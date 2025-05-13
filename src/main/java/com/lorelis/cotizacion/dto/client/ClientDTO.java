@@ -1,8 +1,12 @@
 package com.lorelis.cotizacion.dto.client;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+//@Data // opcional si ya tienes @Getter y @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class ClientDTO {
 
     private Long id;
@@ -20,4 +24,6 @@ public class ClientDTO {
     private String phoneNumber;
 
     private String email;
+
+
 }

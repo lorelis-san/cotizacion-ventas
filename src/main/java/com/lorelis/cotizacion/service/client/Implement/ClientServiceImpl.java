@@ -18,12 +18,14 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
+
     // Convertir de DTO a entidad
     private Client convertToEntity(ClientDTO dto) {
         Client client = new Client();
         client.setId(dto.getId());
         client.setFirstName(dto.getFirstName());
         client.setLastName(dto.getLastName());
+        client.setTypeDocument(dto.getTypeDocument());
         client.setDocumentNumber(dto.getDocumentNumber());
         client.setBusinessName(dto.getBusinessName());
         client.setPhoneNumber(dto.getPhoneNumber());
@@ -37,6 +39,7 @@ public class ClientServiceImpl implements ClientService {
         dto.setId(client.getId());
         dto.setFirstName(client.getFirstName());
         dto.setLastName(client.getLastName());
+        dto.setTypeDocument(client.getTypeDocument());
         dto.setDocumentNumber(client.getDocumentNumber());
         dto.setBusinessName(client.getBusinessName());
         dto.setPhoneNumber(client.getPhoneNumber());

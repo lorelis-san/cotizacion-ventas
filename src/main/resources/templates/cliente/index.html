@@ -33,7 +33,6 @@
             <th scope="col">ID</th>
             <th scope="col">Nombre</th>
             <th scope="col">Apellidos</th>
-            <th scope="col">Nombre</th>
             <th scope="col">Tipo de Documento</th>
             <th scope="col">Nro Documento</th>
             <th scope="col">Razón Social</th>
@@ -46,16 +45,16 @@
             <td th:text="${client.id}"></td>
 
             <!-- Show first name only if document type is DNI -->
-            <td th:text="${client.documentType == 'DNI' ? client.firstName : ''}"></td>
+            <td th:text="${client.firstName}"></td>
 
             <!-- Show last name only if document type is DNI -->
-            <td th:text="${client.documentType == 'DNI' ? client.lastName : ''}"></td>
+            <td th:text="${client.lastName}"></td>
 
-            <!-- Show business name only if document type is RUC -->
-            <td th:text="${client.documentType == 'RUC' ? client.businessName : ''}"></td>
 
-            <td th:text="${client.documentType}"></td>
+            <td th:text="${client.typeDocument}"></td>
             <td th:text="${client.documentNumber}"></td>
+            <!-- Show business name only if document type is RUC -->
+            <td th:text="${client.typeDocument == 'RUC' ? client.businessName : ''}"></td>
             <td th:text="${client.phoneNumber}"></td>
             <td th:text="${client.email}"></td>
         </tr>
