@@ -1,4 +1,4 @@
-package com.lorelis.cotizacion.model.cotizacion;
+package com.lorelis.cotizacion.model.quote;
 import com.lorelis.cotizacion.model.productos.Productos;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "detalle_cotizacion")
-public class DetalleCotizacion {
+public class QuoteDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_detalle")
@@ -21,7 +21,7 @@ public class DetalleCotizacion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cotizacion_id", nullable = false)
-    private Cotizacion cotizacion;
+    private Quote cotizacion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = false)

@@ -1,4 +1,4 @@
-package com.lorelis.cotizacion.dto.usuario;
+package com.lorelis.cotizacion.dto.users;
 
 import lombok.Data;
 import jakarta.validation.constraints.Email;

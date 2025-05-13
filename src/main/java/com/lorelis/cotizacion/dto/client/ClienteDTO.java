@@ -1,4 +1,4 @@
-package com.lorelis.cotizacion.dto.cliente;
+package com.lorelis.cotizacion.dto.client;
 
 import lombok.Data;
 

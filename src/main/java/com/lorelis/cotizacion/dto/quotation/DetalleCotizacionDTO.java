@@ -1,4 +1,4 @@
-package com.lorelis.cotizacion.dto.cotizacion;
+package com.lorelis.cotizacion.dto.quotation;
 
 import lombok.Data;
 import jakarta.validation.constraints.NotNull;

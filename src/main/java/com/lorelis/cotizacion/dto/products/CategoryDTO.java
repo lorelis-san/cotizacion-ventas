@@ -1,10 +1,10 @@
-package com.lorelis.cotizacion.dto.productos;
+package com.lorelis.cotizacion.dto.products;
 
 import lombok.Data;
 import jakarta.validation.constraints.NotNull;
 
 @Data
-public class CategoriaDTO {
+public class CategoryDTO {
     private Long id;
 
     @NotNull

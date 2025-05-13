@@ -1,4 +1,4 @@
-package com.lorelis.cotizacion.model.cotizacion;
+package com.lorelis.cotizacion.model.quote;
 import jakarta.persistence.*;
 @Entity
 public class RespuestaCotizacion {
@@ -8,7 +8,7 @@ public class RespuestaCotizacion {
 
     @ManyToOne
     @JoinColumn(name = "cotizacion_id")
-    private Cotizacion cotizacion;
+    private Quote cotizacion;
 
     private String respuesta; // Ej. "Aceptada", "Rechazada"
     private String comentario;
