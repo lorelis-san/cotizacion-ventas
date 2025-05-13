@@ -11,6 +11,8 @@ public class ClientDTO {
 
     private String lastName;
 
+    private String typeDocument;
+
     private String documentNumber;  // Un solo campo para documento (DNI o RUC)
 
     private String businessName;  // Solo se llena si el nroDocumento es RUC

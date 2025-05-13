@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
-    Client findbyDocumentNumber(String documentNumber);
+    Client findByDocumentNumber(String documentNumber);
 }

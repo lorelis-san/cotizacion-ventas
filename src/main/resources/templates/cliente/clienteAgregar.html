@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Cliente</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <script>
+        function toggleBusinessNameField() {
+            const docType = document.getElementById("typeDocument").value;
+            const businessNameField = document.getElementById("businessNameField");
+
+            if (docType === "RUC") {
+                businessNameField.style.display = "block"; // Show "Business Name"
+            } else {
+                businessNameField.style.display = "none"; // Hide "Business Name"
+            }
+        }
+    </script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/clients">Lista Clientes <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/nuevoCliente">Agregar Cliente</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<br />
+
+<div class="container text-center">
+    <h2>Add New Client</h2>
+    <form th:action="@{/clients/guardar}" method="POST" th:object="${cliente}">
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" class="form-control" th:field="*{firstName}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" class="form-control" th:field="*{lastName}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="typeDocument">Document Type:</label>
+            <select id="typeDocument" class="form-control" th:field="*{typeDocument}" onchange="toggleBusinessNameField()" required>
+                <option value="DNI">DNI</option>
+                <option value="RUC">RUC</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="documentNumber">Document Number:</label>
+            <input type="text" id="documentNumber" class="form-control" th:field="*{documentNumber}" required>
+        </div>
+
+        <div id="businessNameField" class="form-group" style="display: none;">
+            <label for="businessName">Business Name (Razón Social):</label>
+            <input type="text" id="businessName" class="form-control" th:field="*{businessName}">
+        </div>
+
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="text" id="phoneNumber" class="form-control" th:field="*{phoneNumber}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" class="form-control" th:field="*{email}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Client</button>
+    </form>
+</div>
+
+</body>
+</html>

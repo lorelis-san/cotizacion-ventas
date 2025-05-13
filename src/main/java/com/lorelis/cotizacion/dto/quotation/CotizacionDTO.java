@@ -18,6 +18,10 @@ public class CotizacionDTO {
     private LocalDateTime fechaCreacion;
 
     private LocalDateTime fechaActualizacion;
+    private String placa;
+    private String marca;
+    private String model;
+    private String anio;
 
     private BigDecimal total;
 

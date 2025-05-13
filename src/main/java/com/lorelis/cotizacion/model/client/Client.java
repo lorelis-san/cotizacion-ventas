@@ -22,6 +22,9 @@ public class Client {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @Column(name = "type_document", nullable = false)
+    private String typeDocument;
+
     @Column(name = "document_number", nullable = false, unique = true)
     private String documentNumber;  // Unique field for document (DNI or RUC)
 

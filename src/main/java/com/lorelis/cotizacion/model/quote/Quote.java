@@ -13,16 +13,16 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "quotation")
+@Table(name = "quote")
 public class Quote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "quotation_id")
+    @Column(name = "quote_id")
     private Long id;
 
-    @Column(name = "nro_quotation", nullable = false, unique = true)
-    private String nroQuotation;
+    @Column(name = "nro_quote", nullable = false, unique = true)
+    private String nroQuote;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -40,7 +40,7 @@ public class Quote {
     @Column(name = "state", nullable = false)
     private String state;
 
-    @OneToMany(mappedBy = "quotation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "quote", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<QuoteDetails> QuoteDetails;
 
 
@@ -55,7 +55,7 @@ public class Quote {
         updateDate = LocalDateTime.now();
 
         // Formatear el número de cotización con ceros a la izquierda
-        this.nroQuotation = generateQuoteNumber();
+        this.nroQuote = generateQuoteNumber();
     }
 
     @PreUpdate
