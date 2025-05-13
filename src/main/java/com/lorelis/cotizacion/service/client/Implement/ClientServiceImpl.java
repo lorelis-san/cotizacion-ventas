@@ -1,6 +1,7 @@
 package com.lorelis.cotizacion.service.client.Implement;
 
-import com.lorelis.cotizacion.dto.client.ClienteDTO;
+import com.lorelis.cotizacion.dto.client.ClientDTO;
+import com.lorelis.cotizacion.model.client.Client;
 import com.lorelis.cotizacion.repository.client.ClientRepository;
 import com.lorelis.cotizacion.service.client.ClientService;
 import jakarta.transaction.Transactional;
@@ -8,35 +9,79 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class ClientServiceImpl implements ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
-    @Override
-    public void saveClient(ClienteDTO clienteDTO) {
+    // Convertir de DTO a entidad
+    private Client convertToEntity(ClientDTO dto) {
+        Client client = new Client();
+        client.setId(dto.getId());
+        client.setFirstName(dto.getFirstName());
+        client.setLastName(dto.getLastName());
+        client.setDocumentNumber(dto.getDocumentNumber());
+        client.setBusinessName(dto.getBusinessName());
+        client.setPhoneNumber(dto.getPhoneNumber());
+        client.setEmail(dto.getEmail());
+        return client;
+    }
 
-
+    // Convertir de entidad a DTO
+    private ClientDTO convertToDTO(Client client) {
+        ClientDTO dto = new ClientDTO();
+        dto.setId(client.getId());
+        dto.setFirstName(client.getFirstName());
+        dto.setLastName(client.getLastName());
+        dto.setDocumentNumber(client.getDocumentNumber());
+        dto.setBusinessName(client.getBusinessName());
+        dto.setPhoneNumber(client.getPhoneNumber());
+        dto.setEmail(client.getEmail());
+        return dto;
     }
 
     @Override
-    public List<ClienteDTO> getAllClients() {
-        return List.of();
+    public void saveClient(ClientDTO clienteDTO) {
+        clientRepository.save(convertToEntity(clienteDTO));
     }
 
     @Override
-    public ClienteDTO getClientById(Long id) {
-        return null;
+    public List<ClientDTO> getAllClients() {
+        return clientRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void updateClient(ClienteDTO clienteDTO) {
+    public ClientDTO getClientById(Long id) {
+        Optional<Client> clientOpt = clientRepository.findById(id);
+        return clientOpt.map(this::convertToDTO).orElse(null);
+    }
 
+    @Override
+    public void updateClient(ClientDTO clienteDTO) {
+        if (clienteDTO.getId() == null) return;
+
+        Optional<Client> clientOpt = clientRepository.findById(clienteDTO.getId());
+        if (clientOpt.isPresent()) {
+            Client client = clientOpt.get();
+            client.setFirstName(clienteDTO.getFirstName());
+            client.setLastName(clienteDTO.getLastName());
+            client.setDocumentNumber(clienteDTO.getDocumentNumber());
+            client.setBusinessName(clienteDTO.getBusinessName());
+            client.setPhoneNumber(clienteDTO.getPhoneNumber());
+            client.setEmail(clienteDTO.getEmail());
+            clientRepository.save(client);
+        }
     }
 
     @Override
     public void deleteClient(Long id) {
-
+        // Puedes cambiar esto a una lógica de "inhabilitar" si deseas usar un campo booleano "activo"
+        clientRepository.deleteById(id);
     }
 }

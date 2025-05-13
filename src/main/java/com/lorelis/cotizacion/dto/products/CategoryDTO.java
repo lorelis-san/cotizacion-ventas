@@ -8,7 +8,7 @@ public class CategoryDTO {
     private Long id;
 
     @NotNull
-    private String nombre;
+    private String name;
 
-    private String descripcion;
+    private String description;
 }

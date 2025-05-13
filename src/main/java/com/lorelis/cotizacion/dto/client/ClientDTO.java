@@ -1,0 +1,21 @@
+package com.lorelis.cotizacion.dto.client;
+
+import lombok.Data;
+
+@Data
+public class ClientDTO {
+
+    private Long id;
+
+    private String firstName;
+
+    private String lastName;
+
+    private String documentNumber;  // Un solo campo para documento (DNI o RUC)
+
+    private String businessName;  // Solo se llena si el nroDocumento es RUC
+
+    private String phoneNumber;
+
+    private String email;
+}
