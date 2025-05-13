@@ -16,6 +16,6 @@ public class Rol {
     @Column(name = "id_rol")
     private Long id;
 
-    @Column(name = "nombre", nullable = false, unique = true)
-    private String nombre; // Ej. ADMIN, VENDEDOR
+    @Column(name = "name", nullable = false, unique = true)
+    private String name; // Ej. ADMIN, VENDEDOR
 }

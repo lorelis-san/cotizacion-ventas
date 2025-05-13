@@ -13,17 +13,17 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
+    @Column(name = "id_user")
     private Long id;
 
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "correo", nullable = false, unique = true)
-    private String correo;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
-    @Column(name = "contrasena", nullable = false)
-    private String contrasena; // Usar encriptación para la contraseña
+    @Column(name = "password", nullable = false)
+    private String password; // Usar encriptación para la contraseña
 
     // Relación con la entidad Rol
     @ManyToOne

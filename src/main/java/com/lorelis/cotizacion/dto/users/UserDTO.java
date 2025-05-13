@@ -5,17 +5,17 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 @Data
-public class UsuarioDTO {
+public class UserDTO {
     private Long id;
 
     @NotNull
-    private String nombre;
+    private String name;
 
     @Email @NotNull
-    private String correo;
+    private String email;
 
     @NotNull
-    private String contrasena;
+    private String password;
 
     @NotNull
     private Long rolId;   // Referencia al Rol

@@ -15,9 +15,9 @@ public class Sede {
     @Column(name = "id_sede")
     private Long id;
 
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "direccion")
-    private String direccion;
+    @Column(name = "address")
+    private String address;
 }

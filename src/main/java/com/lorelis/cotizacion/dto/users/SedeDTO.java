@@ -8,7 +8,7 @@ public class SedeDTO {
     private Long id;
 
     @NotNull
-    private String nombre;
+    private String name;
 
-    private String direccion;
+    private String address;
 }

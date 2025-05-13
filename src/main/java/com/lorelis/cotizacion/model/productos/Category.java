@@ -9,16 +9,16 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Categoria {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_categoria")
+    @Column(name = "id_category")
     private Long id;
 
-    @Column(name = "nombre_categoria", nullable = false, length = 100)
-    private String nombre;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
-    @Column(name = "descripcion", length = 255)
-    private String descripcion;
+    @Column(name = "description", length = 255)
+    private String description;
 }

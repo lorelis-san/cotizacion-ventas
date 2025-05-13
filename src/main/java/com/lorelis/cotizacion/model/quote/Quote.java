@@ -1,6 +1,7 @@
 package com.lorelis.cotizacion.model.quote;
 
 import com.lorelis.cotizacion.model.client.Client;
+import com.lorelis.cotizacion.model.vehicle.Vehicle;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +29,10 @@ public class Quote {
     @JoinColumn(name = "client_id")
     private Client client;
 
+    @ManyToOne
+    @JoinColumn(name = "id_vehicle")
+    private Vehicle vehicle;
+
     @Column(name = "creation_date", updatable = false)
     private LocalDateTime creationDate;
 
@@ -40,9 +45,11 @@ public class Quote {
     @Column(name = "state", nullable = false)
     private String state;
 
+    @Column(name = "coment", nullable = true)
+    private String coment;
+
     @OneToMany(mappedBy = "quote", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<QuoteDetails> QuoteDetails;
-
 
     // Relación con el contador
     @ManyToOne(fetch = FetchType.LAZY)

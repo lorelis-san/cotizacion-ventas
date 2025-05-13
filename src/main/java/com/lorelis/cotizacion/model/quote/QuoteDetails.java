@@ -1,5 +1,5 @@
 package com.lorelis.cotizacion.model.quote;
-import com.lorelis.cotizacion.model.productos.Productos;
+import com.lorelis.cotizacion.model.productos.Products;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,11 +25,12 @@ public class QuoteDetails {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private Productos product;
+    private Products product;
 
     @Column(name = "amount", nullable = false)
     private Integer amount;
 
+// el precio de un producto puede cambiar con el tiempo, pero tu cotización debe mantener el precio con el que se cotizó.
     @Column(name = "salePrice", nullable = false, precision = 10, scale = 2)
     private BigDecimal salePrice;
 

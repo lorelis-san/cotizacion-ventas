@@ -11,13 +11,15 @@ public class ProductDTO {
     @NotNull
     private String name;
 
+    private String cod;
+
     private String description;
 
     private String brand; //marca
 
     private String model;
 
-    private Integer year;
+    private String year;
 
     private BigDecimal costPrice;
 

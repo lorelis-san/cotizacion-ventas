@@ -8,5 +8,5 @@ public class RolDTO {
     private Long id;
 
     @NotNull
-    private String nombre; // Ej. "ADMIN", "VENDEDOR"
+    private String name; // Ej. "ADMIN", "VENDEDOR"
 }

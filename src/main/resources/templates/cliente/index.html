@@ -38,6 +38,7 @@
             <th scope="col">Razón Social</th>
             <th scope="col">Celular</th>
             <th scope="col">Correo</th>
+            <th scope="col">Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -57,6 +58,15 @@
             <td th:text="${client.typeDocument == 'RUC' ? client.businessName : ''}"></td>
             <td th:text="${client.phoneNumber}"></td>
             <td th:text="${client.email}"></td>
+
+            <td>
+                <a th:href="@{'/editarCliente/' + ${client.id}}" class="btn btn-warning btn-sm">Editar</a>
+                <a th:href="@{'/eliminarCliente/' + ${client.id}}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
+                    Eliminar
+                </a>
+            </td>
         </tr>
 
         <tr th:if="${#lists.isEmpty(listaClientes)}">

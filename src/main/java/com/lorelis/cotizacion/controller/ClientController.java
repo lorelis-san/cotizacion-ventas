@@ -49,14 +49,14 @@ public class ClientController {
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
         ClientDTO cliente = clientService.getClientById(id);
         model.addAttribute("cliente", cliente);
-        return "clientes/formulario"; // Reutilizamos el mismo formulario
+        return "cliente/clienteEditar"; // Reutilizamos el mismo formulario
     }
 
     // Actualizar cliente
     @PostMapping("/actualizar")
     public String actualizarCliente(@ModelAttribute("cliente") ClientDTO cliente) {
         clientService.updateClient(cliente);
-        return "redirect:/clientes";
+        return "redirect:/index";
     }
 
     // Eliminar cliente
