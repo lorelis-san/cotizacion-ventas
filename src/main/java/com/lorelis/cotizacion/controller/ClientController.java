@@ -27,7 +27,14 @@ public class ClientController {
         return "cliente/index";
     }
 
+    // Guardar nuevo cliente
+    @PostMapping("/clients/guardar")
+    public String guardarCliente(@ModelAttribute("cliente") ClientDTO cliente) {
 
+        clientService.saveClient(cliente);
+        return "redirect:/clients"; // Redirección a la lista de clientes
+
+    }
     // Mostrar formulario para nuevo cliente
     @GetMapping("/nuevoCliente")
     public String mostrarFormularioNuevoCliente(Model model) {
@@ -35,34 +42,24 @@ public class ClientController {
         return "cliente/clienteAgregar"; // templates/clientes/formulario.html
     }
 
-    // Guardar nuevo cliente
-    @PostMapping("/clients/guardar")
-    public String guardarCliente(@ModelAttribute("cliente") ClientDTO cliente) {
-
-            clientService.saveClient(cliente);
-            return "redirect:/clients"; // Redirección a la lista de clientes
-
-    }
-
-    // Mostrar formulario para editar cliente
-    @GetMapping("/editar/{id}")
-    public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
-        ClientDTO cliente = clientService.getClientById(id);
-        model.addAttribute("cliente", cliente);
-        return "cliente/clienteEditar"; // Reutilizamos el mismo formulario
-    }
-
     // Actualizar cliente
     @PostMapping("/actualizar")
-    public String actualizarCliente(@ModelAttribute("cliente") ClientDTO cliente) {
-        clientService.updateClient(cliente);
-        return "redirect:/index";
+    public String actualizarCliente(@ModelAttribute ClientDTO clienteDTO) {
+        clientService.updateClient(clienteDTO);
+        return "redirect:/clients";
+    }
+
+    // Obtener cliente por ID para editar (API endpoint para AJAX)
+    @GetMapping("/cliente/{id}")
+    @ResponseBody
+    public ClientDTO obtenerClientePorId(@PathVariable Long id) {
+        return clientService.getClientById(id);
     }
 
     // Eliminar cliente
     @GetMapping("/eliminar/{id}")
     public String eliminarCliente(@PathVariable Long id) {
         clientService.deleteClient(id);
-        return "redirect:/clientes";
+        return "redirect:/clients";
     }
 }

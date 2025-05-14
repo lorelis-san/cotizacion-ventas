@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragmento de Modal para Editar Cliente</title>
+</head>
+<body>
+<!-- Fragmento Modal para Editar Cliente -->
+<div th:fragment="editarClienteModal">
+    <!-- Modal para editar cliente -->
+    <div class="modal fade" id="editarClienteModal" tabindex="-1" aria-labelledby="editarClienteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarClienteModalLabel">Editar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarCliente" th:action="@{/actualizar}" method="post">
+                        <input type="hidden" id="idEditar" name="id">
+
+                        <div class="mb-3">
+                            <label for="typeDocumentEditar" class="form-label">Tipo de Documento</label>
+                            <select class="form-select" id="typeDocumentEditar" name="typeDocument" onchange="toggleFields()">
+                                <option value="DNI">DNI</option>
+                                <option value="RUC">RUC</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="documentNumberEditar" class="form-label">Número de Documento</label>
+                            <input type="text" class="form-control" id="documentNumberEditar" name="documentNumber" required>
+                        </div>
+
+                        <!-- Campos para DNI -->
+                        <div id="camposDNI">
+                            <div class="mb-3">
+                                <label for="firstNameEditar" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="firstNameEditar" name="firstName">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="lastNameEditar" class="form-label">Apellidos</label>
+                                <input type="text" class="form-control" id="lastNameEditar" name="lastName">
+                            </div>
+                        </div>
+
+                        <!-- Campo para RUC -->
+                        <div id="camposRUC" style="display: none;">
+                            <div class="mb-3">
+                                <label for="businessNameEditar" class="form-label">Razón Social</label>
+                                <input type="text" class="form-control" id="businessNameEditar" name="businessName">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phoneNumberEditar" class="form-label">Celular</label>
+                            <input type="text" class="form-control" id="phoneNumberEditar" name="phoneNumber">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="emailEditar" class="form-label">Correo</label>
+                            <input type="email" class="form-control" id="emailEditar" name="email">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para manejar el modal -->
+    <script>
+        function cargarDatosEditar(button) {
+            // Obtener datos del botón
+            const id = button.getAttribute('data-id');
+            const firstName = button.getAttribute('data-firstname');
+            const lastName = button.getAttribute('data-lastname');
+            const typeDocument = button.getAttribute('data-typedocument');
+            const documentNumber = button.getAttribute('data-documentnumber');
+            const businessName = button.getAttribute('data-businessname');
+            const phoneNumber = button.getAttribute('data-phonenumber');
+            const email = button.getAttribute('data-email');
+
+            // Establecer valores en el formulario
+            document.getElementById('idEditar').value = id;
+            document.getElementById('firstNameEditar').value = firstName || '';
+            document.getElementById('lastNameEditar').value = lastName || '';
+            document.getElementById('typeDocumentEditar').value = typeDocument;
+            document.getElementById('documentNumberEditar').value = documentNumber;
+            document.getElementById('businessNameEditar').value = businessName || '';
+            document.getElementById('phoneNumberEditar').value = phoneNumber || '';
+            document.getElementById('emailEditar').value = email || '';
+
+            // Mostrar/ocultar campos según tipo de documento
+            toggleFields();
+        }
+
+        function toggleFields() {
+            const tipoDoc = document.getElementById('typeDocumentEditar').value;
+            const camposDNI = document.getElementById('camposDNI');
+            const camposRUC = document.getElementById('camposRUC');
+
+            if (tipoDoc === 'DNI') {
+                camposDNI.style.display = 'block';
+                camposRUC.style.display = 'none';
+            } else if (tipoDoc === 'RUC') {
+                camposDNI.style.display = 'none';
+                camposRUC.style.display = 'block';
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
