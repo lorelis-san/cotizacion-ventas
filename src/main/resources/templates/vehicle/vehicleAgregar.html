@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Cliente</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/vehicle">Control de Vehículos <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/nuevoVehiculo">Agregar Vehículo</a>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+
+<br />
+
+<div class="container text-center">
+    <h2>Add New Vehículo</h2>
+    <form th:action="@{/vehicle/guardar}" method="POST" th:object="${vehicle}">
+        <div class="form-group">
+            <label for="placa">Placa:</label>
+            <input type="text" id="placa" class="form-control" th:field="*{placa}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" class="form-control" th:field="*{marca}" required>
+        </div>
+
+
+        <div class="form-group">
+            <label for="modelo">Modelo:</label>
+            <input type="text" id="modelo" class="form-control" th:field="*{modelo}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="year">Año:</label>
+            <input type="number" id="year" class="form-control" th:field="*{year}" required>
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary">Add Vehicle</button>
+    </form>
+</div>
+
+</body>
+</html>
