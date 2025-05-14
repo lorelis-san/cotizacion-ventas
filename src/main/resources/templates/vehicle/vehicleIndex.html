@@ -41,14 +41,12 @@
         <tr th:each="vehicle : ${listVehiculo}">
             <td th:text="${vehicle.id}"></td>
 
-            <!-- Show first name only if document type is DNI -->
             <td th:text="${vehicle.placa}"></td>
 
-            <!-- Show last name only if document type is DNI -->
+            <td th:text="${vehicle.modelo}"></td>
+
             <td th:text="${vehicle.marca}"></td>
 
-
-            <td th:text="${vehicle.modelo}"></td>
             <td th:text="${vehicle.year}"></td>
 
 

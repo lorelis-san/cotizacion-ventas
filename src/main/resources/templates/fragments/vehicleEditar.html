@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Fragmento de Modal para Editar Cliente</title>
+    <title>Modal Editar Vehículo</title>
 </head>
 <body>
-<!-- Fragmento Modal para Editar Cliente -->
+
 <div th:fragment="editarVehiculoModal">
 
     <div class="modal fade" id="editarVehiculoModal" tabindex="-1" aria-labelledby="editarVehicleModalLabel" aria-hidden="true">
@@ -24,15 +24,16 @@
                             <input type="text" class="form-control" id="placaEditar" name="placa" required>
                         </div>
 
-                            <div class="mb-3">
-                                <label for="modeloEditar" class="form-label">Modelo</label>
-                                <input type="text" class="form-control" id="modeloEditar" name="modelo">
-                            </div>
 
-                            <div class="mb-3">
+                         <div class="mb-3">
                                 <label for="marcaEditar" class="form-label">Marca</label>
                                 <input type="text" class="form-control" id="marcaEditar" name="marca">
-                            </div>
+                         </div>
+
+                        <div class="mb-3">
+                            <label for="modeloEditar" class="form-label">Modelo</label>
+                            <input type="text" class="form-control" id="modeloEditar" name="modelo">
+                        </div>
 
                         <div class="mb-3">
                             <label for="yearEditar" class="form-label">Año</label>

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Agregar Cliente</title>
+    <title>Agregar Vehículo</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
 
 </head>
@@ -27,7 +27,7 @@
 <br />
 
 <div class="container text-center">
-    <h2>Add New Vehículo</h2>
+    <h2>Añadir Nuevo Vehículo</h2>
     <form th:action="@{/vehicle/guardar}" method="POST" th:object="${vehicle}">
         <div class="form-group">
             <label for="placa">Placa:</label>
@@ -52,7 +52,7 @@
 
 
 
-        <button type="submit" class="btn btn-primary">Add Vehicle</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
 </div>
 

@@ -39,7 +39,7 @@ public class ClientController {
     @GetMapping("/nuevoCliente")
     public String mostrarFormularioNuevoCliente(Model model) {
         model.addAttribute("cliente", new ClientDTO());
-        return "cliente/clienteAgregar"; // templates/clientes/formulario.html
+        return "cliente/clienteAgregar";
     }
 
     // Actualizar cliente

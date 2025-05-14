@@ -2,21 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Fragmento de Modal para Editar Cliente</title>
+    <title>Modal Editar Cliente</title>
 </head>
 <body>
-<!-- Fragmento Modal para Editar Cliente -->
+
+<!-- Fragmento del modal -->
 <div th:fragment="editarClienteModal">
-    <!-- Modal para editar cliente -->
     <div class="modal fade" id="editarClienteModal" tabindex="-1" aria-labelledby="editarClienteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editarClienteModalLabel">Editar Cliente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formEditarCliente" th:action="@{/actualizar}" method="post">
+                <form id="formEditarCliente" th:action="@{/actualizar}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editarClienteModalLabel">Editar Cliente</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
                         <input type="hidden" id="idEditar" name="id">
 
                         <div class="mb-3">
@@ -35,12 +35,12 @@
                         <!-- Campos para DNI -->
                         <div id="camposDNI">
                             <div class="mb-3">
-                                <label for="firstNameEditar" class="form-label">Nombre</label>
+                                <label for="firstNameEditar" class="form-label">Nombres:</label>
                                 <input type="text" class="form-control" id="firstNameEditar" name="firstName">
                             </div>
 
                             <div class="mb-3">
-                                <label for="lastNameEditar" class="form-label">Apellidos</label>
+                                <label for="lastNameEditar" class="form-label">Apellidos:</label>
                                 <input type="text" class="form-control" id="lastNameEditar" name="lastName">
                             </div>
                         </div>
@@ -48,35 +48,33 @@
                         <!-- Campo para RUC -->
                         <div id="camposRUC" style="display: none;">
                             <div class="mb-3">
-                                <label for="businessNameEditar" class="form-label">Razón Social</label>
+                                <label for="businessNameEditar" class="form-label">Razón Social:</label>
                                 <input type="text" class="form-control" id="businessNameEditar" name="businessName">
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="phoneNumberEditar" class="form-label">Celular</label>
+                            <label for="phoneNumberEditar" class="form-label">Celular:</label>
                             <input type="text" class="form-control" id="phoneNumberEditar" name="phoneNumber">
                         </div>
 
                         <div class="mb-3">
-                            <label for="emailEditar" class="form-label">Correo</label>
+                            <label for="emailEditar" class="form-label">Correo:</label>
                             <input type="email" class="form-control" id="emailEditar" name="email">
                         </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Script para manejar el modal -->
+    <!-- Script para cargar datos al modal -->
     <script>
         function cargarDatosEditar(button) {
-            // Obtener datos del botón
             const id = button.getAttribute('data-id');
             const firstName = button.getAttribute('data-firstname');
             const lastName = button.getAttribute('data-lastname');
@@ -86,7 +84,6 @@
             const phoneNumber = button.getAttribute('data-phonenumber');
             const email = button.getAttribute('data-email');
 
-            // Establecer valores en el formulario
             document.getElementById('idEditar').value = id;
             document.getElementById('firstNameEditar').value = firstName || '';
             document.getElementById('lastNameEditar').value = lastName || '';
@@ -96,8 +93,7 @@
             document.getElementById('phoneNumberEditar').value = phoneNumber || '';
             document.getElementById('emailEditar').value = email || '';
 
-            // Mostrar/ocultar campos según tipo de documento
-            toggleFields();
+            toggleFields(); // Mostrar campos correspondientes
         }
 
         function toggleFields() {

@@ -72,12 +72,22 @@ public class ClientServiceImpl implements ClientService {
         Optional<Client> clientOpt = clientRepository.findById(clienteDTO.getId());
         if (clientOpt.isPresent()) {
             Client client = clientOpt.get();
-            client.setFirstName(clienteDTO.getFirstName());
-            client.setLastName(clienteDTO.getLastName());
+
+            client.setTypeDocument(clienteDTO.getTypeDocument());
             client.setDocumentNumber(clienteDTO.getDocumentNumber());
-            client.setBusinessName(clienteDTO.getBusinessName());
             client.setPhoneNumber(clienteDTO.getPhoneNumber());
             client.setEmail(clienteDTO.getEmail());
+
+            if ("DNI".equalsIgnoreCase(clienteDTO.getTypeDocument())) {
+                client.setFirstName(clienteDTO.getFirstName());
+                client.setLastName(clienteDTO.getLastName());
+                client.setBusinessName("-"); // limpia el campo de RUC
+            } else if ("RUC".equalsIgnoreCase(clienteDTO.getTypeDocument())) {
+                client.setBusinessName(clienteDTO.getBusinessName());
+                client.setFirstName("-"); // limpia campos de DNI
+                client.setLastName("-");
+            }
+
             clientRepository.save(client);
         }
     }
