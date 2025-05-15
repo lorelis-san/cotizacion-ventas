@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modal Editar Categoría</title>
+</head>
+<body>
+
+<div th:fragment="editarCategoriaModal">
+    <div class="modal fade" id="editarCategoriaModal" tabindex="-1" aria-labelledby="editarCategoriaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formEditarCategoria" th:action="@{/actualizarCategoria}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editarCategoriaModalLabel">Editar Categoría</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="edit-id" name="id">
+
+                        <div class="mb-3">
+                            <label for="edit-name" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="edit-name" name="name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edit-description" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="edit-description" name="description" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function cargarDatosCategoria(button) {
+            const id = button.getAttribute('data-id');
+            const name = button.getAttribute('data-name');
+            const description = button.getAttribute('data-description');
+
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-name').value = name || '';
+            document.getElementById('edit-description').value = description || '';
+        }
+    </script>
+</div>
+
+</body>
+</html>
