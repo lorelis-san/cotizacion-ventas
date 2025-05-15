@@ -43,6 +43,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public void saveVehicle(VehicleDTO vehicleDTO) {
+
         vehicleRepository.save(convertToEntity(vehicleDTO));
     }
 
