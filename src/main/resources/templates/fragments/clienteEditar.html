@@ -7,72 +7,71 @@
 <body>
 
 <!-- Fragmento del modal -->
-<div th:fragment="editarClienteModal">
-    <div class="modal fade" id="editarClienteModal" tabindex="-1" aria-labelledby="editarClienteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="formEditarCliente" th:action="@{/actualizar}" method="post">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editarClienteModalLabel">Editar Cliente</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" id="idEditar" name="id">
+    <div th:fragment="editarClienteModal">
+        <div class="modal fade" id="editarClienteModal" tabindex="-1" aria-labelledby="editarClienteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg"> <!-- más ancho -->
+                <div class="modal-content">
+                    <div class="card w-100">
+                        <h5 class="card-header">Editar Cliente</h5>
+                        <div class="card-body">
+                            <form id="formEditarCliente" th:action="@{/actualizar}" method="post">
+                                <input type="hidden" id="idEditar" name="id" />
 
-                        <div class="mb-3">
-                            <label for="typeDocumentEditar" class="form-label">Tipo de Documento</label>
-                            <select class="form-select" id="typeDocumentEditar" name="typeDocument" onchange="toggleFields()">
-                                <option value="DNI">DNI</option>
-                                <option value="RUC">RUC</option>
-                            </select>
+                                <div class="form-group mb-3">
+                                    <label for="typeDocumentEditar">Tipo de Documento</label>
+                                    <select class="form-select" id="typeDocumentEditar" name="typeDocument" onchange="toggleFields()">
+                                        <option value="DNI">DNI</option>
+                                        <option value="RUC">RUC</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="documentNumberEditar">Número de Documento</label>
+                                    <input type="text" class="form-control" id="documentNumberEditar" name="documentNumber" required>
+                                </div>
+
+                                <div id="camposDNI">
+                                    <div class="form-group mb-3">
+                                        <label for="firstNameEditar">Nombres</label>
+                                        <input type="text" class="form-control" id="firstNameEditar" name="firstName">
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="lastNameEditar">Apellidos</label>
+                                        <input type="text" class="form-control" id="lastNameEditar" name="lastName">
+                                    </div>
+                                </div>
+
+                                <div id="camposRUC" style="display: none;">
+                                    <div class="form-group mb-3">
+                                        <label for="businessNameEditar">Razón Social</label>
+                                        <input type="text" class="form-control" id="businessNameEditar" name="businessName">
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="phoneNumberEditar">Celular</label>
+                                    <input type="text" class="form-control" id="phoneNumberEditar" name="phoneNumber">
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label for="emailEditar">Correo</label>
+                                    <input type="email" class="form-control" id="emailEditar" name="email">
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+
+                            </form>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="documentNumberEditar" class="form-label">Número de Documento</label>
-                            <input type="text" class="form-control" id="documentNumberEditar" name="documentNumber" required>
-                        </div>
-
-                        <!-- Campos para DNI -->
-                        <div id="camposDNI">
-                            <div class="mb-3">
-                                <label for="firstNameEditar" class="form-label">Nombres:</label>
-                                <input type="text" class="form-control" id="firstNameEditar" name="firstName">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="lastNameEditar" class="form-label">Apellidos:</label>
-                                <input type="text" class="form-control" id="lastNameEditar" name="lastName">
-                            </div>
-                        </div>
-
-                        <!-- Campo para RUC -->
-                        <div id="camposRUC" style="display: none;">
-                            <div class="mb-3">
-                                <label for="businessNameEditar" class="form-label">Razón Social:</label>
-                                <input type="text" class="form-control" id="businessNameEditar" name="businessName">
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="phoneNumberEditar" class="form-label">Celular:</label>
-                            <input type="text" class="form-control" id="phoneNumberEditar" name="phoneNumber">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="emailEditar" class="form-label">Correo:</label>
-                            <input type="email" class="form-control" id="emailEditar" name="email">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                    </div>
-                </form>
+                    </div> <!-- .card -->
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Script para cargar datos al modal -->
+        <!-- Script para cargar datos al modal -->
     <script>
         function cargarDatosEditar(button) {
             const id = button.getAttribute('data-id');

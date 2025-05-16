@@ -33,7 +33,7 @@ public class CategoryController {
         return "categories/categoriesAgregar"; // Asegúrate de tener esta vista
     }
 
-    @PostMapping("/guardar")
+    @PostMapping("/categories/guardar")
     public String guardarCategoria(@ModelAttribute("categoria") CategoryDTO categoryDTO) {
         categoryService.saveCategory(categoryDTO);
         return "redirect:/categories";
