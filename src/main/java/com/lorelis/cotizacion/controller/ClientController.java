@@ -27,14 +27,18 @@ public class ClientController {
         return "cliente/index";
     }
 
-    // Guardar nuevo cliente
     @PostMapping("/clients/guardar")
-    public String guardarCliente(@ModelAttribute("cliente") ClientDTO cliente) {
-
-        clientService.saveClient(cliente);
-        return "redirect:/clients"; // Redirección a la lista de clientes
-
+    public String guardarCliente(@ModelAttribute("cliente") ClientDTO cliente, Model model) {
+        try {
+            clientService.saveClient(cliente);
+            return "redirect:/clients";
+        } catch (RuntimeException e) {
+            model.addAttribute("cliente", cliente);
+            model.addAttribute("error", e.getMessage());
+            return "cliente/clienteAgregar"; // Regresa al formulario
+        }
     }
+
     // Mostrar formulario para nuevo cliente
     @GetMapping("/nuevoCliente")
     public String mostrarFormularioNuevoCliente(Model model) {

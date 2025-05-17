@@ -43,9 +43,13 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public void saveVehicle(VehicleDTO vehicleDTO) {
-
+        String placa = vehicleDTO.getPlaca().trim().toUpperCase();
+        if (vehicleRepository.findByPlaca(placa) != null) {
+            throw new RuntimeException("Ya existe un vehículo con esa placa");
+        }
         vehicleRepository.save(convertToEntity(vehicleDTO));
     }
+
 
     @Override
     public List<VehicleDTO> getAllVehicles() {
@@ -62,21 +66,27 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public void updateVehicle(VehicleDTO vehicleDTO) {
-      if (vehicleDTO.getId()== null) return;
-      Optional<Vehicle> vehicleOptional = vehicleRepository.findById(vehicleDTO.getId());
+        if (vehicleDTO.getId() == null) return;
 
-      if(vehicleOptional.isPresent()){
-          Vehicle vehicle = vehicleOptional.get();
-          vehicle.setPlaca(vehicleDTO.getPlaca());
-          vehicle.setYear(vehicleDTO.getYear());
-          vehicle.setMarca(vehicleDTO.getMarca());
-          vehicle.setModelo(vehicleDTO.getModelo());
+        Optional<Vehicle> existingVehicleOpt = vehicleRepository.findById(vehicleDTO.getId());
+        if (existingVehicleOpt.isPresent()) {
+            Vehicle existingVehicle = existingVehicleOpt.get();
 
-          vehicleRepository.save(vehicle);
+            // Validar que la nueva placa no exista en otro vehículo
+            Vehicle vehicleConMismaPlaca = vehicleRepository.findByPlaca(vehicleDTO.getPlaca().trim().toUpperCase());
+            if (vehicleConMismaPlaca != null && !vehicleConMismaPlaca.getId().equals(vehicleDTO.getId())) {
+                throw new RuntimeException("Ya existe otro vehículo con esa placa");
+            }
 
-      }
-
+            // Actualiza los campos del vehículo
+            existingVehicle.setPlaca(vehicleDTO.getPlaca().trim().toUpperCase());
+            existingVehicle.setMarca(vehicleDTO.getMarca());
+            existingVehicle.setModelo(vehicleDTO.getModelo());
+            existingVehicle.setYear(vehicleDTO.getYear());
+            vehicleRepository.save(existingVehicle);
+        }
     }
+
 
     @Override
     public void deleteVehicle(Long id) {

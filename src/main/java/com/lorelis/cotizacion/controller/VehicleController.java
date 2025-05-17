@@ -29,11 +29,15 @@ public class VehicleController {
     }
 
     @PostMapping("/vehicle/guardar")
-    public String guardarVehicle(@ModelAttribute("vehicle") VehicleDTO vehicle) {
-
-        vehicleService.saveVehicle(vehicle);
-        return "redirect:/vehicle";
-
+    public String guardarVehicle(@ModelAttribute("vehicle") VehicleDTO vehicle, Model model) {
+        try {
+            vehicleService.saveVehicle(vehicle);
+            return "redirect:/vehicle";
+        } catch (RuntimeException e) {
+            model.addAttribute("vehicle", vehicle);
+            model.addAttribute("error", e.getMessage());
+            return "vehicle/vehicleAgregar"; // Asegúrate de tener esta vista
+        }
     }
 
     @GetMapping("/nuevoVehiculo")

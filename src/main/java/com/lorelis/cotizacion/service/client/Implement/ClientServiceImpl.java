@@ -49,6 +49,12 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void saveClient(ClientDTO clienteDTO) {
+        // Buscar cliente con el mismo número de documento
+        Client existingClient = clientRepository.findByDocumentNumber(clienteDTO.getDocumentNumber());
+
+        if (existingClient != null) {
+            throw new RuntimeException("Ya existe un cliente con ese número de documento");
+        }
         clientRepository.save(convertToEntity(clienteDTO));
     }
 

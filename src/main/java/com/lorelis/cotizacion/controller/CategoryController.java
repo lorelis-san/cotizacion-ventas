@@ -34,10 +34,17 @@ public class CategoryController {
     }
 
     @PostMapping("/categories/guardar")
-    public String guardarCategoria(@ModelAttribute("categoria") CategoryDTO categoryDTO) {
-        categoryService.saveCategory(categoryDTO);
-        return "redirect:/categories";
+    public String guardarCategoria(@ModelAttribute("categoria") CategoryDTO categoryDTO, Model model) {
+        try {
+            categoryService.saveCategory(categoryDTO);
+            return "redirect:/categories";
+        } catch (RuntimeException e) {
+            model.addAttribute("categoria", categoryDTO);
+            model.addAttribute("error", e.getMessage());
+            return "categories/categoriesAgregar"; // Regresa a la vista de agregar categoría
+        }
     }
+
 
 
     @PostMapping("/actualizarCategoria")

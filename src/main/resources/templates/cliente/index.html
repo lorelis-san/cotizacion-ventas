@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
 </head>
 
 <body>
@@ -74,15 +77,19 @@
                                         onclick="cargarDatosEditar(this)">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <a th:href="@{'/eliminar/' + ${client.id}}"
-                                   class="btn btn-outline-danger btn-sm"
-                                   onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
+                                <button class="btn btn-outline-danger btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#eliminarClienteModal"
+                                        th:attr="data-id=${client.id}, data-nombre=${client.firstName} + ' ' + ${client.lastName}"
+                                        onclick="cargarDatosEliminar(this)">
                                     <i class="fas fa-trash-alt"></i>
-                                </a>
+                                </button>
+
+
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(listaClientes)}">
-                            <td colspan="8">No hay clientes registrados.</td>
+                            <td colspan="9">No hay clientes registrados.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -92,12 +99,30 @@
 
         <!-- Modal Editar Cliente -->
         <div th:replace="fragments/clienteEditar :: editarClienteModal"></div>
-
+        <div th:replace="fragments/clienteEliminar :: eliminarClienteModal"></div>
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     </div>
 </div>
+
+
+<!-- jQuery (requerido por DataTables) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- Activar DataTable -->
+<script>
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+            }
+        });
+    });
+</script>
 </body>
 
 </html>

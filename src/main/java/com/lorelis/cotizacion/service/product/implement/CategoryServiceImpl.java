@@ -40,8 +40,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void saveCategory(CategoryDTO categoryDTO) {
+        String nombre = categoryDTO.getName().trim().toLowerCase();
+        Category existing = categoryRepository.findByName(nombre);
+
+        if (existing != null) {
+            throw new RuntimeException("Ya existe una categoría con ese nombre");
+        }
+
         categoryRepository.save(convertToEntity(categoryDTO));
     }
+
 
     @Override
     public List<CategoryDTO> getAllCategory() {
