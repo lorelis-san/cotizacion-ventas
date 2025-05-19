@@ -53,6 +53,15 @@ public class VehicleController {
         return "redirect:/vehicle";
     }
 
+    @GetMapping("/vehicle/existsByPlaca")
+    @ResponseBody
+    public boolean existsPlaca(@RequestParam String placa, @RequestParam(required = false) Long id) {
+        VehicleDTO existingVehicle = vehicleService.getByPlaca(placa.trim());
+
+        return existingVehicle != null && (id == null || !existingVehicle.getId().equals(id));
+    }
+
+
     // Obtener cliente por ID para editar (API endpoint para AJAX)
     @GetMapping("/vehicle/{id}")
     @ResponseBody

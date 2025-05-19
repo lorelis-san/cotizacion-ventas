@@ -59,7 +59,6 @@
             const modelo = button.getAttribute('data-modelo');
             const year = button.getAttribute('data-year');
 
-
             // Establecer valores en el formulario
             document.getElementById('idEditar').value = id;
             document.getElementById('placaEditar').value = placa || '';
@@ -67,11 +66,31 @@
             document.getElementById('modeloEditar').value = modelo;
             document.getElementById('yearEditar').value = year;
 
+            // Agregar evento blur para validar placa
+            const placaInput = document.getElementById('placaEditar');
+            placaInput.addEventListener('blur', function() {
+                const placaValue = placaInput.value.trim();
+                const idValue = document.getElementById('idEditar').value;
 
+                if (placaValue === '') {
+                    return; // No hacer nada si está vacío
+                }
 
+                fetch(`/vehicle/existsByPlaca?placa=${encodeURIComponent(placaValue)}&id=${encodeURIComponent(idValue)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data === true) {
+                            alert('La placa ya existe para otro vehículo. Por favor, ingrese una placa diferente.');
+                            placaInput.focus();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al validar placa:', error);
+                    });
+            }, { once: true });
         }
-
     </script>
+
 </div>
 </body>
 </html>

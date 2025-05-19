@@ -92,4 +92,13 @@ public class VehicleServiceImpl implements VehicleService {
     public void deleteVehicle(Long id) {
         vehicleRepository.deleteById(id);
     }
+
+    @Override
+    public VehicleDTO getByPlaca(String placa) {
+        Vehicle vehicle = vehicleRepository.findByPlaca(placa);
+        if (vehicle == null) {
+            return null;
+        }
+        return convertToDTO(vehicle);
+    }
 }

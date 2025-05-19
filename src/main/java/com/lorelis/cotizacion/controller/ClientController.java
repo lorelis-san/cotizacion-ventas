@@ -46,11 +46,24 @@ public class ClientController {
         return "cliente/clienteAgregar";
     }
 
+    @GetMapping("/editarCliente/{id}")
+    public String mostrarFormularioEditarCliente(@PathVariable Long id, Model model) {
+        ClientDTO cliente = clientService.getClientById(id);
+        model.addAttribute("cliente", cliente);
+        return "cliente/clienteEditar";
+    }
+
     // Actualizar cliente
     @PostMapping("/actualizar")
-    public String actualizarCliente(@ModelAttribute ClientDTO clienteDTO) {
-        clientService.updateClient(clienteDTO);
-        return "redirect:/clients";
+    public String actualizarCliente(@ModelAttribute("cliente") ClientDTO cliente, Model model) {
+        try {
+            clientService.updateClient(cliente);
+            return "redirect:/clients";
+        } catch (RuntimeException e) {
+            model.addAttribute("cliente", cliente);
+            model.addAttribute("error", e.getMessage());
+            return "cliente/clienteEditar";
+        }
     }
 
     // Obtener cliente por ID para editar (API endpoint para AJAX)

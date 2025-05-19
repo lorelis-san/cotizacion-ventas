@@ -79,6 +79,12 @@ public class ClientServiceImpl implements ClientService {
         if (clientOpt.isPresent()) {
             Client client = clientOpt.get();
 
+            // ✅ Verificar si ya existe otro cliente con ese número de documento
+            Client existingClient = clientRepository.findByDocumentNumber(clienteDTO.getDocumentNumber());
+            if (existingClient != null && !existingClient.getId().equals(clienteDTO.getId())) {
+                throw new RuntimeException("Ya existe un cliente con ese número de documento");
+            }
+
             client.setTypeDocument(clienteDTO.getTypeDocument());
             client.setDocumentNumber(clienteDTO.getDocumentNumber());
             client.setPhoneNumber(clienteDTO.getPhoneNumber());
@@ -87,16 +93,17 @@ public class ClientServiceImpl implements ClientService {
             if ("DNI".equalsIgnoreCase(clienteDTO.getTypeDocument())) {
                 client.setFirstName(clienteDTO.getFirstName());
                 client.setLastName(clienteDTO.getLastName());
-                client.setBusinessName("-"); // limpia el campo de RUC
+                client.setBusinessName("-"); // limpia campo RUC
             } else if ("RUC".equalsIgnoreCase(clienteDTO.getTypeDocument())) {
                 client.setBusinessName(clienteDTO.getBusinessName());
-                client.setFirstName("-"); // limpia campos de DNI
+                client.setFirstName("-"); // limpia campos DNI
                 client.setLastName("-");
             }
 
             clientRepository.save(client);
         }
     }
+
 
     @Override
     public void deleteClient(Long id) {

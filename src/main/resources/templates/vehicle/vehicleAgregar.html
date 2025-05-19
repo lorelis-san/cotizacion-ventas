@@ -98,5 +98,22 @@
 
     </div>
 </div>
+    <script>
+        const placaInput = document.getElementById('placa');
+
+    // Bloquear espacios al presionar la tecla
+    placaInput.addEventListener('keydown', function (e) {
+        if (e.key === ' ') {
+            e.preventDefault(); // No permite escribir espacios
+        }
+    });
+
+    // Bloquear espacios si el usuario pega texto con espacios
+    placaInput.addEventListener('input', function () {
+        this.value = this.value.replace(/\s/g, ''); // Borra cualquier espacio que se haya colado
+    });
+    </script>
 </body>
+
+
 </html>

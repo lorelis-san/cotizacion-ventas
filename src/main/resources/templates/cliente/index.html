@@ -63,20 +63,9 @@
                             <td th:text="${client.phoneNumber}"></td>
                             <td th:text="${client.email}"></td>
                             <td>
-                                <button class="btn btn-outline-primary btn-sm"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#editarClienteModal"
-                                        th:attr="data-id=${client.id},
-                                                 data-firstname=${client.firstName},
-                                                 data-lastname=${client.lastName},
-                                                 data-typedocument=${client.typeDocument},
-                                                 data-documentnumber=${client.documentNumber},
-                                                 data-businessname=${client.businessName},
-                                                 data-phonenumber=${client.phoneNumber},
-                                                 data-email=${client.email}"
-                                        onclick="cargarDatosEditar(this)">
+                                <a th:href="@{/editarCliente/{id}(id=${client.id})}" class="btn btn-outline-primary btn-sm">
                                     <i class="fas fa-edit"></i>
-                                </button>
+                                </a>
                                 <button class="btn btn-outline-danger btn-sm"
                                         data-bs-toggle="modal"
                                         data-bs-target="#eliminarClienteModal"
@@ -97,16 +86,13 @@
             </div>
         </div>
 
-        <!-- Modal Editar Cliente -->
-        <div th:replace="fragments/clienteEditar :: editarClienteModal"></div>
+
         <div th:replace="fragments/clienteEliminar :: eliminarClienteModal"></div>
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     </div>
 </div>
-
-
 <!-- jQuery (requerido por DataTables) -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 

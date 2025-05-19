@@ -12,5 +12,6 @@ public interface VehicleService {
     VehicleDTO getVehicleById(Long id);
     void updateVehicle(VehicleDTO vehicleDTO);
     void deleteVehicle(Long id); //inhabilitar
+    VehicleDTO getByPlaca(String placa);
 
 }

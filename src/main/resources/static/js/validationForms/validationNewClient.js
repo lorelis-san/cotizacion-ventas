@@ -2,8 +2,8 @@
      function toggleBusinessNameField() {
      const docType = document.getElementById("typeDocument").value;
      const businessNameField = document.getElementById("businessNameField");
-     const firstNameField = document.getElementById("firstName").closest(".col-md-6");
-     const lastNameField = document.getElementById("lastName").closest(".col-md-6");
+     const firstNameField = document.getElementById("firstNameField").closest(".col-md-6");
+     const lastNameField = document.getElementById("lastNameField").closest(".col-md-6");
 
      const businessNameInput = document.getElementById("businessName");
      const firstNameInput = document.getElementById("firstName");
@@ -97,8 +97,11 @@
              }
          }
 
+
+
+
         document.addEventListener("DOMContentLoaded", function () {
-    toggleBusinessNameField();
-    document.getElementById("clientForm").addEventListener("submit", validateForm);
-    document.getElementById("typeDocument").addEventListener("change", toggleBusinessNameField);
+        toggleBusinessNameField();
+        document.getElementById("clientForm").addEventListener("submit", validateForm);
+        document.getElementById("typeDocument").addEventListener("change", toggleBusinessNameField);
 });
