@@ -17,8 +17,8 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/")
-    public String redirigirACategorias() {
-        return "redirect:/categories";
+    public String redirigirADashboard() {
+        return "fragments/dashboard";
     }
     @GetMapping("/categories")
     public String listarCategorias(Model model) {
@@ -45,19 +45,26 @@ public class CategoryController {
         }
     }
 
+    @GetMapping("/categoria/{id}")
+    public String mostrarFormularioEditarCategoria(@PathVariable Long id, Model model) {
+        CategoryDTO categoria = categoryService.getCategoryById(id);
+        model.addAttribute("categoria", categoria);
+        return "categories/categoriesEditar";
+    }
 
 
     @PostMapping("/actualizarCategoria")
-    public String actualizarCategoria(@ModelAttribute("categoria") CategoryDTO categoryDTO) {
-        categoryService.updateCategory(categoryDTO);
+    public String actualizarCategoria(@ModelAttribute("categoria") CategoryDTO categoryDTO, Model model) {
+        try{categoryService.updateCategory(categoryDTO);
         return "redirect:/categories";
+        } catch (RuntimeException e) {
+            model.addAttribute("categoria", categoryDTO);
+            model.addAttribute("error", e.getMessage());
+            return "categories/categoriesEditar";
+        }
     }
 
-    @GetMapping("/categoria/{id}")
-    @ResponseBody
-    public CategoryDTO obtenerCategoriaPorId(@PathVariable Long id) {
-        return categoryService.getCategoryById(id);
-    }
+
 
 
     @GetMapping("/eliminarCategoria/{id}")

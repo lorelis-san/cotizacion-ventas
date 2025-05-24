@@ -3,19 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Agregar Vehículo</title>
-    <!-- Bootstrap CSS -->
+    <title>Editar Vehículo</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <!-- <link href="css/circular-std/style.css" rel="stylesheet">-->
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <!-- Font Awesome 5.15.4 desde CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <!-- para gráficas chatist, morris, c3 -->
-    <!-- Material Design Icons CDN -->
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css">
-
-    <!-- <link rel="stylesheet" href="css/c3.css">  -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
 
@@ -24,40 +16,25 @@
 <body>
 <div class="dashboard-main-wrapper">
     <div th:replace="~{fragments/dashboard :: menu}"></div>
+
     <div class="dashboard-wrapper">
-        <nav class="navbar navbar-expand-lg navbar-dark custom-navbar" style="background-color:#0E0C28;">
-            <a class="navbar-brand" href="/vehicle">
-                <i class="fa-solid fa-car"></i> Vehículos
-            </a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/nuevoVehiculo">
-                            <i class="fas fa-plus-circle"></i> Agregar Vehículo
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-
-
 
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="card shadow">
                         <div class="card-header text-white text-center" style="background-color: #0E0C28;">
-                            <h4 class="mb-0">Nuevo Vehículo</h4>
+                            <h4 class="mb-0">Editar Vehículo</h4>
                         </div>
                         <div class="card-body">
                             <div th:if="${error}" class="alert alert-danger">
                                 <p th:text="${error}"></p>
                             </div>
 
-                            <form th:action="@{/vehicle/guardar}" method="POST" th:object="${vehicle}">
-                                <div class="row g-3">
+                            <form th:action="@{/actualizarVehiculo}" method="POST" th:object="${vehicle}">
+                                <input type="hidden" th:field="*{id}"/>
 
+                                <div class="row g-3">
                                     <div class="col-md-6">
                                         <label for="placa" class="form-label">Placa</label>
                                         <input type="text" id="placa" class="form-control" th:field="*{placa}" required>
@@ -77,7 +54,6 @@
                                         <label for="year" class="form-label">Año</label>
                                         <input type="number" id="year" class="form-control" th:field="*{year}" required>
                                     </div>
-
                                 </div>
 
                                 <div class="mt-4 d-flex justify-content-end">
@@ -85,7 +61,7 @@
                                         <i class="fas fa-arrow-left"></i> Cancelar
                                     </a>
                                     <button type="submit" class="btn btn-dark" style="background-color: #0E0C28;">
-                                       Guardar
+                                        Guardar Cambios
                                     </button>
                                 </div>
                             </form>
@@ -94,26 +70,22 @@
                 </div>
             </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </div>
 </div>
-    <script>
-        const placaInput = document.getElementById('placa');
 
-    // Bloquear espacios al presionar la tecla
+<script>
+    const placaInput = document.getElementById('placa');
     placaInput.addEventListener('keydown', function (e) {
         if (e.key === ' ') {
-            e.preventDefault(); // No permite escribir espacios
+            e.preventDefault();
         }
     });
-
-    // Bloquear espacios si el usuario pega texto con espacios
     placaInput.addEventListener('input', function () {
-        this.value = this.value.replace(/\s/g, ''); // Borra cualquier espacio que se haya colado
+        this.value = this.value.replace(/\s/g, '');
     });
-    </script>
+</script>
+
 </body>
-
-
 </html>

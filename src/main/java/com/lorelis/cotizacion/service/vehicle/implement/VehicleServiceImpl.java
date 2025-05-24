@@ -67,7 +67,6 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public void updateVehicle(VehicleDTO vehicleDTO) {
         if (vehicleDTO.getId() == null) return;
-
         Optional<Vehicle> existingVehicleOpt = vehicleRepository.findById(vehicleDTO.getId());
         if (existingVehicleOpt.isPresent()) {
             Vehicle existingVehicle = existingVehicleOpt.get();

@@ -1,6 +1,7 @@
 package com.lorelis.cotizacion.controller;
 
 import com.lorelis.cotizacion.dto.client.ClientDTO;
+import com.lorelis.cotizacion.dto.products.CategoryDTO;
 import com.lorelis.cotizacion.dto.vehicle.VehicleDTO;
 import com.lorelis.cotizacion.service.vehicle.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +47,6 @@ public class VehicleController {
         return "vehicle/vehicleAgregar";
     }
 
-    // Actualizar cliente
-    @PostMapping("/actualizarVehiculo")
-    public String actualizarVehicle(@ModelAttribute VehicleDTO vehicleDTO) {
-        vehicleService.updateVehicle(vehicleDTO);
-        return "redirect:/vehicle";
-    }
-
     @GetMapping("/vehicle/existsByPlaca")
     @ResponseBody
     public boolean existsPlaca(@RequestParam String placa, @RequestParam(required = false) Long id) {
@@ -61,14 +55,25 @@ public class VehicleController {
         return existingVehicle != null && (id == null || !existingVehicle.getId().equals(id));
     }
 
-
-    // Obtener cliente por ID para editar (API endpoint para AJAX)
     @GetMapping("/vehicle/{id}")
-    @ResponseBody
-    public VehicleDTO obtenerVehiculoPorId(@PathVariable Long id) {
-        return vehicleService.getVehicleById(id);
+    public String mostrarFormularioEditarVehiculo(@PathVariable Long id, Model model) {
+        VehicleDTO vehicle = vehicleService.getVehicleById(id);
+        model.addAttribute("vehicle", vehicle);
+        return "vehicle/vehicleEditar";
     }
 
+    // Actualizar vehículo
+    @PostMapping("/actualizarVehiculo")
+    public String actualizarVehicle(@ModelAttribute VehicleDTO vehicleDTO, Model model) {
+        try {
+            vehicleService.updateVehicle(vehicleDTO);
+            return "redirect:/vehicle";
+        } catch (RuntimeException e) {
+            model.addAttribute("vehicle", vehicleDTO);
+            model.addAttribute("error", e.getMessage());
+            return "vehicle/vehicleEditar";
+        }
+    }
 
     @GetMapping("/eliminarVehicle/{id}")
     public String eliminarVehicle(@PathVariable Long id) {

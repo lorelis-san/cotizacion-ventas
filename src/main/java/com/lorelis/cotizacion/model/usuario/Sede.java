@@ -20,4 +20,7 @@ public class Sede {
 
     @Column(name = "address")
     private String address;
+
+    public Sede(long l, String s) {
+    }
 }

@@ -68,6 +68,11 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> categoryOptional = categoryRepository.findById(categoryDTO.getId());
 
         if(categoryOptional.isPresent()){
+            Category existingCategory = categoryRepository.findByName(categoryDTO.getName());
+            if (existingCategory != null && !existingCategory.getId().equals(categoryDTO.getId())){
+                throw new RuntimeException("Ya existe una categoría con ese nombre");
+            }
+
             Category category = categoryOptional.get();
             category.setName(categoryDTO.getName());
             category.setDescription(categoryDTO.getDescription());

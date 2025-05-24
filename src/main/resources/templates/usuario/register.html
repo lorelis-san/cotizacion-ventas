@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registrar Usuario</title>
+</head>
+<body>
+    <h1>Registrar nuevo usuario</h1>
+    <div th:if="${exito}">
+        <p style="color: green;">¡Usuario registrado correctamente!</p>
+    </div>
+
+
+    <form th:action="@{/usuarios/verRegistrar}" th:object="${usuario}" method="post">
+        <label>Nombre:</label>
+        <input type="text" th:field="*{name}" required><br>
+
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" required><br>
+
+        <label>Contraseña:</label>
+        <input type="password" th:field="*{password}" required><br>
+
+        <label>Rol:</label>
+        <select th:field="*{rolId}">
+            <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.name}"></option>
+        </select><br>
+
+        <label>Sede:</label>
+        <select th:field="*{sedeId}">
+            <option th:each="sede : ${sedes}" th:value="${sede.id}" th:text="${sede.name}"></option>
+        </select><br>
+
+        <button type="submit">Registrar</button>
+    </form>
+</body>
+</html>

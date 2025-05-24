@@ -13,7 +13,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_user")
+    @Column(name = "id_usuario")
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -33,4 +33,7 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "sede_id", nullable = false)
     private Sede sede;
+
+//    @Column(name="enabled", nullable = false)
+//    private boolean enabled = false;
 }

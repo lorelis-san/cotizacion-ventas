@@ -21,7 +21,7 @@
 </head>
 <body>
 <div class="dashboard-main-wrapper">
-    <div th:replace="fragments/dashboard :: menu"></div>
+    <div th:replace="~{fragments/dashboard :: menu}"></div>
     <div class="dashboard-wrapper">
 
         <div class="container py-5">
@@ -109,7 +109,6 @@
             e.target.value = e.target.value.replace(/\s/g, '');
           });
         });
-
 
         const soloNumerosInputs = document.querySelectorAll('.solo-numeros');
 
