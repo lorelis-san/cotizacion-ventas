@@ -37,7 +37,7 @@ public class VehicleController {
         } catch (RuntimeException e) {
             model.addAttribute("vehicle", vehicle);
             model.addAttribute("error", e.getMessage());
-            return "vehicle/vehicleAgregar"; // Asegúrate de tener esta vista
+            return "vehicle/vehicleAgregar";
         }
     }
 

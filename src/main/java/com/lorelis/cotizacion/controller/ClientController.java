@@ -19,7 +19,6 @@ public class ClientController {
     public String listarClientes(Model model) {
         List<ClientDTO> listaClientes = clientService.getAllClients();
 
-        // Si no hay datos, pasar una lista vacía
         if (listaClientes == null) {
             listaClientes = new ArrayList<>();
         }
@@ -35,7 +34,7 @@ public class ClientController {
         } catch (RuntimeException e) {
             model.addAttribute("cliente", cliente);
             model.addAttribute("error", e.getMessage());
-            return "cliente/clienteAgregar"; // Regresa al formulario
+            return "cliente/clienteAgregar";
         }
     }
 

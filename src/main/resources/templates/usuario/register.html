@@ -1,36 +1,100 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 <head>
-    <title>Registrar Usuario</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registro de Usuario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .register-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        input, button {
+            width: 100%;
+            margin: 0.5rem 0;
+            padding: 0.6rem;
+            font-size: 1rem;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        #message {
+            text-align: center;
+            margin-top: 1rem;
+            color: red;
+        }
+    </style>
 </head>
 <body>
-    <h1>Registrar nuevo usuario</h1>
-    <div th:if="${exito}">
-        <p style="color: green;">¡Usuario registrado correctamente!</p>
-    </div>
+<div class="register-container">
+    <h2>Registro</h2>
+    <form id="registerForm">
+        <input type="text" id="username" placeholder="Nombre de usuario" required />
 
-
-    <form th:action="@{/usuarios/verRegistrar}" th:object="${usuario}" method="post">
-        <label>Nombre:</label>
-        <input type="text" th:field="*{name}" required><br>
-
-        <label>Email:</label>
-        <input type="email" th:field="*{email}" required><br>
-
-        <label>Contraseña:</label>
-        <input type="password" th:field="*{password}" required><br>
-
-        <label>Rol:</label>
-        <select th:field="*{rolId}">
-            <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.name}"></option>
-        </select><br>
-
-        <label>Sede:</label>
-        <select th:field="*{sedeId}">
-            <option th:each="sede : ${sedes}" th:value="${sede.id}" th:text="${sede.name}"></option>
-        </select><br>
-
-        <button type="submit">Registrar</button>
+        <input type="password" id="password" placeholder="Contraseña" required />
+        <button type="submit">Registrarse</button>
     </form>
+    <div id="message"></div>
+</div>
+
+<script>
+    const form = document.getElementById('registerForm');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const data = {
+            username: document.getElementById('username').value.trim(),
+
+            password: document.getElementById('password').value.trim()
+        };
+
+        try {
+            const response = await fetch('/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                messageDiv.style.color = 'green';
+                messageDiv.textContent = '¡Registro exitoso! Puedes iniciar sesión.';
+                form.reset();
+            } else {
+                const errorData = await response.json();
+                messageDiv.style.color = 'red';
+                messageDiv.textContent = errorData.message || 'Error en el registro';
+            }
+        } catch (error) {
+            messageDiv.style.color = 'red';
+            messageDiv.textContent = 'Error de conexión al servidor.';
+        }
+    });
+</script>
 </body>
 </html>

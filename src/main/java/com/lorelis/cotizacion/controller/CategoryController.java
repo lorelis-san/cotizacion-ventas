@@ -24,13 +24,13 @@ public class CategoryController {
     public String listarCategorias(Model model) {
         List<CategoryDTO> listaCategorias = categoryService.getAllCategory();
         model.addAttribute("listaCategorias", listaCategorias);
-        return "categories/categoriesIndex"; // Asegúrate de tener esta vista
+        return "categories/categoriesIndex";
     }
 
     @GetMapping("/nuevaCategoria")
     public String mostrarFormularioNuevaCategoria(Model model) {
         model.addAttribute("categoria", new CategoryDTO());
-        return "categories/categoriesAgregar"; // Asegúrate de tener esta vista
+        return "categories/categoriesAgregar";
     }
 
     @PostMapping("/categories/guardar")
@@ -41,7 +41,7 @@ public class CategoryController {
         } catch (RuntimeException e) {
             model.addAttribute("categoria", categoryDTO);
             model.addAttribute("error", e.getMessage());
-            return "categories/categoriesAgregar"; // Regresa a la vista de agregar categoría
+            return "categories/categoriesAgregar";
         }
     }
 
