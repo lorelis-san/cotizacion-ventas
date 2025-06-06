@@ -16,10 +16,6 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/")
-    public String redirigirADashboard() {
-        return "fragments/dashboard";
-    }
     @GetMapping("/categories")
     public String listarCategorias(Model model) {
         List<CategoryDTO> listaCategorias = categoryService.getAllCategory();
