@@ -52,4 +52,10 @@ public class Products {
     @ManyToOne
     @JoinColumn(name = "id_category", nullable = false)
     private Category categoryproduct;
+
+    @ManyToOne
+    @JoinColumn(name = "id_supplier", nullable = false)
+    private Supplier supplierProduct;
+
+
 }

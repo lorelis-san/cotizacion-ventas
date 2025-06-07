@@ -33,4 +33,7 @@ public class ProductDTO {
 
     @NotNull
     private Long categoryProductId; // Referencia a la Categoria
+
+    @NotNull
+    private Long supplierProductId;
 }
