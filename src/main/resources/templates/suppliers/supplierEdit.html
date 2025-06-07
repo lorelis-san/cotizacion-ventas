@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Proveedor</title>
+
+    <!-- Bootstrap y estilos -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-main-wrapper">
+    <div th:replace="~{fragments/dashboard :: menu}"></div>
+    <div class="dashboard-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-dark custom-navbar" style="background-color:#0E0C28;">
+            <a class="navbar-brand" href="/proveedores">
+                <i class="fas fa-truck"></i> Proveedores
+            </a>
+        </nav>
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card shadow">
+                        <div class="card-header text-white text-center" style="background-color: #0E0C28;">
+                            <h4 class="mb-0">Editar Proveedor</h4>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${error}" class="alert alert-danger">
+                                <p th:text="${error}"></p>
+                            </div>
+
+                            <form th:action="@{/supplier/update/{id}(id=${supplier.id})}" method="post" th:object="${supplier}">
+                                <input type="hidden" th:field="*{id}" />
+
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nombre:</label>
+                                    <input type="text" id="name" class="form-control" th:field="*{name}" placeholder="Ingrese el nombre" required>
+                                    <div class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="ruc" class="form-label">RUC:</label>
+                                    <input type="text" id="ruc" class="form-control" th:field="*{ruc}" placeholder="Ingrese el RUC" required>
+                                    <div class="error-message" th:if="${#fields.hasErrors('ruc')}" th:errors="*{ruc}"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email:</label>
+                                    <input type="email" id="email" class="form-control" th:field="*{email}" placeholder="Ingrese el email">
+                                    <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Teléfono:</label>
+                                    <input type="text" id="phone" class="form-control" th:field="*{phone}" placeholder="Ingrese el teléfono">
+                                    <div class="error-message" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                                </div>
+
+                                <div class="d-flex justify-content-end">
+                                    <a href="/suppliers" class="btn btn-outline-secondary me-2">
+                                        <i class="fas fa-arrow-left"></i> Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-dark" style="background-color: #0E0C28;">
+                                        Guardar Cambios
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
