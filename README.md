@@ -1,6 +1,3 @@
-Para acceder al SpringSecurity:
-User.name=admin
-User.password=admin123
 
 ------------------
 Installarlombook si no está instalado XD
