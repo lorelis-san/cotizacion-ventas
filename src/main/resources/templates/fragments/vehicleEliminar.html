@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vehículo Eliminar Modal</title>
+</head>
+<body  th:fragment="eliminarVehiculoModal">
+    <div class="modal fade" id="eliminarVehiculoModal" tabindex="-1" aria-labelledby="eliminarVehiculoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formEliminarVehiculo" method="post">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="eliminarVehiculoModalLabel">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Desea eliminar el vehículo con placa <strong id="placaVehiculoEliminar"></strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function cargarDatosEliminar(button) {
+            const id = button.getAttribute("data-id");
+            const placa = button.getAttribute("data-placa");
+
+            document.getElementById("placaVehiculoEliminar").textContent = placa;
+
+            const form = document.getElementById("formEliminarVehiculo");
+            form.action = "/eliminarVehicle/" + id;
+        }
+    </script>
+
+
+</body>
+</html>

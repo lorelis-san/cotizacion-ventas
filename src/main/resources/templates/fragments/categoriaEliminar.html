@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Categoría Eliminar Modal</title>
+</head>
+<body th:fragment="eliminarCategoriaModal">
+    <!-- Modal de Confirmación de Eliminación -->
+    <div class="modal fade" id="eliminarCategoriaModal" tabindex="-1" aria-labelledby="eliminarCategoriaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="eliminarCategoriaModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Desea eliminar esta categoría? Si la elimina ahora, se eliminarán los productos relacionados.
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="btn-confirmar-eliminar" class="btn btn-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        const eliminarModal = document.getElementById('eliminarCategoriaModal');
+        eliminarModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Botón que disparó el modal
+            const categoriaId = button.getAttribute('data-id');
+
+            // Asignar la URL de eliminación al botón de confirmar
+            const btnEliminar = eliminarModal.querySelector('#btn-confirmar-eliminar');
+            btnEliminar.href = '/eliminarCategoria/' + categoriaId;
+        });
+    </script>
+
+</body>
+</html>

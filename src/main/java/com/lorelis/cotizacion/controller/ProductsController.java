@@ -1,0 +1,111 @@
+package com.lorelis.cotizacion.controller;
+
+import com.lorelis.cotizacion.dto.products.ProductDTO;
+import com.lorelis.cotizacion.repository.productos.CategoryRepository;
+import com.lorelis.cotizacion.service.product.CategoryService;
+import com.lorelis.cotizacion.service.product.ProductsService;
+import com.lorelis.cotizacion.service.product.SupplierService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+
+@Controller
+public class ProductsController {
+
+    @Autowired
+    private ProductsService productsService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private SupplierService supplierService;
+
+
+    @GetMapping("/productos")
+    public String listProducts(Model model) {
+
+        model.addAttribute("products", productsService.getAllProducts());
+        model.addAttribute("categories", categoryService.getAllCategory());
+        model.addAttribute("suppliers", supplierService.getAllSuppliers());
+        return "productos/productsIndex";
+    }
+
+    @GetMapping("/products/newProducto")
+    public String showCreateForm(Model model) {
+
+        model.addAttribute("product", new ProductDTO());
+        model.addAttribute("categories", categoryService.getAllCategory());
+        model.addAttribute("suppliers", supplierService.getAllSuppliers());
+        return "productos/productsAgregar";
+    }
+
+    @PostMapping("/products/save")
+    public String saveProduct(@ModelAttribute ProductDTO product,
+                              @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+                              RedirectAttributes redirectAttributes) {
+
+        try {
+                productsService.saveProduct(product, imageFile);
+                redirectAttributes.addFlashAttribute("message", "Producto creado exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+        }
+
+        return "redirect:/productos";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        ProductDTO product = productsService.getProductById(id);
+        if (product == null) {
+            return "redirect:/productos";
+        }
+        model.addAttribute("product", product);
+        model.addAttribute("categories", categoryService.getAllCategory());
+        model.addAttribute("suppliers", supplierService.getAllSuppliers());
+        return "productos/productsEditar";
+    }
+
+    @PostMapping("/products/update")
+    public String updateProduct(@ModelAttribute ProductDTO product,
+                                @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+                                RedirectAttributes redirectAttributes) {
+        try {
+            productsService.updateProduct(product, imageFile);
+            redirectAttributes.addFlashAttribute("message", "Producto actualizado exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+        }
+        return "redirect:/productos";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            productsService.deleteProduct(id);
+            redirectAttributes.addFlashAttribute("message", "Producto eliminado exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar el producto: " + e.getMessage());
+        }
+        return "redirect:/productos";
+    }
+
+    @GetMapping("/view/{id}")
+    public String viewProduct(@PathVariable Long id, Model model) {
+        ProductDTO product = productsService.getProductById(id);
+        if (product == null) {
+            return "redirect:/productos";
+        }
+
+        model.addAttribute("categories", categoryService.getAllCategory());
+        model.addAttribute("suppliers", supplierService.getAllSuppliers());
+        model.addAttribute("product", product);
+        return "productos/productsView";
+    }
+}
