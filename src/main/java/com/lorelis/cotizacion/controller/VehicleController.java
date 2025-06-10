@@ -5,9 +5,11 @@ import com.lorelis.cotizacion.dto.products.CategoryDTO;
 import com.lorelis.cotizacion.dto.vehicle.VehicleDTO;
 import com.lorelis.cotizacion.service.vehicle.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +82,7 @@ public class VehicleController {
         vehicleService.deleteVehicle(id);
         return "redirect:/vehicle";
     }
+
 
 
 

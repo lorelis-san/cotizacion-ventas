@@ -1,0 +1,48 @@
+ .hidden {
+            display: none;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .input-group input, .input-group select {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        #carrito {
+            margin-top: 20px;
+        }
+        .producto-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
+            align-items: center;
+            gap: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .producto-header {
+            font-weight: bold;
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .carrito-item,
+        .carrito-header {
+            border-bottom: 1px solid #ddd;
+            padding: 8px 0;
+        }
+

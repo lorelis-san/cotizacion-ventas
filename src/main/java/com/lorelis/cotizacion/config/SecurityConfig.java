@@ -51,7 +51,7 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/error/**", "/auth/login", "/loginView", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/","/error/**", "/auth/login", "/loginView", "/css/**", "/js/**", "/images/**", "/vistaCotizacion").permitAll()
                         .requestMatchers(HttpMethod.GET, "/categories").hasAnyRole("ADMIN", "USER")
 
                         // El resto de operaciones (crear, actualizar, eliminar) solo para ADMIN

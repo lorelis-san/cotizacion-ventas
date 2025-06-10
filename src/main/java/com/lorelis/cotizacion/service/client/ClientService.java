@@ -10,6 +10,6 @@ public interface ClientService {
     ClientDTO getClientById(Long id);
     void updateClient(ClientDTO clienteDTO);
     void deleteClient(Long id); //inhabilitar
-
+    ClientDTO getClientByDocumentNumber(String documentNumber);
 
 }

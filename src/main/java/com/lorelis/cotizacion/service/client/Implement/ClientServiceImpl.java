@@ -110,4 +110,13 @@ public class ClientServiceImpl implements ClientService {
         // Puedes cambiar esto a una lógica de "inhabilitar" si deseas usar un campo booleano "activo"
         clientRepository.deleteById(id);
     }
+
+    @Override
+    public ClientDTO getClientByDocumentNumber(String documentNumber) {
+        Client client= clientRepository.findByDocumentNumber(documentNumber);
+        if(client== null){
+            return null;
+        }
+        return convertToDTO(client);
+    }
 }

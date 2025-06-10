@@ -16,7 +16,5 @@ public interface ProductsService {
     ProductDTO getProductById(Long id);
     void updateProduct(ProductDTO dto,MultipartFile imageFile);
     void deleteProduct(Long id);
-
-
-
+    List<ProductDTO> buscarPorNombreOCodigo(String termino);
 }

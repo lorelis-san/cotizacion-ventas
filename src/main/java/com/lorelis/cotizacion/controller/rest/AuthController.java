@@ -1,4 +1,4 @@
-package com.lorelis.cotizacion.controller;
+package com.lorelis.cotizacion.controller.rest;
 
 import com.lorelis.cotizacion.dto.user.ApiMessage;
 import com.lorelis.cotizacion.dto.user.LoginUserDto;
