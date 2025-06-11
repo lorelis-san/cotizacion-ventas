@@ -11,6 +11,7 @@ import java.util.List;
 
 @Data
 public class CotizacionResponseDTO {
+    private Long id;
     private String numeroCotizacion;
     private String estado;
     private LocalDate fecha;

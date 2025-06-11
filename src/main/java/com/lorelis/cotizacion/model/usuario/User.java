@@ -16,10 +16,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+//    @NotBlank
+//    @Column(unique = true, nullable = false)
+//    private String nombre;
+//    @NotBlank
+//    @Column(unique = true, nullable = false)
+//    private String apellido;
+//
     @NotBlank
     @Column(unique = true, nullable = false)
     private String username;
 
+//    @NotBlank
+//    @Column(unique = true, nullable = false)
+//    private String email;
+//
     @NotBlank
     @Column(nullable = false)
     private String password;

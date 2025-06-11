@@ -26,9 +26,16 @@ console.log("Cotización a enviar:", cotizacionDTO);
   });
 
   if (response.ok) {
+  const data = await response.json(); // Asegúrate que tu backend devuelva el DTO con el ID
+      const id = data.id; // ← este valor lo usas para abrir el PDF
+
     alert("Cotización guardada con éxito");
+    window.open(`/api/pdf/cotizacion/${id}`, '_blank');
+
     // Redirigir o limpiar
   } else {
     alert("Error al guardar la cotización");
   }
+
+
 }

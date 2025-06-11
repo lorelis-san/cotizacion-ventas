@@ -1,0 +1,324 @@
+// Clase actualizada con mejoras visuales solamente
+
+package com.lorelis.cotizacion.service.cotizacion;
+
+import com.lorelis.cotizacion.model.cotizacion.Cotizacion;
+import com.lorelis.cotizacion.model.cotizacion.DetalleCotizacion;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.*;
+import org.springframework.stereotype.Service;
+
+import java.awt.Color;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
+import java.time.format.DateTimeFormatter;
+
+@Service
+public class PdfGeneratorService {
+
+    private static final String FUENTE = FontFactory.HELVETICA; // Arial-like fuente estándar
+
+    public ByteArrayInputStream generarCotizacionPDF(Cotizacion cotizacion, String nombreUsuario) {
+        Document document = new Document(PageSize.A4, 40, 40, 80, 80);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            agregarHeader(document);
+            agregarTitulo(document);
+            agregarInformacionGeneral(document, cotizacion, nombreUsuario);
+            agregarTablaProductos(document, cotizacion);
+            agregarTotales(document, cotizacion);
+            agregarTerminosYCondiciones(document);
+            agregarSeccionFirma(document, nombreUsuario);
+
+            document.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    private void agregarTitulo(Document document) throws DocumentException {
+        Font titleFont = FontFactory.getFont(FUENTE, 20, Font.BOLD, new Color(14, 12, 40));
+        Paragraph title = new Paragraph("COTIZACIÓN", titleFont);
+        title.setAlignment(Element.ALIGN_CENTER);
+        title.setSpacingAfter(20);
+        document.add(title);
+    }
+
+    private void agregarHeader(Document document) throws Exception {
+        PdfPTable headerTable = new PdfPTable(2);
+        headerTable.setWidthPercentage(100);
+        headerTable.setWidths(new float[]{1, 2});
+
+        PdfPCell logoCell = new PdfPCell();
+        logoCell.setBorder(Rectangle.NO_BORDER);
+        logoCell.setPadding(10);
+
+        try {
+            Image logo = Image.getInstance(new URL("https://img.freepik.com/vector-premium/logotipo-empresa-sobre-fondo-blanco_1072857-23733.jpg?semt=ais_hybrid&w=740"));
+            logo.scaleToFit(120, 60);
+            logoCell.addElement(logo);
+        } catch (Exception e) {
+            logoCell.addElement(new Paragraph("TU EMPRESA", FontFactory.getFont(FUENTE, 14, Font.BOLD, new Color(14, 12, 40))));
+        }
+
+        PdfPCell infoCell = new PdfPCell();
+        infoCell.setBorder(Rectangle.NO_BORDER);
+        infoCell.setPadding(10);
+        infoCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
+        Paragraph empresaInfo = new Paragraph();
+        empresaInfo.add(new Chunk("EMPRESA COTIZACIONES S.A.C.\n", FontFactory.getFont(FUENTE, 12, Font.BOLD)));
+        empresaInfo.add(new Chunk("RUC: 20123456789\n", FontFactory.getFont(FUENTE, 10)));
+        empresaInfo.add(new Chunk("Dirección: Av. Principal 123, Lima\n", FontFactory.getFont(FUENTE, 10)));
+        empresaInfo.add(new Chunk("Teléfono: (01) 123-4567\n", FontFactory.getFont(FUENTE, 10)));
+        empresaInfo.add(new Chunk("Email: ventas@empresa.com", FontFactory.getFont(FUENTE, 10)));
+        infoCell.addElement(empresaInfo);
+
+        headerTable.addCell(logoCell);
+        headerTable.addCell(infoCell);
+        document.add(headerTable);
+    }
+
+    private void agregarInformacionGeneral(Document document, Cotizacion cotizacion, String nombreUsuario) throws DocumentException {
+        PdfPTable infoTable = new PdfPTable(4);
+        infoTable.setWidthPercentage(100);
+        infoTable.setWidths(new float[]{1.5f, 2f, 1.5f, 2f});
+        infoTable.setSpacingAfter(15);
+
+        Font labelFont = FontFactory.getFont(FUENTE, 10, Font.BOLD);
+        Font valueFont = FontFactory.getFont(FUENTE, 10);
+
+        // Fila 1
+        infoTable.addCell(celdaInfo("Número:", labelFont, true));
+        infoTable.addCell(celdaInfo(cotizacion.getNumeroCotizacion(), valueFont, false));
+        infoTable.addCell(celdaInfo("Fecha:", labelFont, true));
+        infoTable.addCell(celdaInfo(cotizacion.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), valueFont, false));
+
+
+        Font sectionFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.WHITE);
+
+        Color sectionBgColor = new Color(31, 28, 79);
+
+        // ========== SECCIÓN: DATOS DE COTIZACIÓN ==========
+        PdfPCell clienteTitle = new PdfPCell(new Phrase("DATOS DE CLIENTE", sectionFont));
+        clienteTitle.setColspan(4);
+        clienteTitle.setBackgroundColor(sectionBgColor);
+        clienteTitle.setHorizontalAlignment(Element.ALIGN_LEFT);
+        clienteTitle.setPadding(8f);
+        infoTable.addCell(clienteTitle);
+
+        // Fila 2
+        String tipoDoc = cotizacion.getCliente().getTypeDocument();
+        infoTable.addCell(celdaInfo("Tipo Documento:", labelFont, true));
+        infoTable.addCell(celdaInfo(tipoDoc, valueFont, false));
+        String nombreCliente = tipoDoc.equalsIgnoreCase("RUC")
+                ? cotizacion.getCliente().getBusinessName()
+                : cotizacion.getCliente().getFirstName() + " " + cotizacion.getCliente().getLastName();
+        infoTable.addCell(celdaInfo("Cliente:", labelFont, true));
+        infoTable.addCell(celdaInfo(nombreCliente, valueFont, false));
+
+        // Fila 3
+        infoTable.addCell(celdaInfo("Correo:", labelFont, true));
+        infoTable.addCell(celdaInfo(cotizacion.getCliente().getEmail(), valueFont, false));
+        infoTable.addCell(celdaInfo("Celular:", labelFont, true));
+        infoTable.addCell(celdaInfo(cotizacion.getCliente().getPhoneNumber(), valueFont, false));
+
+        // Fila 4
+        infoTable.addCell(celdaInfo("Placa del Vehículo:", labelFont, true));
+        infoTable.addCell(celdaInfo(cotizacion.getVehiculo().getPlaca(), valueFont, false));
+        infoTable.addCell(celdaInfo("Marca:", labelFont, true));
+        infoTable.addCell(celdaInfo(cotizacion.getVehiculo().getMarca(), valueFont, false));
+
+        infoTable.addCell(celdaInfo("Modelo:", labelFont, true));
+        PdfPCell modeloCell = celdaInfo(cotizacion.getVehiculo().getModelo(), valueFont, false);
+        modeloCell.setColspan(3);
+        infoTable.addCell(modeloCell);
+
+        if (cotizacion.getObservaciones() != null && !cotizacion.getObservaciones().trim().isEmpty()) {
+            infoTable.addCell(celdaInfo("Observaciones:", labelFont, true));
+            PdfPCell obsCell = celdaInfo(cotizacion.getObservaciones(), valueFont, false);
+            obsCell.setColspan(3);
+            infoTable.addCell(obsCell);
+        }
+
+        document.add(infoTable);
+    }
+
+    private PdfPCell celdaInfo(String texto, Font font, boolean esLabel) {
+        PdfPCell cell = new PdfPCell(new Phrase(texto, font));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPadding(5);
+        if (esLabel) cell.setBackgroundColor(new Color(245, 245, 245));
+        return cell;
+    }
+
+    private void agregarTablaProductos(Document document, Cotizacion cotizacion) throws DocumentException {
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(100);
+        table.setWidths(new float[]{3f, 1.5f, 1f, 1.2f, 1.2f});
+        table.setSpacingAfter(15);
+
+        Font headFont = FontFactory.getFont(FUENTE, 10, Font.BOLD, Color.WHITE);
+        Color headerColor = new Color(14, 12, 40); // azul base
+
+        String[] headers = {"Producto", "Imagen", "Cant.", "Precio Unit.", "Subtotal"};
+        for (String h : headers) {
+            PdfPCell cell = new PdfPCell(new Phrase(h, headFont));
+            cell.setBackgroundColor(headerColor);
+            cell.setPadding(8);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+        }
+
+        Font contentFont = FontFactory.getFont(FUENTE, 9);
+        int i = 0;
+        for (DetalleCotizacion d : cotizacion.getDetalles()) {
+            Color bgColor = (i++ % 2 == 0) ? Color.WHITE : new Color(245, 245, 245);
+
+            table.addCell(celdaTabla(d.getProducto().getName(), contentFont, bgColor));
+            table.addCell(celdaImagen(d.getProducto().getImageUrl(), bgColor));
+            table.addCell(celdaTabla(String.valueOf(d.getCantidad()), contentFont, bgColor, Element.ALIGN_CENTER));
+            table.addCell(celdaTabla(String.format("S/ %.2f", d.getPrecioUnitario()), contentFont, bgColor, Element.ALIGN_RIGHT));
+            table.addCell(celdaTabla(String.format("S/ %.2f", d.getSubtotal()), contentFont, bgColor, Element.ALIGN_RIGHT));
+        }
+
+        document.add(table);
+    }
+
+    private PdfPCell celdaTabla(String text, Font font, Color bgColor) {
+        return celdaTabla(text, font, bgColor, Element.ALIGN_LEFT);
+    }
+
+    private PdfPCell celdaTabla(String text, Font font, Color bgColor, int align) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setBackgroundColor(bgColor);
+        cell.setPadding(8);
+        cell.setHorizontalAlignment(align);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        return cell;
+    }
+
+    private PdfPCell celdaImagen(String url, Color bgColor) {
+        PdfPCell cell = new PdfPCell();
+        cell.setBackgroundColor(bgColor);
+        cell.setPadding(5);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setMinimumHeight(90);
+
+        try {
+            if (url != null && !url.isEmpty()) {
+                Image img = Image.getInstance(new URL(url));
+                img.scaleToFit(80, 80);
+                cell.addElement(img);
+            } else {
+                cell.addElement(new Paragraph("Sin imagen", FontFactory.getFont(FUENTE, 8, Color.GRAY)));
+            }
+        } catch (Exception e) {
+            cell.addElement(new Paragraph("Sin imagen", FontFactory.getFont(FUENTE, 8, Color.GRAY)));
+        }
+        return cell;
+    }
+
+    private void agregarTotales(Document document, Cotizacion cotizacion) throws DocumentException {
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(40);
+        table.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        table.setWidths(new float[]{1.5f, 1f});
+        table.setSpacingAfter(20);
+
+        Font bold = FontFactory.getFont(FUENTE, 10, Font.BOLD);
+        Font regular = FontFactory.getFont(FUENTE, 10);
+
+        table.addCell(celdaTotal("Subtotal:", bold));
+        table.addCell(celdaTotal(String.format("S/ %.2f", cotizacion.getSubtotal()), regular, true));
+
+//        table.addCell(celdaTotal("IGV (18%):", bold));
+//        table.addCell(celdaTotal(String.format("S/ %.2f", cotizacion.getIgv()), regular, true));
+
+        PdfPCell totalLabel = celdaTotal("TOTAL:", FontFactory.getFont(FUENTE, 11, Font.BOLD));
+        PdfPCell totalValue = celdaTotal(String.format("S/ %.2f", cotizacion.getTotal()), FontFactory.getFont(FUENTE, 11, Font.BOLD), true);
+        totalLabel.setBackgroundColor(new Color(240, 240, 240));
+        totalValue.setBackgroundColor(new Color(240, 240, 240));
+
+        table.addCell(totalLabel);
+        table.addCell(totalValue);
+
+        document.add(table);
+    }
+
+    private PdfPCell celdaTotal(String text, Font font) {
+        return celdaTotal(text, font, false);
+    }
+
+    private PdfPCell celdaTotal(String text, Font font, boolean alignRight) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPadding(5);
+        if (alignRight) cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        return cell;
+    }
+
+    private void agregarTerminosYCondiciones(Document document) throws DocumentException {
+        Font titleFont = FontFactory.getFont(FUENTE, 12, Font.BOLD);
+        Paragraph title = new Paragraph("TÉRMINOS Y CONDICIONES", titleFont);
+        title.setSpacingBefore(10);
+        title.setSpacingAfter(10);
+        document.add(title);
+
+        Font termFont = FontFactory.getFont(FUENTE, 9);
+        String[] terminos = {
+                "• Esta cotización tiene una validez de 30 días calendario desde la fecha de emisión.",
+                "• Los precios están expresados en Soles (S/) e incluyen IGV.",
+                "• El tiempo de entrega será coordinado una vez confirmado el pedido.",
+                "• Para confirmar el pedido se requiere el 50% del total como adelanto.",
+                "• Los productos están sujetos a disponibilidad de stock.",
+                "• La empresa se reserva el derecho de modificar precios sin previo aviso."
+        };
+
+        for (String t : terminos) {
+            Paragraph p = new Paragraph(t, termFont);
+            p.setSpacingAfter(3);
+            document.add(p);
+        }
+    }
+
+    private void agregarSeccionFirma(Document document, String nombreUsuario) throws DocumentException {
+        document.add(new Paragraph(" "));
+
+        PdfPTable firmaTable = new PdfPTable(2);
+        firmaTable.setWidthPercentage(100);
+        firmaTable.setWidths(new float[]{1f, 1f});
+
+        Font firmaFont = FontFactory.getFont(FUENTE, 10);
+        Font labelFont = FontFactory.getFont(FUENTE, 9, Font.BOLD);
+
+        firmaTable.addCell(celdaFirma("ELABORADO POR", nombreUsuario, firmaFont, labelFont));
+        firmaTable.addCell(celdaFirma("ACEPTADO POR", "Cliente", firmaFont, labelFont));
+
+        document.add(firmaTable);
+    }
+
+    private PdfPCell celdaFirma(String label, String nombre, Font valueFont, Font labelFont) {
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setPadding(10);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+        Paragraph p = new Paragraph();
+        p.add(new Chunk("_________________________\n", valueFont));
+        p.add(new Chunk(label + "\n", labelFont));
+        p.add(new Chunk(nombre, valueFont));
+        p.setAlignment(Element.ALIGN_CENTER);
+        cell.addElement(p);
+
+        return cell;
+    }
+}

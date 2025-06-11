@@ -35,6 +35,7 @@ public class CotizacionServiceImpl implements CotizacionService {
 
     public CotizacionResponseDTO mapToResponseDTO(Cotizacion cotizacion) {
         CotizacionResponseDTO dto = new CotizacionResponseDTO();
+        dto.setId(cotizacion.getId());
         dto.setNumeroCotizacion(cotizacion.getNumeroCotizacion());
         dto.setEstado(cotizacion.getEstado().name());
         dto.setFecha(cotizacion.getFecha());
@@ -85,6 +86,12 @@ public class CotizacionServiceImpl implements CotizacionService {
 
         dto.setDetalles(detalles);
         return dto;
+    }
+
+    @Override
+    public Cotizacion obtenerPorId(Long id) {
+        return cotizacionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cotización no encontrada con ID: " + id));
     }
 
     @Transactional

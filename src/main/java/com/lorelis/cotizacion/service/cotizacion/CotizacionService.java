@@ -7,21 +7,6 @@ import jakarta.transaction.Transactional;
 
 public interface CotizacionService {
 
-//    @Transactional
-//    CotizacionDTO iniciarCotizacion();
-//
-//    @Transactional
-//    CotizacionDTO setVehiculo(Long cotizacionId, VehicleDTO vehiculoDTO);
-//
-//    @Transactional
-//    CotizacionDTO setCliente(Long cotizacionId, ClientDTO clienteDTO);
-//
-//    @Transactional
-//    CotizacionDTO agregarDetalle(Long cotizacionId, DetalleCotizacionDTO detalleDTO);
-//
-//    @Transactional
-//    CotizacionDTO eliminarDetalle(Long cotizacionId, Long productoId);
-//
 //    CotizacionResponseDTO iniciarCotizacion(CotizacionResponseDTO request);
 //
 //    CotizacionResponseDTO agregarProducto(Long cotizacionId, ProductDetailCotizacionDTO producto);
@@ -37,6 +22,7 @@ public interface CotizacionService {
 //    CotizacionResponseDTO obtenerCotizacion(Long cotizacionId);
 //
 //    List<CotizacionResponseDTO> listarCotizaciones();
+    Cotizacion obtenerPorId(Long id);
 
     CotizacionResponseDTO crearCotizacionDesdeDTO(CotizacionDTO dto);
 }

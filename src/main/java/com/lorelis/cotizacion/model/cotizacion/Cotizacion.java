@@ -67,7 +67,7 @@ public class Cotizacion {
                 .map(DetalleCotizacion::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        this.igv = subtotal.multiply(new BigDecimal("0.18"));
+        this.igv = subtotal.multiply(new BigDecimal("1"));
         this.total = subtotal.add(igv);
     }
 
