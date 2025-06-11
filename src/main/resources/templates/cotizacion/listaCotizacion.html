@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Listado de Cotizaciones</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+        <!-- DataTables CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    </head>
+
+    <body>
+    <div class="dashboard-main-wrapper">
+        <div th:replace="~{fragments/dashboard :: menu}"></div>
+        <div class="dashboard-wrapper">
+
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+                <a class="navbar-brand" href="/listaCotizaciones">
+                    <i class="fas fa-file-invoice-dollar"></i> Cotizaciones
+                </a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/nuevaCotizacion">
+                                <i class="fas fa-plus-circle"></i> Nueva Cotización
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="container mt-4">
+                <div class="card shadow-sm rounded">
+                    <div class="card-body">
+                        <table class="table table-hover align-middle text-center">
+                            <thead class="text-white" style="background-color: #2A2861;">
+                            <tr>
+                                <th>#</th>
+                                <th>Número</th>
+                                <th>Fecha</th>
+                                <th>Tipo Doc</th>
+                                <th>Nro Doc</th>
+                                <th>Cliente</th>
+                                <th>Vehículo</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="cotizacion, stat : ${cotizaciones}">
+                                <td th:text="${stat.index + 1}">1</td>
+                                <td th:text="${cotizacion.numeroCotizacion}">COT-001</td>
+                                <td th:text="${cotizacion.fecha}">2024-06-11</td>
+                                <td th:text="${cotizacion.cliente.typeDocument}">DNI</td>
+                                <td th:text="${cotizacion.cliente.documentNumber}">12345678</td>
+                                <td th:text="${cotizacion.cliente.typeDocument == 'RUC' ? cotizacion.cliente.businessName : cotizacion.cliente.firstName + ' ' + cotizacion.cliente.lastName}">Juan Pérez</td>
+                                <td th:text="${cotizacion.vehiculo.placa}">ABC-123</td>
+                                <td th:text="${cotizacion.total}">S/ 1500.00</td>
+                                <td th:text="${cotizacion.estado}">Emitida</td>
+                                <td>
+                                    <a th:href="@{'/cotizaciones/editar/' + ${cotizacion.id}}" class="btn btn-outline-warning btn-sm" title="Ver">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a th:href="@{'/cotizaciones/editar/' + ${cotizacion.id}}" class="btn btn-outline-warning btn-sm" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{'/api/pdf/cotizacion/' + ${cotizacion.id}}" target="_blank" class="btn btn-outline-primary btn-sm" title="Ver PDF">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
+                                    <button class="btn btn-outline-danger btn-sm"
+                                            th:attr="data-id=${cotizacion.id}, data-numero=${cotizacion.numeroCotizacion}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#eliminarCotizacionModal"
+                                            onclick="cargarDatosEliminar(this)">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(cotizaciones)}">
+                                <td colspan="10">No hay cotizaciones registradas.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de Eliminación -->
+            <div class="modal fade" id="eliminarCotizacionModal" tabindex="-1" aria-labelledby="eliminarCotizacionLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="eliminarCotizacionLabel">Eliminar Cotización</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas eliminar la cotización <strong id="numeroCotizacionEliminar"></strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-danger" id="confirmarEliminarBtn">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bootstrap & jQuery -->
+            <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+            <!-- DataTables -->
+            <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+            <script th:src="@{/js/cotizacion/listarCotizacion.js}"></script>
+        </div>
+    </div>
+
+<script>
+    function eliminarCotizacion(id) {
+        if (confirm('¿Estás seguro de que deseas eliminar esta cotización?')) {
+            fetch(`/cotizaciones/${id}`, {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.ok) {
+                    alert('Cotización eliminada');
+                    location.reload();
+                } else {
+                    alert('Error al eliminar');
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>

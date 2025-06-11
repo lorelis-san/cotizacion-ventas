@@ -17,12 +17,15 @@ import com.lorelis.cotizacion.repository.client.ClientRepository;
 import com.lorelis.cotizacion.repository.cotizacion.CotizacionRepository;
 import com.lorelis.cotizacion.repository.productos.ProductsRepository;
 import com.lorelis.cotizacion.repository.vehicle.VehicleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class CotizacionServiceImpl implements CotizacionService {
     private final VehicleRepository vehicleRepository;
     private final ClientRepository clientRepository;
 
+    @Override
     public CotizacionResponseDTO mapToResponseDTO(Cotizacion cotizacion) {
         CotizacionResponseDTO dto = new CotizacionResponseDTO();
         dto.setId(cotizacion.getId());
@@ -130,6 +134,44 @@ public class CotizacionServiceImpl implements CotizacionService {
         cotizacion.calcularTotales();
         Cotizacion cotizacionGuardada = cotizacionRepository.save(cotizacion);
         return mapToResponseDTO(cotizacionGuardada);
+    }
+
+    @Override
+    public List<CotizacionResponseDTO> listarCotizaciones() {
+        List<Cotizacion> cotizaciones = cotizacionRepository.findAll(Sort.by(Sort.Direction.DESC, "fecha"));
+
+        return cotizaciones.stream().map(this::mapToResponseDTO).toList();
+    }
+
+    @Override
+    public void eliminarCotizacion(Long id) {
+        Optional<Cotizacion> cotizacionOpt = cotizacionRepository.findById(id);
+        if (cotizacionOpt.isPresent()) {
+            cotizacionRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("Cotización no encontrada con ID: " + id);
+        }
+    }
+
+
+    @Override
+    public void actualizarCotizacionDesdeDTO(CotizacionResponseDTO dto) {
+        Cotizacion cotizacion = cotizacionRepository.findById(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Cotización no encontrada con ID: " + dto.getId()));
+
+        // Aquí actualizas solo los campos permitidos
+        cotizacion.setFecha(dto.getFecha());
+        cotizacion.setEstado(EstadoCotizacion.valueOf(dto.getEstado()));
+        cotizacion.setTotal(dto.getTotal());
+        cotizacion.setIgv(dto.getIgv());
+        cotizacion.setSubtotal(dto.getSubtotal());
+    }
+
+    @Override
+    public CotizacionResponseDTO obtenerCotizacionResponsePorId(Long id) {
+        Cotizacion cot = cotizacionRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cotización no encontrada con ID: " + id));
+        return mapToResponseDTO(cot);
     }
 
 

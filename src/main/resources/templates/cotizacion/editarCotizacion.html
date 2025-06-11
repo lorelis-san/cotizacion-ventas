@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Cotización</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Editar Cotización</h2>
+
+    <form th:action="@{/cotizaciones/actualizar}" method="post">
+        <!-- ID oculto para identificar la cotización -->
+        <input type="hidden" name="id" th:value="${cotizacionDTO.id}"/>
+
+        <!-- Número y Fecha -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label>Número de Cotización</label>
+                <input type="text" class="form-control" name="numeroCotizacion"
+                       th:value="${cotizacionDTO.numeroCotizacion}" readonly>
+            </div>
+            <div class="col-md-6">
+                <label>Fecha</label>
+                <input type="date" class="form-control" name="fecha"
+                       th:value="${cotizacionDTO.fecha}">
+            </div>
+        </div>
+
+        <!-- Cliente -->
+        <h5>Datos del Cliente</h5>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Tipo de Documento</label>
+                <input type="text" class="form-control" name="cliente.typeDocument"
+                       th:value="${cotizacionDTO.cliente.typeDocument}" readonly>
+            </div>
+            <div class="col-md-4">
+                <label>Número de Documento</label>
+                <input type="text" class="form-control" name="cliente.documentNumber"
+                       th:value="${cotizacionDTO.cliente.documentNumber}" readonly>
+            </div>
+
+            <div class="col-md-4" th:if="${cotizacionDTO.cliente.typeDocument == 'RUC'}">
+                <label>Razón Social</label>
+                <input type="text" class="form-control" name="cliente.businessName"
+                       th:value="${cotizacionDTO.cliente.businessName}" readonly>
+            </div>
+
+            <div class="col-md-4" th:if="${cotizacionDTO.cliente.typeDocument != 'RUC'}">
+                <label>Nombre</label>
+                <input type="text" class="form-control" name="cliente.firstName"
+                       th:value="${cotizacionDTO.cliente.firstName}" readonly>
+            </div>
+            <div class="col-md-4" th:if="${cotizacionDTO.cliente.typeDocument != 'RUC'}">
+                <label>Apellido</label>
+                <input type="text" class="form-control" name="cliente.lastName"
+                       th:value="${cotizacionDTO.cliente.lastName}" readonly>
+            </div>
+        </div>
+
+        <!-- Vehículo -->
+        <h5>Datos del Vehículo</h5>
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <label>Placa</label>
+                <input type="text" class="form-control" name="vehiculo.placa"
+                       th:value="${cotizacionDTO.vehiculo.placa}" readonly>
+            </div>
+            <div class="col-md-3">
+                <label>Marca</label>
+                <input type="text" class="form-control" name="vehiculo.marca"
+                       th:value="${cotizacionDTO.vehiculo.marca}" readonly>
+            </div>
+            <div class="col-md-3">
+                <label>Modelo</label>
+                <input type="text" class="form-control" name="vehiculo.modelo"
+                       th:value="${cotizacionDTO.vehiculo.modelo}" readonly>
+            </div>
+            <div class="col-md-3">
+                <label>Año</label>
+                <input type="text" class="form-control" name="vehiculo.year"
+                       th:value="${cotizacionDTO.vehiculo.year}" readonly>
+            </div>
+        </div>
+
+        <!-- Productos -->
+        <h5>Productos</h5>
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Precio Unitario</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="detalle, iterStat : ${cotizacionDTO.detalles}">
+                    <!-- IMPORTANTE: ID del producto -->
+                    <input type="hidden" th:name="detalles[__${iterStat.index}__].producto.id"
+                           th:value="${detalle.producto.id}" />
+
+                    <td th:text="${detalle.producto.name}">Nombre</td>
+                    <td th:text="${detalle.producto.brand}">Marca</td>
+                    <td th:text="${detalle.producto.model}">Modelo</td>
+                    <td th:text="${detalle.producto.salePrice}">Precio</td>
+
+                    <!-- Campo editable: Cantidad -->
+                    <td>
+                        <input type="number" class="form-control form-control-sm"
+                               th:name="detalles[__${iterStat.index}__].producto.cantidad"
+                               th:value="${detalle.producto.cantidad}">
+                    </td>
+
+                    <!-- Subtotal -->
+                    <td th:text="${detalle.producto.subtotal}">Subtotal</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Totales -->
+        <div class="row mb-4">
+            <div class="col-md-4 offset-md-8">
+                <label>Subtotal</label>
+                <input type="text" class="form-control" name="subtotal"
+                       th:value="${cotizacionDTO.subtotal}" readonly>
+
+                <label class="mt-2">IGV</label>
+                <input type="text" class="form-control" name="igv"
+                       th:value="${cotizacionDTO.igv}" readonly>
+
+                <label class="mt-2">Total</label>
+                <input type="text" class="form-control" name="total"
+                       th:value="${cotizacionDTO.total}" readonly>
+            </div>
+        </div>
+
+        <!-- Observaciones -->
+        <div class="mb-4">
+            <label>Observaciones</label>
+            <textarea class="form-control" name="observaciones" rows="3"
+                      th:text="${cotizacionDTO.observaciones}"></textarea>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-between">
+            <a th:href="@{/cotizaciones}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

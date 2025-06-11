@@ -5,26 +5,20 @@ import com.lorelis.cotizacion.dto.cotizacion.CotizacionResponseDTO;
 import com.lorelis.cotizacion.model.cotizacion.Cotizacion;
 import jakarta.transaction.Transactional;
 
+import java.util.List;
+
 public interface CotizacionService {
 
-//    CotizacionResponseDTO iniciarCotizacion(CotizacionResponseDTO request);
-//
-//    CotizacionResponseDTO agregarProducto(Long cotizacionId, ProductDetailCotizacionDTO producto);
-//
-//    CotizacionResponseDTO eliminarProducto(Long cotizacionId, Long productoId);
-//
-//    CotizacionResponseDTO asignarVehiculo(Long cotizacionId, Long vehiculoId);
-//
-//    CotizacionResponseDTO asignarCliente(Long cotizacionId, Long clienteId);
-//
-//    CotizacionResponseDTO confirmarCotizacion(Long cotizacionId);
-//
-//    CotizacionResponseDTO obtenerCotizacion(Long cotizacionId);
-//
-//    List<CotizacionResponseDTO> listarCotizaciones();
+    CotizacionResponseDTO mapToResponseDTO(Cotizacion cotizacion);
     Cotizacion obtenerPorId(Long id);
-
     CotizacionResponseDTO crearCotizacionDesdeDTO(CotizacionDTO dto);
+    List<CotizacionResponseDTO> listarCotizaciones();
+    void eliminarCotizacion(Long id);
+
+    void actualizarCotizacionDesdeDTO(CotizacionResponseDTO dto);
+
+
+    CotizacionResponseDTO obtenerCotizacionResponsePorId(Long id);
 }
 
 
