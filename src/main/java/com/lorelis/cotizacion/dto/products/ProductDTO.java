@@ -36,4 +36,7 @@ public class ProductDTO {
 
     @NotNull
     private Long supplierProductId;
+
+    private String categoryName;
+    private String supplierName;
 }

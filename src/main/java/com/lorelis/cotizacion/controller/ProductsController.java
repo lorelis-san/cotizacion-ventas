@@ -1,7 +1,8 @@
 package com.lorelis.cotizacion.controller;
 
+import com.lorelis.cotizacion.dto.products.CategoryDTO;
 import com.lorelis.cotizacion.dto.products.ProductDTO;
-import com.lorelis.cotizacion.repository.productos.CategoryRepository;
+import com.lorelis.cotizacion.dto.products.SupplierDTO;
 import com.lorelis.cotizacion.service.product.CategoryService;
 import com.lorelis.cotizacion.service.product.ProductsService;
 import com.lorelis.cotizacion.service.product.SupplierService;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ProductsController {
@@ -26,15 +28,40 @@ public class ProductsController {
     @Autowired
     private SupplierService supplierService;
 
-
     @GetMapping("/productos")
     public String listProducts(Model model) {
 
-        model.addAttribute("products", productsService.getAllProducts());
+        List<ProductDTO> products = productsService.getAllProducts();
+
+        products.forEach(product -> {
+            if (product.getCategoryProductId() != null) {
+                CategoryDTO category = categoryService.getCategoryById(product.getCategoryProductId());
+                if (category != null) {
+                    product.setCategoryName(category.getName());
+                }
+            }
+            if (product.getSupplierProductId() != null) {
+                SupplierDTO supplier = supplierService.getSupplieryById(product.getSupplierProductId());
+                if (supplier != null) {
+                    product.setSupplierName(supplier.getName());
+                }
+            }
+        });
+
+        model.addAttribute("products", products);
         model.addAttribute("categories", categoryService.getAllCategory());
         model.addAttribute("suppliers", supplierService.getAllSuppliers());
         return "productos/productsIndex";
     }
+
+//    @GetMapping("/productos")
+//    public String listProducts(Model model) {
+//
+//        model.addAttribute("products", productsService.getAllProducts());
+//        model.addAttribute("categories", categoryService.getAllCategory());
+//        model.addAttribute("suppliers", supplierService.getAllSuppliers());
+//        return "productos/productsIndex";
+//    }
 
     @GetMapping("/products/newProducto")
     public String showCreateForm(Model model) {

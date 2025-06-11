@@ -4,7 +4,6 @@ import com.lorelis.cotizacion.dto.products.SupplierDTO;
 import com.lorelis.cotizacion.model.productos.Supplier;
 import com.lorelis.cotizacion.repository.productos.SupplierRepository;
 import com.lorelis.cotizacion.service.product.SupplierService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +28,12 @@ public class SupplierServiceImpl implements SupplierService {
     public Optional<SupplierDTO> findById(Long id) {
         return supplierRepository.findById(id)
                 .map(this::convertToDTO);
+    }
+
+    @Override
+    public SupplierDTO getSupplieryById(Long id) {
+        Optional<Supplier> supplierOptional = supplierRepository.findById(id);
+        return supplierOptional.map(this::convertToDTO).orElse(null);
     }
 
     @Override
