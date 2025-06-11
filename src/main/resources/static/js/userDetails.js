@@ -6,9 +6,16 @@
                     const user = await res.json();
                     const usernameElements = document.getElementsByClassName('username');
                             for (let el of usernameElements) {
-                                el.textContent = user.username;
+                                el.textContent = user.nombre + " " +user.apellido;
                             }
-                    document.getElementById('role').textContent = user.role ? user.role.name : 'N/A';
+                  document.getElementById('role').textContent = user.role && user.role.name
+                    ? user.role.name === 'ROLE_USER'
+                      ? 'Vendedor'
+                      : user.role.name === 'ROLE_ADMIN'
+                        ? 'Administrador'
+                        : user.role.name
+                    : 'N/A';
+
                 } catch (err) {
                     console.error('No se pudo cargar usuario:', err);
                     //window.location.href = '/loginView';  // redirige al login si no está autenticado

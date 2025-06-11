@@ -16,21 +16,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-//    @NotBlank
-//    @Column(unique = true, nullable = false)
-//    private String nombre;
-//    @NotBlank
-//    @Column(unique = true, nullable = false)
-//    private String apellido;
-//
+    @NotBlank
+    @Column( nullable = false)
+    private String nombre;
+    @NotBlank
+    @Column( nullable = false)
+    private String apellido;
+
     @NotBlank
     @Column(unique = true, nullable = false)
     private String username;
 
-//    @NotBlank
-//    @Column(unique = true, nullable = false)
-//    private String email;
-//
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    private String email;
+
     @NotBlank
     @Column(nullable = false)
     private String password;
@@ -44,4 +44,15 @@ public class User {
         this.password = password;
         this.role = role;
     }
+
+    public User(String nombre, String apellido, String username, String email, String password, Role role) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+
 }

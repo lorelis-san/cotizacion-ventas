@@ -50,7 +50,10 @@ const form = document.getElementById('registerForm');
         btnText.innerHTML = '<span class="loading-spinner"></span>Registrando...';
 
         const data = {
+            nombre: document.getElementById('nombre').value.trim(),
+            apellido: document.getElementById('apellido').value.trim(),
             username: document.getElementById('username').value.trim(),
+            email: document.getElementById('email').value.trim(),
             password: document.getElementById('password').value.trim()
         };
 
