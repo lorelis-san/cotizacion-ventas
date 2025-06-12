@@ -39,4 +39,7 @@ public class ProductDTO {
 
     private String categoryName;
     private String supplierName;
+
+    @NotNull
+    private String sede;
 }

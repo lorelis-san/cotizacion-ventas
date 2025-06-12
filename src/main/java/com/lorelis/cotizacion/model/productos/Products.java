@@ -34,6 +34,9 @@ public class Products {
     @Column(name = "year")
     private String year;
 
+    @Column(name = "sede", nullable = false, length = 50)
+    private String sede;
+
     @Column(name = "cost_price", precision = 10, scale = 2)
     private BigDecimal costPrice;
 

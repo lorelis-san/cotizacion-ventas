@@ -28,6 +28,7 @@ public class ProductsController {
     @Autowired
     private SupplierService supplierService;
 
+
     @GetMapping("/productos")
     public String listProducts(Model model) {
 
@@ -49,19 +50,11 @@ public class ProductsController {
         });
 
         model.addAttribute("products", products);
+
         model.addAttribute("categories", categoryService.getAllCategory());
         model.addAttribute("suppliers", supplierService.getAllSuppliers());
         return "productos/productsIndex";
     }
-
-//    @GetMapping("/productos")
-//    public String listProducts(Model model) {
-//
-//        model.addAttribute("products", productsService.getAllProducts());
-//        model.addAttribute("categories", categoryService.getAllCategory());
-//        model.addAttribute("suppliers", supplierService.getAllSuppliers());
-//        return "productos/productsIndex";
-//    }
 
     @GetMapping("/products/newProducto")
     public String showCreateForm(Model model) {
@@ -74,17 +67,27 @@ public class ProductsController {
 
     @PostMapping("/products/save")
     public String saveProduct(@ModelAttribute ProductDTO product,
-                              @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+                              @RequestParam(value = "imageFile", required = false) MultipartFile imageFile, Model model,
                               RedirectAttributes redirectAttributes) {
 
         try {
-                productsService.saveProduct(product, imageFile);
-                redirectAttributes.addFlashAttribute("message", "Producto creado exitosamente");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
-        }
+            if ((imageFile == null || imageFile.isEmpty()) &&
+                    (product.getImageUrl() != null && !product.getImageUrl().trim().isEmpty())) {
 
-        return "redirect:/productos";
+                System.out.println("Guardando producto con URL de imagen: " + product.getImageUrl());
+            }
+
+            productsService.saveProduct(product, imageFile);
+            redirectAttributes.addFlashAttribute("message", "Producto creado exitosamente");
+            return "redirect:/productos";
+
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("product", product);
+            model.addAttribute("categories", categoryService.getAllCategory());
+            model.addAttribute("suppliers", supplierService.getAllSuppliers());
+            return "productos/productsAgregar";
+        }
     }
 
     @GetMapping("/edit/{id}")
@@ -101,15 +104,19 @@ public class ProductsController {
 
     @PostMapping("/products/update")
     public String updateProduct(@ModelAttribute ProductDTO product,
-                                @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+                                @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,Model model,
                                 RedirectAttributes redirectAttributes) {
         try {
             productsService.updateProduct(product, imageFile);
             redirectAttributes.addFlashAttribute("message", "Producto actualizado exitosamente");
+            return "redirect:/productos";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("product", product);
+            model.addAttribute("categories", categoryService.getAllCategory());
+            model.addAttribute("suppliers", supplierService.getAllSuppliers());
+            return "productos/productsEditar";
         }
-        return "redirect:/productos";
     }
 
     @GetMapping("/delete/{id}")
