@@ -41,7 +41,6 @@
                         <table class="table table-hover align-middle text-center">
                             <thead class="text-white" style="background-color: #2A2861;">
                             <tr>
-                                <th>#</th>
                                 <th>Número</th>
                                 <th>Fecha</th>
                                 <th>Tipo Doc</th>
@@ -55,7 +54,6 @@
                             </thead>
                             <tbody>
                             <tr th:each="cotizacion, stat : ${cotizaciones}">
-                                <td th:text="${stat.index + 1}">1</td>
                                 <td th:text="${cotizacion.numeroCotizacion}">COT-001</td>
                                 <td th:text="${cotizacion.fecha}">2024-06-11</td>
                                 <td th:text="${cotizacion.cliente.typeDocument}">DNI</td>
@@ -65,7 +63,7 @@
                                 <td th:text="${cotizacion.total}">S/ 1500.00</td>
                                 <td th:text="${cotizacion.estado}">Emitida</td>
                                 <td>
-                                    <a th:href="@{'/cotizaciones/editar/' + ${cotizacion.id}}" class="btn btn-outline-warning btn-sm" title="Ver">
+                                    <a th:href="@{'/cotizaciones/ver/' + ${cotizacion.id}}" class="btn btn-outline-warning btn-sm" title="Ver">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
                                     <a th:href="@{'/cotizaciones/editar/' + ${cotizacion.id}}" class="btn btn-outline-warning btn-sm" title="Editar">

@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class DetalleCotizacionDTO {
     private Long productoId;
+    private String nombreProducto;
     private Integer cantidad;
     private BigDecimal precioUnitario;
     private BigDecimal subtotal;

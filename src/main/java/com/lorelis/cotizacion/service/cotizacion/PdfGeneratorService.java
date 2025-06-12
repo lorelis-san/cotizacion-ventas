@@ -19,9 +19,10 @@ public class PdfGeneratorService {
 
     private static final String FUENTE = FontFactory.HELVETICA; // Arial-like fuente estándar
 
-    public ByteArrayInputStream generarCotizacionPDF(Cotizacion cotizacion, String nombreUsuario) {
+    public ByteArrayInputStream generarCotizacionPDF(Cotizacion cotizacion) {
         Document document = new Document(PageSize.A4, 40, 40, 80, 80);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+        String nombreUsuario = cotizacion.getUser().getNombre() + " " + cotizacion.getUser().getApellido();
 
         try {
             PdfWriter.getInstance(document, out);

@@ -9,4 +9,6 @@ public interface DetalleCotizacionRepository extends JpaRepository<DetalleCotiza
     void deleteByCotizacionIdAndProductoId(Long cotizacionId, Long productoId);
 
     List<DetalleCotizacion> findByCotizacionId(Long cotizacionId);
+
+    void deleteAllByCotizacionId(Long id);
 }

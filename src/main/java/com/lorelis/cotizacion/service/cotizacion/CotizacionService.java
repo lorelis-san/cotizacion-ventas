@@ -14,11 +14,11 @@ public interface CotizacionService {
     CotizacionResponseDTO crearCotizacionDesdeDTO(CotizacionDTO dto);
     List<CotizacionResponseDTO> listarCotizaciones();
     void eliminarCotizacion(Long id);
-
     void actualizarCotizacionDesdeDTO(CotizacionResponseDTO dto);
-
-
     CotizacionResponseDTO obtenerCotizacionResponsePorId(Long id);
+
+
+
 }
 
 

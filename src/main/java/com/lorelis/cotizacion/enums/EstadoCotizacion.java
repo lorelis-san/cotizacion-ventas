@@ -1,8 +1,9 @@
 package com.lorelis.cotizacion.enums;
 
 public enum EstadoCotizacion {
-    BORRADOR("Borrador"),
+    MODIFICADA("Modificada"),
     ENVIADA("Enviada"),
+    CREADA("Creada"),
     APROBADA("Aprobada"),
     RECHAZADA("Rechazada"),
     VENCIDA("Vencida");

@@ -5,7 +5,7 @@ import com.lorelis.cotizacion.dto.cotizacion.CotizacionResponseDTO;
 import com.lorelis.cotizacion.model.cotizacion.Cotizacion;
 import com.lorelis.cotizacion.service.client.ClientService;
 import com.lorelis.cotizacion.service.cotizacion.CotizacionService;
-import com.lorelis.cotizacion.service.cotizacion.CotizacionServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +18,7 @@ import java.util.List;
 public class PruebaCotizacion {
     @Autowired
     private CotizacionService cotizacionService;
+
 
     @GetMapping("/nuevaCotizacion")
     public String vistaPrueba() {
@@ -33,18 +34,27 @@ public class PruebaCotizacion {
 
     @GetMapping("/cotizaciones/editar/{id}")
     public String mostrarFormularioEdicion(@PathVariable Long id, Model model) {
+
         CotizacionResponseDTO dto = cotizacionService.obtenerCotizacionResponsePorId(id);
-        model.addAttribute("cotizacionDTO", dto);
+        model.addAttribute("cotizacion", dto);
+
         return "cotizacion/editarCotizacion";
     }
 
     @PostMapping("/cotizaciones/actualizar")
     public String actualizarCotizacion(@ModelAttribute CotizacionResponseDTO cotizacionDTO) {
         cotizacionService.actualizarCotizacionDesdeDTO(cotizacionDTO);
-        return "redirect:/cotizaciones";
+        return "redirect:/listaCotizaciones";
     }
 
 
+    @GetMapping("/cotizaciones/ver/{id}")
+    public String mostrarCotizacion(@PathVariable Long id, Model model) {
+        CotizacionResponseDTO dto = cotizacionService.obtenerCotizacionResponsePorId(id);
+        model.addAttribute("cotizacion", dto);
+
+        return "cotizacion/vistaCotizacion";
+    }
 
     @DeleteMapping("/cotizaciones/{id}")
     public ResponseEntity<Void> eliminarCotizacion(@PathVariable Long id) {

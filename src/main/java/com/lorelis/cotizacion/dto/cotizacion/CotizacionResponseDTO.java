@@ -13,6 +13,8 @@ import java.util.List;
 public class CotizacionResponseDTO {
     private Long id;
     private String numeroCotizacion;
+    private String userNombre;
+    private String userApellido;
     private String estado;
     private LocalDate fecha;
     private String observaciones;

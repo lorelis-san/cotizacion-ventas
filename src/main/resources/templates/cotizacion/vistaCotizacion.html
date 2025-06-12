@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Cotización</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .label-title {
+            font-weight: bold;
+            color: #0E0C28;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-main-wrapper">
+    <div th:replace="~{fragments/dashboard :: menu}"></div>
+    <div class="dashboard-wrapper">
+        <div class="container mt-5">
+            <div class="container mt-4">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2 class="mb-3" style="color: #0E0C28;">Detalle de Cotización</h2>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1 fw-bold">Elaborado por:</p>
+                        <p class="form-control-plaintext" th:text="${cotizacion.userNombre + ' ' + cotizacion.userApellido}"></p>
+                    </div>
+                </div>
+
+                <!-- Número, Fecha y Estado -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <p class="label-title">Número</p>
+                        <p th:text="${cotizacion.numeroCotizacion}"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="label-title">Fecha</p>
+                        <p th:text="${cotizacion.fecha}"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="label-title">Estado</p>
+                        <p th:text="${cotizacion.estado}"></p>
+                    </div>
+                </div>
+
+                <!-- Cliente -->
+                <div class="card mb-4">
+                    <div class="card-header text-white" style="background-color: #0E0C28;">Cliente</div>
+                    <div class="card-body row">
+                        <div class="col-md-4">
+                            <p class="label-title">Tipo Documento</p>
+                            <p th:text="${cotizacion.cliente.typeDocument}"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="label-title">Nro Documento</p>
+                            <p th:text="${cotizacion.cliente.documentNumber}"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="label-title">Nombre o Razón Social</p>
+                            <p th:text="${cotizacion.cliente.businessName != null ? cotizacion.cliente.businessName : cotizacion.cliente.firstName + ' ' + cotizacion.cliente.lastName}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehículo -->
+                <div class="card mb-4">
+                    <div class="card-header text-white" style="background-color: #0E0C28;">Vehículo</div>
+                    <div class="card-body row">
+                        <div class="col-md-3">
+                            <p class="label-title">Placa</p>
+                            <p th:text="${cotizacion.vehiculo.placa}"></p>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="label-title">Marca</p>
+                            <p th:text="${cotizacion.vehiculo.marca}"></p>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="label-title">Modelo</p>
+                            <p th:text="${cotizacion.vehiculo.modelo}"></p>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="label-title">Año</p>
+                            <p th:text="${cotizacion.vehiculo.year}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Productos -->
+                <div class="card mb-4">
+                    <div class="card-header text-white" style="background-color: #0E0C28;">Productos</div>
+                    <div class="card-body">
+                        <div class="row fw-bold border-bottom pb-2 mb-2">
+                            <div class="col-md-4">Producto</div>
+                            <div class="col-md-2">Precio Unitario</div>
+                            <div class="col-md-2">Cantidad</div>
+                            <div class="col-md-2">Subtotal</div>
+                        </div>
+
+                        <div th:each="detalle : ${cotizacion.detalles}" class="row mb-2">
+                            <div class="col-md-4">[[${detalle.nombreProducto}]]</div>
+                            <div class="col-md-2">S/ [[${detalle.precioUnitario}]]</div>
+                            <div class="col-md-2">[[${detalle.cantidad}]]</div>
+                            <div class="col-md-2">S/ [[${detalle.subtotal}]]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Totales -->
+                <div class="row mb-3 justify-content-end">
+                    <div class="col-md-4">
+                        <p class="label-title">Subtotal</p>
+                        <p th:text="${cotizacion.subtotal}"></p>
+
+                        <p class="label-title">Total</p>
+                        <p th:text="${cotizacion.total}"></p>
+                    </div>
+                </div>
+
+                <!-- Observaciones -->
+                <div class="mb-3">
+                    <p class="label-title">Observaciones</p>
+                    <p th:text="${cotizacion.observaciones}"></p>
+                </div>
+
+                <div class="text-end">
+                    <a href="/listaCotizaciones" class="btn btn-outline-secondary me-2">
+                        <i class="fas fa-arrow-left"></i> Atrás
+                    </a>
+                    <a th:href="@{'/api/pdf/cotizacion/' + ${cotizacion.id}}" target="_blank" class="btn btn-outline-primary btn-sm" title="Ver PDF">
+                        <i class="fas fa-file-pdf"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

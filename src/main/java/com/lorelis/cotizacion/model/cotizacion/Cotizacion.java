@@ -2,6 +2,7 @@ package com.lorelis.cotizacion.model.cotizacion;
 
 import com.lorelis.cotizacion.enums.EstadoCotizacion;
 import com.lorelis.cotizacion.model.client.Client;
+import com.lorelis.cotizacion.model.usuario.User;
 import com.lorelis.cotizacion.model.vehicle.Vehicle;
 import jakarta.persistence.*;
 import lombok.*;
@@ -61,6 +62,10 @@ public class Cotizacion {
     @Column(name = "observaciones", length = 500)
     private String observaciones;
 
+
+    @ManyToOne
+    private User user;
+
     // Método para calcular totales
     public void calcularTotales() {
         this.subtotal = detalles.stream()
@@ -82,6 +87,7 @@ public class Cotizacion {
     protected void onCreate() {
         if (fechaCreacion == null) {
             fechaCreacion = LocalDateTime.now();
+
         }
         if (fecha == null) {
             fecha = LocalDate.now();

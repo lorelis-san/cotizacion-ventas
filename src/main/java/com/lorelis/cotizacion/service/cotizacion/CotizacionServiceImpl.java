@@ -5,25 +5,32 @@ import com.lorelis.cotizacion.dto.cotizacion.CotizacionDTO;
 import com.lorelis.cotizacion.dto.cotizacion.CotizacionResponseDTO;
 import com.lorelis.cotizacion.dto.cotizacion.DetalleCotizacionDTO;
 import com.lorelis.cotizacion.dto.products.ProductDTO;
+import com.lorelis.cotizacion.dto.user.NewUserDto;
 import com.lorelis.cotizacion.dto.vehicle.VehicleDTO;
 import com.lorelis.cotizacion.enums.EstadoCotizacion;
 import com.lorelis.cotizacion.model.client.Client;
 import com.lorelis.cotizacion.model.cotizacion.Cotizacion;
 import com.lorelis.cotizacion.model.cotizacion.DetalleCotizacion;
 import com.lorelis.cotizacion.model.productos.Products;
+import com.lorelis.cotizacion.model.usuario.User;
 import com.lorelis.cotizacion.model.vehicle.Vehicle;
 
 import com.lorelis.cotizacion.repository.client.ClientRepository;
 import com.lorelis.cotizacion.repository.cotizacion.CotizacionRepository;
+import com.lorelis.cotizacion.repository.cotizacion.DetalleCotizacionRepository;
 import com.lorelis.cotizacion.repository.productos.ProductsRepository;
+import com.lorelis.cotizacion.repository.user.UserRepository;
 import com.lorelis.cotizacion.repository.vehicle.VehicleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +39,11 @@ import java.util.Optional;
 public class CotizacionServiceImpl implements CotizacionService {
 
     private final CotizacionRepository cotizacionRepository;
+    private final DetalleCotizacionRepository detalleCotizacionRepository;
     private final ProductsRepository productsRepository;
     private final VehicleRepository vehicleRepository;
     private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
 
     @Override
     public CotizacionResponseDTO mapToResponseDTO(Cotizacion cotizacion) {
@@ -47,6 +56,7 @@ public class CotizacionServiceImpl implements CotizacionService {
         dto.setSubtotal(cotizacion.getSubtotal());
         dto.setIgv(cotizacion.getIgv());
         dto.setTotal(cotizacion.getTotal());
+
 
         // Cliente
         ClientDTO clienteDTO = new ClientDTO();
@@ -81,6 +91,7 @@ public class CotizacionServiceImpl implements CotizacionService {
             productoDTO.setCostPrice(detalle.getProducto().getCostPrice());
             productoDTO.setDealerPrice(detalle.getProducto().getCostDealer());
 
+            detalleDTO.setNombreProducto(productoDTO.getName());
             detalleDTO.setProductoId(productoDTO.getId());
             detalleDTO.setCantidad(detalle.getCantidad());
             detalleDTO.setPrecioUnitario(detalle.getPrecioUnitario());
@@ -89,6 +100,13 @@ public class CotizacionServiceImpl implements CotizacionService {
         }).toList();
 
         dto.setDetalles(detalles);
+
+        if (cotizacion.getUser() != null) {
+            dto.setUserNombre(cotizacion.getUser().getNombre());
+            dto.setUserApellido(cotizacion.getUser().getApellido());
+        }
+
+
         return dto;
     }
 
@@ -108,13 +126,18 @@ public class CotizacionServiceImpl implements CotizacionService {
         // Generar número de cotización automático
         String numeroCotizacion = generarNumeroCotizacion();
 
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
+
         Cotizacion cotizacion = Cotizacion.builder()
                 .numeroCotizacion(numeroCotizacion)
                 .fecha(LocalDate.now())
                 .cliente(cliente)
                 .vehiculo(vehiculo)
+                .user(user)
                 .observaciones(dto.getObservaciones())
-                .estado(EstadoCotizacion.ENVIADA)
+                .estado(EstadoCotizacion.CREADA)
                 .build();
 
         for (DetalleCotizacionDTO detalleDTO : dto.getDetalles()) {
@@ -153,18 +176,50 @@ public class CotizacionServiceImpl implements CotizacionService {
         }
     }
 
-
+    @Transactional
     @Override
     public void actualizarCotizacionDesdeDTO(CotizacionResponseDTO dto) {
         Cotizacion cotizacion = cotizacionRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Cotización no encontrada con ID: " + dto.getId()));
+        // Limpiar detalles existentes
+        detalleCotizacionRepository.deleteAllByCotizacionId(cotizacion.getId());
 
-        // Aquí actualizas solo los campos permitidos
-        cotizacion.setFecha(dto.getFecha());
-        cotizacion.setEstado(EstadoCotizacion.valueOf(dto.getEstado()));
-        cotizacion.setTotal(dto.getTotal());
-        cotizacion.setIgv(dto.getIgv());
-        cotizacion.setSubtotal(dto.getSubtotal());
+        // Agregar nuevos detalles
+        List<DetalleCotizacion> nuevosDetalles = new ArrayList<>();
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
+
+        for (DetalleCotizacionDTO detalleDTO : dto.getDetalles()) {
+            Products producto = productsRepository.findById(detalleDTO.getProductoId())
+                    .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+
+            DetalleCotizacion detalle = new DetalleCotizacion();
+            detalle.setCotizacion(cotizacion);
+            detalle.setProducto(producto);
+            detalle.setCantidad(detalleDTO.getCantidad());
+            detalle.setPrecioUnitario(detalleDTO.getPrecioUnitario());
+            detalle.setSubtotal(detalleDTO.getPrecioUnitario().multiply(BigDecimal.valueOf(detalleDTO.getCantidad())));
+
+            nuevosDetalles.add(detalle);
+        }
+
+        detalleCotizacionRepository.saveAll(nuevosDetalles);
+
+        BigDecimal nuevoSubtotal = nuevosDetalles.stream()
+                .map(DetalleCotizacion::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal igv = nuevoSubtotal.multiply(BigDecimal.valueOf(0.18));
+        BigDecimal total = nuevoSubtotal.add(igv);
+        cotizacion.setFecha(LocalDate.now());
+        cotizacion.setEstado(EstadoCotizacion.MODIFICADA);
+        cotizacion.setObservaciones(dto.getObservaciones());
+        cotizacion.setSubtotal(nuevoSubtotal);
+        cotizacion.setIgv(igv);
+        cotizacion.setTotal(total);
+        cotizacion.setUser(user);
+        cotizacionRepository.save(cotizacion);
     }
 
     @Override
