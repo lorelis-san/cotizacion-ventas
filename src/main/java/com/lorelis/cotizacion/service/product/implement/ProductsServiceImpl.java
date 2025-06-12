@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,6 +49,7 @@ public class ProductsServiceImpl implements ProductsService {
         product.setCostDealer(dto.getDealerPrice());
         product.setSalePrice(dto.getSalePrice());
         product.setImageUrl(dto.getImageUrl());
+        product.setSede(dto.getSede());
 
         if (dto.getCategoryProductId() != null) {
             Optional<Category> categoryOptional = categoryRepository.findById(dto.getCategoryProductId());
@@ -77,6 +79,7 @@ public class ProductsServiceImpl implements ProductsService {
         dto.setDealerPrice(product.getCostDealer());
         dto.setSalePrice(product.getSalePrice());
         dto.setImageUrl(product.getImageUrl());
+        dto.setSede(product.getSede());
 
         if (product.getCategoryproduct() != null) {
             dto.setCategoryProductId(product.getCategoryproduct().getId());
@@ -87,21 +90,42 @@ public class ProductsServiceImpl implements ProductsService {
         return dto;
     }
 
-
     @Override
     public void saveProduct(ProductDTO dto, MultipartFile imageFile) {
         validarProductoDTO(dto);
         Products product = convertToEntity(dto);
 
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
+        System.out.println("Guardando producto con URL de imagen: " + dto.getImageUrl());
+
+        try {
+            // Prioridad 1: Archivo subido
+            if (imageFile != null && !imageFile.isEmpty()) {
                 String imageUrl = firebaseStorageService.uploadFile(imageFile);
                 product.setImageUrl(imageUrl);
-            } catch (IOException e) {
-                throw new RuntimeException("Error al cargar la imagen: " + e.getMessage());
+                System.out.println("Imagen subida desde archivo: " + imageUrl);
             }
+            // Prioridad 2: URL proporcionada
+            else if (dto.getImageUrl() != null && !dto.getImageUrl().trim().isEmpty()) {
+                try {
+                    String imageUrl = firebaseStorageService.uploadFileFromUrl(dto.getImageUrl());
+                    product.setImageUrl(imageUrl);
+                    System.out.println("Imagen subida desde URL: " + imageUrl);
+                } catch (IOException e) {
+                    System.err.println("Error al procesar imagen desde URL: " + e.getMessage());
+                    // Continuar guardando el producto sin imagen en lugar de fallar completamente
+                    product.setImageUrl(null);
+                    System.out.println("Producto se guardará sin imagen debido al error");
+                }
+            }
+
+            // Guardar el producto (con o sin imagen)
+            productsRepository.save(product);
+            System.out.println("Producto guardado exitosamente con ID: " + product.getId());
+
+        } catch (IOException e) {
+            System.err.println("Error al procesar imagen desde archivo: " + e.getMessage());
+            throw new RuntimeException("Error al cargar la imagen desde archivo: " + e.getMessage());
         }
-        productsRepository.save(product);
     }
 
     @Override
@@ -117,7 +141,7 @@ public class ProductsServiceImpl implements ProductsService {
         return productOptional.map(this::convertToDTO).orElse(null);
     }
 
-    @Override
+
     public void updateProduct(ProductDTO dto, MultipartFile imageFile) {
         validarProductoDTO(dto);
 
@@ -149,26 +173,49 @@ public class ProductsServiceImpl implements ProductsService {
                     throw new jakarta.persistence.EntityNotFoundException("Proveedor no encontrado con ID: " + dto.getSupplierProductId());
                 }
             }
-            if (imageFile != null && !imageFile.isEmpty()) {
-                try {
-                    // Solo eliminar la imagen anterior si se va a subir una nueva
-                    String oldImageUrl = product.getImageUrl();
-                    // Subir la nueva imagen
+            // Manejar imagen
+            String oldImageUrl = product.getImageUrl();
+            boolean imageUpdated = false;
+            try {
+                // Prioridad 1: Nuevo archivo subido
+                if (imageFile != null && !imageFile.isEmpty()) {
                     String newImageUrl = firebaseStorageService.uploadFile(imageFile);
                     product.setImageUrl(newImageUrl);
-                    // Eliminar la imagen anterior después de subir la nueva exitosamente
-                    if (oldImageUrl != null && !oldImageUrl.isEmpty()) {
-                        try {
-                            firebaseStorageService.deleteFile(oldImageUrl);
-                            System.out.println("Imagen anterior eliminada: " + oldImageUrl);
-                        } catch (Exception e) {
-                            System.err.println("Advertencia: No se pudo eliminar la imagen anterior: " + e.getMessage());
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException("Error al actualizar la imagen: " + e.getMessage());
+                    imageUpdated = true;
+                    System.out.println("Imagen actualizada desde archivo: " + newImageUrl);
                 }
+                // Prioridad 2: Nueva URL proporcionada (diferente a la actual)
+                else if (dto.getImageUrl() != null && !dto.getImageUrl().trim().isEmpty() &&
+                        !dto.getImageUrl().equals(oldImageUrl)) {
+
+                    try {
+                        String newImageUrl = firebaseStorageService.uploadFileFromUrl(dto.getImageUrl());
+                        product.setImageUrl(newImageUrl);
+                        imageUpdated = true;
+                        System.out.println("Imagen actualizada desde URL: " + newImageUrl);
+                    } catch (IOException e) {
+                        System.err.println("Error al procesar nueva imagen desde URL: " + e.getMessage());
+                        // No actualizar la imagen, mantener la anterior
+                        System.out.println("Se mantendrá la imagen anterior debido al error");
+                    }
+                }
+
+                // Eliminar imagen anterior solo si se actualizó exitosamente
+                if (imageUpdated && oldImageUrl != null && !oldImageUrl.isEmpty()) {
+                    try {
+                        firebaseStorageService.deleteFile(oldImageUrl);
+                        System.out.println("Imagen anterior eliminada: " + oldImageUrl);
+                    } catch (Exception e) {
+                        System.err.println("Advertencia: No se pudo eliminar la imagen anterior: " + e.getMessage());
+                    }
+                }
+
+            } catch (IOException e) {
+                System.err.println("Error al procesar imagen desde archivo: " + e.getMessage());
+                throw new RuntimeException("Error al actualizar la imagen desde archivo: " + e.getMessage());
             }
+
+            // Guardar producto actualizado
             productsRepository.save(product);
             System.out.println("Producto actualizado exitosamente - ID: " + product.getId());
         }
@@ -180,20 +227,19 @@ public class ProductsServiceImpl implements ProductsService {
 
         if (productOptional.isPresent()) {
             Products product = productOptional.get();
-            // Eliminar la imagen si existe
-            if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
+            if (product.getImageUrl() != null && !product.getImageUrl().isEmpty() &&
+                    product.getImageUrl().contains("firebasestorage.googleapis.com")) {
                 firebaseStorageService.deleteFile(product.getImageUrl());
             }
             productsRepository.deleteById(id);
         }
     }
 
-    // validación
-
     private void validarProductoDTO(ProductDTO dto) {
         validarCod(dto);
         validarYear(dto);
         validarPrice(dto);
+        validarSede(dto);
     }
 
     private void validarCod(ProductDTO dto) {
@@ -227,12 +273,13 @@ public class ProductsServiceImpl implements ProductsService {
         }
     }
 
-    public List<ProductDTO> buscarPorNombreOCodigo(String termino) {
-        List<Products> productos = productsRepository.findByNameContainingIgnoreCaseOrCodContainingIgnoreCase(termino, termino);
-        return productos.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    private void validarSede(ProductDTO dto) {
+        if (dto.getSede() == null || dto.getSede().trim().isEmpty()) {
+            throw new IllegalArgumentException("La sede es obligatoria");
+        }
+        List<String> sedesValidas = Arrays.asList("Lima", "Chiclayo", "Trujillo", "Piura", "Arequipa");
+        if (!sedesValidas.contains(dto.getSede())) {
+            throw new IllegalArgumentException("La sede seleccionada no es válida");
+        }
     }
-
-
 }

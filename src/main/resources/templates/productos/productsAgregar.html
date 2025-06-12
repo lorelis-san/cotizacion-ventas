@@ -1,30 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
-
 <head>
     <meta charset="UTF-8">
     <title th:text="${product.id == null ? 'Nuevo Producto' : 'Editar Producto'}"></title>
-
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/product/editProduct.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">-->
     <script th:src="@{/js/product/editViewImg.js}"></script>
-    <script th:src="@{/js/validationForms/validationNewProduct.js}"></script>
 
     <style>
         .error-text {
             color: #dc3545;
             font-size: 0.875em;
             margin-top: 0.25rem;
-            display: none;
+            display: none; /* Oculto por defecto */
+            font-weight: 500;
+            padding-left: 0.5rem;
         }
         .is-invalid {
             border-color: #dc3545 !important;
             box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+        }
+        .error-text[style*="block"] {
+            display: block !important;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .form-floating .error-text {
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
     </style>
 </head>
@@ -34,23 +45,12 @@
     <div th:replace="~{fragments/dashboard :: menu}"></div>
     <div class="dashboard-wrapper">
 
-        <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
             <a class="navbar-brand" href="/products">
                 <i class="fas fa-box"></i> Productos
             </a>
         </nav>
 
-        <!-- Mostrar error general si existe -->
-        <div th:if="${error}" class="container mt-3">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <span th:text="${error}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </div>
-
-        <!-- Formulario -->
         <div class="container py-4">
             <div class="row justify-content-center">
                 <div class="col-xl-10 col-lg-11">
@@ -66,13 +66,11 @@
                                 <input type="hidden" th:field="*{id}" />
                                 <input type="hidden" th:field="*{imageUrl}" />
 
-                                <!-- Información general -->
                                 <div class="mb-2">
                                     <h5 class="section-title">
                                         <i class="fas fa-info-circle me-2"></i>Información del producto
                                     </h5>
                                     <div class="info-grid">
-                                        <!-- Código -->
                                         <div>
                                             <div class="form-floating">
                                                 <input type="text" class="form-control" th:field="*{cod}"
@@ -83,8 +81,6 @@
                                             </div>
                                             <div class="error-text" id="cod-error"></div>
                                         </div>
-
-                                        <!-- Nombre -->
                                         <div>
                                             <div class="form-floating">
                                                 <input type="text" class="form-control" th:field="*{name}"
@@ -95,8 +91,6 @@
                                             </div>
                                             <div class="error-text" id="name-error"></div>
                                         </div>
-
-                                        <!-- Marca -->
                                         <div>
                                             <div class="form-floating">
                                                 <input type="text" class="form-control" th:field="*{brand}" id="brand" required>
@@ -106,8 +100,6 @@
                                             </div>
                                             <div class="error-text" id="brand-error"></div>
                                         </div>
-
-                                        <!-- Modelo -->
                                         <div>
                                             <div class="form-floating">
                                                 <input type="text" class="form-control" th:field="*{model}" id="model">
@@ -117,8 +109,6 @@
                                             </div>
                                             <div class="error-text" id="model-error"></div>
                                         </div>
-
-                                        <!-- Año -->
                                         <div>
                                             <div class="form-floating">
                                                 <select class="form-select form-select-sm" th:field="*{year}" id="year" required>
@@ -133,10 +123,25 @@
                                             </div>
                                             <div class="error-text" id="year-error"></div>
                                         </div>
+                                        <div>
+                                            <div class="form-floating">
+                                                <select class="form-select form-select-sm" th:field="*{sede}" id="sede" required>
+                                                    <option value="">Seleccionar sede</option>
+                                                    <option value="Lima">Lima</option>
+                                                    <option value="Chiclayo">Chiclayo</option>
+                                                    <option value="Trujillo">Trujillo</option>
+                                                    <option value="Piura">Piura</option>
+                                                    <option value="Arequipa">Arequipa</option>
+                                                </select>
+                                                <label for="sede">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>Sede
+                                                </label>
+                                            </div>
+                                            <div class="error-text" id="sede-error"></div>
+                                        </div>
+
                                     </div>
                                 </div>
-
-                                <!-- Categoría y Proveedor -->
                                 <div class="mb-2">
                                     <h5 class="section-title">
                                         <i class="fas fa-sitemap me-2"></i>Categorización
@@ -172,8 +177,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Precios -->
                                 <div class="mb-2">
                                     <h5 class="section-title">
                                         <i class="fas fa-dollar-sign me-2"></i>Precios
@@ -211,8 +214,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Descripción e Imagen -->
                                 <div class="mb-2">
                                     <h5 class="section-title">
                                         <i class="fas fa-align-left me-2"></i>Descripción e Imagen
@@ -241,8 +242,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <!-- Imagen -->
                                         <div class="col-md-6">
                                             <div class="image-section h-100">
                                                 <div class="image-preview-container mb-3">
@@ -285,7 +284,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </form>
                         </div>
                     </div>
@@ -294,6 +292,7 @@
         </div>
     </div>
 </div>
+<script th:src="@{/js/validationForms/validationNewProduct.js}"></script>
 
 </body>
 </html>
