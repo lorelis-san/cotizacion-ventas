@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const celular = document.getElementById("nuevoCelular").value.trim();
 
         let cliente = {
-            typeDocument: tipo,
+            typeDocument: tipo.toUpperCase(),
             documentNumber: numero,
             email: correo,
             phoneNumber: celular

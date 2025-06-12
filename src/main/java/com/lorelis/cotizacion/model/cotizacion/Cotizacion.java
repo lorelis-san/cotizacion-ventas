@@ -34,6 +34,9 @@ public class Cotizacion {
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
+    @Column(name = "fecha_modificacion")
+    private LocalDateTime fechaModificacion;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
     private Client cliente;
@@ -66,13 +69,16 @@ public class Cotizacion {
     @ManyToOne
     private User user;
 
+    @ManyToOne
+    private User userModificador;
+
     // Método para calcular totales
     public void calcularTotales() {
         this.subtotal = detalles.stream()
                 .map(DetalleCotizacion::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        this.igv = subtotal.multiply(new BigDecimal("1"));
+        this.igv = subtotal.multiply(new BigDecimal("0"));
         this.total = subtotal.add(igv);
     }
 

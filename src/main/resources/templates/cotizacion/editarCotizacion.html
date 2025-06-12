@@ -46,20 +46,37 @@
                         </div>
 
                         <!-- Número, Fecha y Estado -->
+                        <!-- Número, Fecha, Estado y Modificación -->
                         <div class="row mb-3">
+                            <!-- Número de cotización -->
                             <div class="col-md-4">
-                                <label>Número</label>
-                                <input type="text" class="form-control" th:value="${cotizacion.numeroCotizacion}" readonly />
+                                <p class="label-title">Número</p>
+                                <p th:text="${cotizacion.numeroCotizacion}"></p>
                             </div>
+
+                            <!-- Fecha de creación -->
                             <div class="col-md-4">
-                                <label>Fecha</label>
-                                <input type="date" class="form-control" th:value="${cotizacion.fecha}" readonly />
+                                <p class="label-title">Fecha Creación</p>
+                                <p th:text="${#temporals.format(cotizacion.fechaCreacion, 'dd/MM/yyyy HH:mm')}"></p>
                             </div>
+
+                            <!-- Estado -->
                             <div class="col-md-4">
-                                <label>Estado</label>
-                                <input type="text" class="form-control" th:value="${cotizacion.estado}" readonly />
+                                <p class="label-title">Estado</p>
+                                <p th:text="${cotizacion.estado}"></p>
+                            </div>
+
+                            <!-- Fecha de modificación y usuario que modificó -->
+                            <div class="col-md-6 mt-3" th:if="${cotizacion.usuarioModificadorNombre != null}">
+                                <p class="label-title">Fecha Modificación</p>
+                                <p th:text="${#temporals.format(cotizacion.fechaModificacion, 'dd/MM/yyyy HH:mm')}"></p>
+
+                                <p class="label-title mt-2">Modificado por</p>
+                                <p class="form-control-plaintext"
+                                   th:text="${cotizacion.usuarioModificadorNombre + ' ' + cotizacion.usuarioModificadorApellido}"></p>
                             </div>
                         </div>
+
 
                         <!-- Cliente -->
                         <div class="card mb-4">

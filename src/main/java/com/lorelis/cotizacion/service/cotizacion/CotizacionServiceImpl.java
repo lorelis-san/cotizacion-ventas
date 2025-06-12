@@ -30,6 +30,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +54,8 @@ public class CotizacionServiceImpl implements CotizacionService {
         dto.setNumeroCotizacion(cotizacion.getNumeroCotizacion());
         dto.setEstado(cotizacion.getEstado().name());
         dto.setFecha(cotizacion.getFecha());
+        dto.setFechaCreacion(cotizacion.getFechaCreacion());
+        dto.setFechaModificacion(cotizacion.getFechaModificacion());
         dto.setObservaciones(cotizacion.getObservaciones());
         dto.setSubtotal(cotizacion.getSubtotal());
         dto.setIgv(cotizacion.getIgv());
@@ -61,7 +65,7 @@ public class CotizacionServiceImpl implements CotizacionService {
         // Cliente
         ClientDTO clienteDTO = new ClientDTO();
         clienteDTO.setId(cotizacion.getCliente().getId());
-        clienteDTO.setTypeDocument(cotizacion.getCliente().getTypeDocument());
+        clienteDTO.setTypeDocument(cotizacion.getCliente().getTypeDocument().toUpperCase());
         clienteDTO.setDocumentNumber(cotizacion.getCliente().getDocumentNumber());
         clienteDTO.setFirstName(cotizacion.getCliente().getFirstName());
         clienteDTO.setLastName(cotizacion.getCliente().getLastName());
@@ -73,7 +77,7 @@ public class CotizacionServiceImpl implements CotizacionService {
         // Vehículo
         VehicleDTO vehiculoDTO = new VehicleDTO();
         vehiculoDTO.setId(cotizacion.getVehiculo().getId());
-        vehiculoDTO.setPlaca(cotizacion.getVehiculo().getPlaca());
+        vehiculoDTO.setPlaca(cotizacion.getVehiculo().getPlaca().toUpperCase());
         vehiculoDTO.setMarca(cotizacion.getVehiculo().getMarca());
         vehiculoDTO.setModelo(cotizacion.getVehiculo().getModelo());
         vehiculoDTO.setYear(cotizacion.getVehiculo().getYear());
@@ -106,6 +110,11 @@ public class CotizacionServiceImpl implements CotizacionService {
             dto.setUserApellido(cotizacion.getUser().getApellido());
         }
 
+        if (cotizacion.getUserModificador() != null) {
+            dto.setUsuarioModificadorNombre(cotizacion.getUserModificador().getNombre());
+            dto.setUsuarioModificadorApellido(cotizacion.getUserModificador().getApellido());
+        }
+
 
         return dto;
     }
@@ -130,9 +139,11 @@ public class CotizacionServiceImpl implements CotizacionService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
 
+
         Cotizacion cotizacion = Cotizacion.builder()
                 .numeroCotizacion(numeroCotizacion)
                 .fecha(LocalDate.now())
+                .fechaCreacion(LocalDateTime.now())
                 .cliente(cliente)
                 .vehiculo(vehiculo)
                 .user(user)
@@ -210,15 +221,16 @@ public class CotizacionServiceImpl implements CotizacionService {
         BigDecimal nuevoSubtotal = nuevosDetalles.stream()
                 .map(DetalleCotizacion::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal igv = nuevoSubtotal.multiply(BigDecimal.valueOf(0.18));
+        BigDecimal igv = nuevoSubtotal.multiply(BigDecimal.valueOf(0));
         BigDecimal total = nuevoSubtotal.add(igv);
         cotizacion.setFecha(LocalDate.now());
+        cotizacion.setFechaModificacion(LocalDateTime.now());
         cotizacion.setEstado(EstadoCotizacion.MODIFICADA);
         cotizacion.setObservaciones(dto.getObservaciones());
         cotizacion.setSubtotal(nuevoSubtotal);
         cotizacion.setIgv(igv);
         cotizacion.setTotal(total);
-        cotizacion.setUser(user);
+        cotizacion.setUserModificador(user);
         cotizacionRepository.save(cotizacion);
     }
 
@@ -240,157 +252,3 @@ public class CotizacionServiceImpl implements CotizacionService {
 
 }
 
-
-//    private final DetalleCotizacionRepository detalleRepo;
-//
-//    @Transactional
-//    @Override
-//    public CotizacionDTO iniciarCotizacion() {
-//        Cotizacion cot = new Cotizacion();
-//        cot.setEstado("BORRADOR");
-//        cot.setFechaCreacion(new Date());
-//        cot = cotizacionRepo.save(cot);
-//        return mapToDTO(cot);
-//    }
-//
-//    @Transactional
-//    @Override
-//    public CotizacionDTO setVehiculo(Long cotizacionId, VehicleDTO vehiculoDTO) {
-//        Cotizacion cot = getCotizacionOrThrow(cotizacionId);
-//        Vehicle vehiculo = vehiculoRepo.findByPlaca(vehiculoDTO.getPlaca())
-//                .orElseThrow(() -> new RuntimeException("Vehiculo no encontrado"));
-//        cot.setVehiculo(vehiculo);
-//        return mapToDTO(cot);
-//    }
-//
-//    @Transactional
-//    @Override
-//    public CotizacionDTO setCliente(Long cotizacionId, ClientDTO clienteDTO) {
-//        Cotizacion cot = getCotizacionOrThrow(cotizacionId);
-//        Client cliente = clienteRepo.findByDocumentNumber(clienteDTO.getDocumentNumber())
-//                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-//        cot.setCliente(cliente);
-//        return mapToDTO(cot);
-//    }
-//
-//    @Transactional
-//    @Override
-//    public CotizacionDTO agregarDetalle(Long cotizacionId, DetalleCotizacionDTO detalleDTO) {
-//        Cotizacion cot = getCotizacionOrThrow(cotizacionId);
-//        Products producto = productoRepo.findById(detalleDTO.getProductoId())
-//                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-//
-//        DetalleCotizacion detalle = new DetalleCotizacion();
-//        detalle.setCotizacion(cot);
-//        detalle.setProducto(producto);
-//        detalle.setCantidad(detalleDTO.getCantidad());
-//        detalle.setPrecioUnitario(producto.getSalePrice());
-//        detalleRepo.save(detalle);
-//
-//        return mapToDTO(cot);
-//    }
-//
-//    @Transactional
-//    @Override
-//    public CotizacionDTO eliminarDetalle(Long cotizacionId, Long productoId) {
-//        Cotizacion cot = getCotizacionOrThrow(cotizacionId);
-//        detalleRepo.deleteByCotizacionIdAndProductoId(cotizacionId, productoId);
-//        return mapToDTO(cot);
-//    }
-//
-//    @Override
-//    public CotizacionResponseDTO iniciarCotizacion(CotizacionResponseDTO request) {
-//        return null;
-//    }
-//
-//    @Override
-//    public CotizacionResponseDTO agregarProducto(Long cotizacionId, ProductDetailCotizacionDTO producto) {
-//        return null;
-//    }
-//
-//    @Override
-//    public CotizacionResponseDTO eliminarProducto(Long cotizacionId, Long productoId) {
-//        return null;
-//    }
-//
-//    @Override
-//    public CotizacionResponseDTO asignarVehiculo(Long cotizacionId, Long vehiculoId) {
-//        return null;
-//    }
-//
-//    @Override
-//    public CotizacionResponseDTO asignarCliente(Long cotizacionId, Long clienteId) {
-//        return null;
-//    }
-//
-//    @Override
-//    @Transactional
-//    public CotizacionDTO confirmarCotizacion(Long cotizacionId) {
-//        Cotizacion cot = getCotizacionOrThrow(cotizacionId);
-//        List<DetalleCotizacion> detalles = detalleRepo.findByCotizacionId(cotizacionId);
-//
-//        BigDecimal subtotal = detalles.stream()
-//                .map(d -> d.getPrecioUnitario().multiply(BigDecimal.valueOf(d.getCantidad())))
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//        BigDecimal igv = subtotal.multiply(new BigDecimal("0.18"));
-//        BigDecimal total = subtotal.add(igv);
-//
-//        cot.setSubtotal(subtotal);
-//        cot.setIgv(igv);
-//        cot.setTotal(total);
-//        cot.setEstado("CONFIRMADO");
-//
-//        return mapToDTO(cot);
-//    }
-//
-//    @Override
-//    public CotizacionResponseDTO obtenerCotizacion(Long cotizacionId) {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<CotizacionResponseDTO> listarCotizaciones() {
-//        return List.of();
-//    }
-//
-//    private Cotizacion getCotizacionOrThrow(Long id) {
-//        return cotizacionRepo.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Cotización no encontrada"));
-//    }
-//
-//    private CotizacionDTO mapToDTO(Cotizacion cot) {
-//        CotizacionDTO dto = new CotizacionDTO();
-//        dto.setId(cot.getId());
-//        if (cot.getVehiculo() != null) {
-//            VehicleDTO v = new VehicleDTO();
-//            v.setId(cot.getVehiculo().getId());
-//            v.setPlaca(cot.getVehiculo().getPlaca());
-//            v.setMarca(cot.getVehiculo().getMarca());
-//            v.setModelo(cot.getVehiculo().getModelo());
-//            dto.setVehiculo(v);
-//        }
-//        if (cot.getCliente() != null) {
-//            Client c = cot.getCliente();
-//            ClientDTO cli = new ClientDTO();
-//            cli.setId(c.getId());
-//            cli.setFirstName(c.getFirstName());
-//            cli.setLastName(c.getLastName());
-//            cli.setDocumentNumber(c.getDocumentNumber());
-//            cli.setEmail(c.getEmail());
-//            cli.setPhoneNumber(c.getPhoneNumber());
-//            dto.setCliente(cli);
-//        }
-//        List<DetalleCotizacion> detalles = detalleRepo.findByCotizacionId(cot.getId());
-//        dto.setDetalles(detalles.stream().map(d -> {
-//            DetalleCotizacionDTO det = new DetalleCotizacionDTO();
-//            det.setProductoId(d.getProducto().getId());
-//            det.setNombreProducto(d.getProducto().getName());
-//            det.setCantidad(d.getCantidad());
-//            det.setPrecioUnitario(d.getPrecioUnitario());
-//            return det;
-//        }).collect(Collectors.toList()));
-//
-//        dto.calcularTotales();
-//        return dto;
-//    }
