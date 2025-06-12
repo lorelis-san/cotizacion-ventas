@@ -10,10 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleCamposPorTipo() {
         const tipo = tipoDoc.value;
 
-        if (tipo === 'dni') {
+        if (tipo === 'DNI') {
             camposDni.classList.remove('hidden');
             camposRuc.classList.add('hidden');
-        } else if (tipo === 'ruc') {
+        } else if (tipo === 'RUC') {
             camposDni.classList.add('hidden');
             camposRuc.classList.remove('hidden');
         } else {
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Mostrar datos según tipo de documento
             document.getElementById("clienteId").value = data.id || "";
-            if (tipo === "ruc") {
+            if (tipo === "RUC") {
                 grupoNombreApellido.classList.add("hidden");
                 grupoRazonSocial.classList.remove("hidden");
 
@@ -85,10 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
             clienteDatos.classList.add("hidden");
             clienteNuevo.classList.remove("hidden");
 
-            if (tipo === "dni") {
+            if (tipo === "DNI") {
                 camposDni.classList.remove("hidden");
                 camposRuc.classList.add("hidden");
-            } else if (tipo === "ruc") {
+            } else if (tipo === "RUC") {
                 camposRuc.classList.remove("hidden");
                 camposDni.classList.add("hidden");
             }
@@ -108,10 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
             phoneNumber: celular
         };
 
-        if (tipo === "dni") {
+        if (tipo === "DNI") {
             cliente.firstName = document.getElementById("nuevoNombre").value.trim();
             cliente.lastName = document.getElementById("nuevoApellido").value.trim();
-        } else if (tipo === "ruc") {
+        } else if (tipo === "RUC") {
             cliente.businessName = document.getElementById("nuevaRazonSocial").value.trim();
         }
 
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clienteDatos.classList.remove("hidden");
             clienteNuevo.classList.add("hidden");
 
-            if (tipo === "ruc") {
+            if (tipo === "RUC") {
                 grupoNombreApellido.classList.add("hidden");
                 grupoRazonSocial.classList.remove("hidden");
 
