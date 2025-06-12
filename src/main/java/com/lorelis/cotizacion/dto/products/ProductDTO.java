@@ -7,34 +7,36 @@ import java.math.BigDecimal;
 @Data
 public class ProductDTO {
     private Long id;
+
     @NotNull
     private String name;
+
     private String cod;
+
     private String description;
-    private String brand;
+
+    private String brand; //marca
+
     private String model;
+
     private String year;
+
     private BigDecimal costPrice;
+
     private BigDecimal dealerPrice;
+
     private BigDecimal salePrice;
+
     private Integer stock;
 
     private String imageUrl;
 
     @NotNull
-    private Long categoryProductId;
+    private Long categoryProductId; // Referencia a la Categoria
+
     @NotNull
     private Long supplierProductId;
 
-    // 👉 Cantidad para la cotización
-    @NotNull
-    private Integer cantidad;
-
-    // 👉 Método para calcular el subtotal
-    public BigDecimal getSubtotal() {
-        if (salePrice == null || cantidad == null) {
-            return BigDecimal.ZERO;
-        }
-        return salePrice.multiply(BigDecimal.valueOf(cantidad));
-    }
+    private String categoryName;
+    private String supplierName;
 }

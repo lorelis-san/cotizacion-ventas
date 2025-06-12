@@ -10,6 +10,7 @@ public interface SupplierService {
 
     List<SupplierDTO> getAllSuppliers();
     Optional<SupplierDTO> findById(Long id);
+    SupplierDTO getSupplieryById(Long id);
     SupplierDTO save(SupplierDTO supplierDTO);
     SupplierDTO update(Long id, SupplierDTO supplierDTO);
     void deleteById(Long id);
