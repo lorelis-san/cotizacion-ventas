@@ -48,7 +48,6 @@
             </div>
             <div class="col-md-8">
               <h3 th:text="${product.name}" class="mb-4 text-primary"></h3>
-
               <!-- Información básica del producto -->
               <div class="row mb-4">
                 <div class="col-md-6">
@@ -109,11 +108,17 @@
                     </div>
                     <div class="col-md-7" th:text="${product.year ?: 'No especificado'}"></div>
                   </div>
+                  <div class="row mb-3">
+                    <div class="col-md-5 fw-bold text-muted">
+                      <i class="fas fa-map-marker-alt me-1"></i>Sede:
+                    </div>
+                    <div class="col-md-7" th:text="${product.sede ?: 'No especificado'}"></div>
+                  </div>
                 </div>
               </div>
 
               <!-- Sección de Precios -->
-              <div class="row mb-4">
+              <div class="row mb-2">
                 <div class="col-md-12">
                   <div class="card border-light">
                     <div class="card-header bg-light">

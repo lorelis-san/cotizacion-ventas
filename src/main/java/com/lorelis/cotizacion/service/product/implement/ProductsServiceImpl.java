@@ -235,6 +235,13 @@ public class ProductsServiceImpl implements ProductsService {
         }
     }
 
+    public List<ProductDTO> buscarPorNombreOCodigo(String termino) {
+        List<Products> productos = productsRepository.findByNameContainingIgnoreCaseOrCodContainingIgnoreCase(termino, termino);
+        return productos.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     private void validarProductoDTO(ProductDTO dto) {
         validarCod(dto);
         validarYear(dto);
