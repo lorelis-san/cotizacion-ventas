@@ -83,31 +83,37 @@
                                                 <i class="fas fa-cube me-1"></i>Modelo
                                             </label>
                                         </div>
-                                        <div class="form-floating">
-                                            <select class="form-select" th:field="*{year}" id="year">
-                                                <option value="">Seleccionar año</option>
-                                                <th:block th:each="yearOption : ${#numbers.sequence(2000, T(java.time.Year).now().getValue())}">
-                                                    <option th:value="${yearOption}" th:text="${yearOption}"
-                                                            th:selected="${product.year} == ${yearOption}">
-                                                    </option>
-                                                </th:block>
-                                            </select>
-                                            <label for="year">
-                                                <i class="fas fa-calendar-alt me-1"></i>Año
-                                            </label>
+                                        <div>
+                                            <div class="form-floating">
+                                                <select class="form-select form-select-sm" th:field="*{startYear}" id="startYear" required onchange="updateEndYearOptions()">
+                                                    <option value="">Seleccionar año inicial</option>
+                                                    <th:block th:each="yearOption : ${#numbers.sequence(1900, T(java.time.Year).now().getValue() + 10)}">
+                                                        <option th:value="${yearOption}" th:text="${yearOption}"
+                                                                th:selected="${product.startYear} == ${yearOption}">
+                                                        </option>
+                                                    </th:block>
+                                                </select>
+                                                <label for="startYear">
+                                                    <i class="fas fa-calendar-alt me-1"></i>Año Inicial *
+                                                </label>
+                                            </div>
+                                            <div class="error-text" id="startYear-error"></div>
                                         </div>
-                                        <div class="form-floating">
-                                            <select class="form-select" th:field="*{sede}" id="sede">
-                                                <option value="">Seleccionar sede</option>
-                                                <option value="Lima" th:selected="${product.sede == 'Lima'}">Lima</option>
-                                                <option value="Chiclayo" th:selected="${product.sede == 'Chiclayo'}">Chiclayo</option>
-                                                <option value="Trujillo" th:selected="${product.sede == 'Trujillo'}">Trujillo</option>
-                                                <option value="Piura" th:selected="${product.sede == 'Piura'}">Piura</option>
-                                                <option value="Arequipa" th:selected="${product.sede == 'Arequipa'}">Arequipa</option>
-                                            </select>
-                                            <label for="sede">
-                                                <i class="fas fa-map-marker-alt me-1"></i>Sede
-                                            </label>
+                                        <div>
+                                            <div class="form-floating">
+                                                <select class="form-select form-select-sm" th:field="*{endYear}" id="endYear">
+                                                    <option value="">Seleccionar año final</option>
+                                                    <th:block th:each="yearOption : ${#numbers.sequence(1900, T(java.time.Year).now().getValue() + 20)}">
+                                                        <option th:value="${yearOption}" th:text="${yearOption}"
+                                                                th:selected="${product.endYear} == ${yearOption}">
+                                                        </option>
+                                                    </th:block>
+                                                </select>
+                                                <label for="endYear">
+                                                    <i class="fas fa-calendar-alt me-1"></i>Año Final
+                                                </label>
+                                            </div>
+                                            <div class="error-text" id="endYear-error"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -117,9 +123,9 @@
                                         <i class="fas fa-sitemap me-2"></i>Categorización
                                     </h5>
                                     <div class="row g-3">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-floating">
-                                                <select class="form-select" th:field="*{categoryProductId}" id="categoryProductId">
+                                                <select class="form-select" th:field="*{categoryProductId}" id="categoryProductId" required>
                                                     <option value="">Seleccionar categoría</option>
                                                     <option th:each="category : ${categories}"
                                                             th:value="${category.id}"
@@ -132,9 +138,9 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-floating">
-                                                <select class="form-select" th:field="*{supplierProductId}" id="supplierProductId">
+                                                <select class="form-select" th:field="*{supplierProductId}" id="supplierProductId" required>
                                                     <option value="">Seleccionar proveedor</option>
                                                     <option th:each="supplier : ${suppliers}"
                                                             th:value="${supplier.id}"
@@ -146,6 +152,22 @@
                                                     <i class="fas fa-truck me-1"></i>Proveedor
                                                 </label>
                                             </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-floating">
+                                                <select class="form-select form-select-sm" th:field="*{sede}" id="sede" required>
+                                                    <option value="">Seleccionar sede</option>
+                                                    <option value="Lima" th:selected="${product.sede} == 'Lima'">Lima</option>
+                                                    <option value="Chiclayo" th:selected="${product.sede} == 'Chiclayo'">Chiclayo</option>
+                                                    <option value="Trujillo" th:selected="${product.sede} == 'Trujillo'">Trujillo</option>
+                                                    <option value="Piura" th:selected="${product.sede} == 'Piura'">Piura</option>
+                                                    <option value="Arequipa" th:selected="${product.sede} == 'Arequipa'">Arequipa</option>
+                                                </select>
+                                                <label for="sede">
+                                                    <i class="fas fa-map-marker-alt me-1"></i>Sede
+                                                </label>
+                                            </div>
+                                            <div class="error-text" id="sede-error"></div>
                                         </div>
                                     </div>
                                 </div>

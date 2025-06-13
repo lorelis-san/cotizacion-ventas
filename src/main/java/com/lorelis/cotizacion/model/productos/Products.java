@@ -31,8 +31,11 @@ public class Products {
     @Column(name = "model")
     private String model;
 
-    @Column(name = "year")
-    private String year;
+    @Column(name = "start_year")
+    private Integer startYear;
+
+    @Column(name = "end_year")
+    private Integer endYear;
 
     @Column(name = "sede", nullable = false, length = 50)
     private String sede;

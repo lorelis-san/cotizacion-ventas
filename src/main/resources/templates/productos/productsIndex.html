@@ -55,10 +55,9 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="filter-section">
                                 <div class="row g-2">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="form-label filter-label text-muted">Categoría</label>
                                         <select class="form-select form-select-compact" id="categoryFilter">
                                             <option value="">Todas las categorías</option>
@@ -68,14 +67,23 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="form-label filter-label text-muted">Marca</label>
                                         <select class="form-select form-select-compact" id="brandFilter">
                                             <option value="">Todas las marcas</option>
                                             <!-- Las marcas se llenarán dinámicamente -->
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <label class="form-label filter-label text-muted">
+                                            <i class="fas fa-calendar-alt me-1"></i>Año
+                                        </label>
+                                        <select class="form-select form-select-compact" id="yearFilter">
+                                            <option value="">Todos los años</option>
+                                            <!-- Los años se llenarán dinámicamente -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
                                         <label class="form-label filter-label text-muted">Ordenar por</label>
                                         <select class="form-select form-select-compact" id="sortFilter">
                                             <option value="name">Nombre</option>
@@ -87,13 +95,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="search-stats">
-                                <span id="resultsCount">Mostrando todos los productos</span>
-                                <button type="button" id="clearAllFilters" class="btn btn-link btn-sm p-0 ms-2" style="display: none;">
-                                    <i class="fas fa-eraser"></i> Limpiar filtros
-                                </button>
-                            </div>
+                        <div class="search-stats">
+                            <span id="resultsCount">Mostrando todos los productos</span>
+                            <button type="button" id="clearAllFilters" class="btn btn-link btn-sm p-0 ms-2" style="display: none;">
+                                <i class="fas fa-eraser"></i> Limpiar filtros
+                            </button>
                         </div>
+                    </div>
 
                         <div class="no-results" id="noResults">
                             <i class="fas fa-search fa-3x mb-3"></i>
@@ -108,7 +116,9 @@
                                  th:data-cod="${product.cod}"
                                  th:data-brand="${product.brand}"
                                  th:data-category="${#strings.isEmpty(product.categoryName) ? '' : product.categoryName}"
-                                 th:data-price="${product.salePrice}">
+                                 th:data-price="${product.salePrice}"
+                                 th:data-years="${product.startYear != null ? product.startYear + '-' + (product.endYear != null ? product.endYear : '') : ''}">
+
 
                                 <div class="card product-card h-100">
                                     <div class="product-image-container">

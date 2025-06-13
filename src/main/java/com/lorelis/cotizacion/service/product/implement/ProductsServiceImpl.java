@@ -44,7 +44,8 @@ public class ProductsServiceImpl implements ProductsService {
         product.setDescription(dto.getDescription());
         product.setBrand(dto.getBrand());
         product.setModel(dto.getModel());
-        product.setYear(dto.getYear());
+        product.setStartYear(dto.getStartYear());
+        product.setEndYear(dto.getEndYear());
         product.setCostPrice(dto.getCostPrice());
         product.setCostDealer(dto.getDealerPrice());
         product.setSalePrice(dto.getSalePrice());
@@ -74,7 +75,8 @@ public class ProductsServiceImpl implements ProductsService {
         dto.setDescription(product.getDescription());
         dto.setBrand(product.getBrand());
         dto.setModel(product.getModel());
-        dto.setYear(product.getYear());
+        dto.setStartYear(product.getStartYear());
+        dto.setEndYear(product.getEndYear());
         dto.setCostPrice(product.getCostPrice());
         dto.setDealerPrice(product.getCostDealer());
         dto.setSalePrice(product.getSalePrice());
@@ -98,13 +100,11 @@ public class ProductsServiceImpl implements ProductsService {
         System.out.println("Guardando producto con URL de imagen: " + dto.getImageUrl());
 
         try {
-            // Prioridad 1: Archivo subido
             if (imageFile != null && !imageFile.isEmpty()) {
                 String imageUrl = firebaseStorageService.uploadFile(imageFile);
                 product.setImageUrl(imageUrl);
                 System.out.println("Imagen subida desde archivo: " + imageUrl);
             }
-            // Prioridad 2: URL proporcionada
             else if (dto.getImageUrl() != null && !dto.getImageUrl().trim().isEmpty()) {
                 try {
                     String imageUrl = firebaseStorageService.uploadFileFromUrl(dto.getImageUrl());
@@ -117,8 +117,8 @@ public class ProductsServiceImpl implements ProductsService {
                     System.out.println("Producto se guardará sin imagen debido al error");
                 }
             }
-
-            // Guardar el producto (con o sin imagen)
+            System.out.println("DTO START YEAR: " + dto.getStartYear());
+            System.out.println("DTO END YEAR: " + dto.getEndYear());
             productsRepository.save(product);
             System.out.println("Producto guardado exitosamente con ID: " + product.getId());
 
@@ -156,7 +156,8 @@ public class ProductsServiceImpl implements ProductsService {
             product.setDescription(dto.getDescription());
             product.setBrand(dto.getBrand());
             product.setModel(dto.getModel());
-            product.setYear(dto.getYear());
+            product.setStartYear(dto.getStartYear());
+            product.setEndYear(dto.getEndYear());
             product.setCostPrice(dto.getCostPrice());
             product.setCostDealer(dto.getDealerPrice());
             product.setSalePrice(dto.getSalePrice());
@@ -173,21 +174,17 @@ public class ProductsServiceImpl implements ProductsService {
                     throw new jakarta.persistence.EntityNotFoundException("Proveedor no encontrado con ID: " + dto.getSupplierProductId());
                 }
             }
-            // Manejar imagen
             String oldImageUrl = product.getImageUrl();
             boolean imageUpdated = false;
             try {
-                // Prioridad 1: Nuevo archivo subido
                 if (imageFile != null && !imageFile.isEmpty()) {
                     String newImageUrl = firebaseStorageService.uploadFile(imageFile);
                     product.setImageUrl(newImageUrl);
                     imageUpdated = true;
                     System.out.println("Imagen actualizada desde archivo: " + newImageUrl);
                 }
-                // Prioridad 2: Nueva URL proporcionada (diferente a la actual)
                 else if (dto.getImageUrl() != null && !dto.getImageUrl().trim().isEmpty() &&
                         !dto.getImageUrl().equals(oldImageUrl)) {
-
                     try {
                         String newImageUrl = firebaseStorageService.uploadFileFromUrl(dto.getImageUrl());
                         product.setImageUrl(newImageUrl);
@@ -195,12 +192,9 @@ public class ProductsServiceImpl implements ProductsService {
                         System.out.println("Imagen actualizada desde URL: " + newImageUrl);
                     } catch (IOException e) {
                         System.err.println("Error al procesar nueva imagen desde URL: " + e.getMessage());
-                        // No actualizar la imagen, mantener la anterior
-                        System.out.println("Se mantendrá la imagen anterior debido al error");
                     }
                 }
 
-                // Eliminar imagen anterior solo si se actualizó exitosamente
                 if (imageUpdated && oldImageUrl != null && !oldImageUrl.isEmpty()) {
                     try {
                         firebaseStorageService.deleteFile(oldImageUrl);
@@ -209,13 +203,10 @@ public class ProductsServiceImpl implements ProductsService {
                         System.err.println("Advertencia: No se pudo eliminar la imagen anterior: " + e.getMessage());
                     }
                 }
-
             } catch (IOException e) {
                 System.err.println("Error al procesar imagen desde archivo: " + e.getMessage());
                 throw new RuntimeException("Error al actualizar la imagen desde archivo: " + e.getMessage());
             }
-
-            // Guardar producto actualizado
             productsRepository.save(product);
             System.out.println("Producto actualizado exitosamente - ID: " + product.getId());
         }
@@ -252,16 +243,16 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     private void validarYear(ProductDTO dto) {
-        if (dto.getYear() != null && !dto.getYear().trim().isEmpty()) {
-            try {
-                int anio = Integer.parseInt(dto.getYear());
-                int anioActual = java.time.LocalDate.now().getYear();
-                if (anio < 1900 || anio > anioActual) {
-                    throw new IllegalArgumentException("El año debe estar entre 1900 y " + anioActual);
-                }
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("El año debe ser un número válido.");
-            }
+        Integer start = dto.getStartYear();
+        Integer end = dto.getEndYear();
+        int anioActual = java.time.LocalDate.now().getYear();
+
+        if (start == null || start < 1900 || start > anioActual + 10) {
+            throw new IllegalArgumentException("El año inicial debe estar entre 1900 y " + (anioActual + 10));
+        }
+
+        if (end != null && (end < start || end > anioActual + 20)) {
+            throw new IllegalArgumentException("El año final debe ser mayor o igual al inicial y razonable");
         }
     }
 

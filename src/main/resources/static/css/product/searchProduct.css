@@ -55,7 +55,7 @@
     transition: all 0.2s ease;
 }
 
-.dashboard-produtos .search-clear-btn:hover {
+.dashboard-productos .search-clear-btn:hover {
     color: #dc2626;
     background: rgba(220, 38, 38, 0.1);
 }
@@ -137,12 +137,10 @@
     font-weight: 600;
 }
 
-/* Ocultar productos filtrados - CORREGIDO */
 .dashboard-productos [data-name].hidden {
     display: none !important;
 }
 
-/* Responsive para buscador */
 @media (max-width: 768px) {
     .dashboard-productos .search-container {
         padding: 1rem;
@@ -161,5 +159,4 @@
         margin-bottom: 1rem;
     }
 }
-
 
