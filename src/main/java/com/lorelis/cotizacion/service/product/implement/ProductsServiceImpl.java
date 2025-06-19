@@ -160,7 +160,7 @@ public class ProductsServiceImpl implements ProductsService {
             product.setCostPrice(dto.getCostPrice());
             product.setCostDealer(dto.getDealerPrice());
             product.setSalePrice(dto.getSalePrice());
-
+            product.setSede(dto.getSede());
             if (dto.getCategoryProductId() != null) {
                 Optional<Category> categoryOptional = categoryRepository.findById(dto.getCategoryProductId());
                 categoryOptional.ifPresent(product::setCategoryproduct);

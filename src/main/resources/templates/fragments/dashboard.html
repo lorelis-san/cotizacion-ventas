@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -86,10 +86,10 @@
                                         <li class="nav-item">
                                             <a class="nav-link" href="/productos">Repuestos & Accesorios</a>
                                         </li>
-                                        <li class="nav-item">
+                                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
                                             <a class="nav-link" href="/categories">Categorías</a>
                                         </li>
-                                        <li class="nav-item">
+                                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
                                             <a class="nav-link" href="/suppliers">Proveedores</a>
                                         </li>
                                     </ul>

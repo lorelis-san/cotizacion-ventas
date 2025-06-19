@@ -25,26 +25,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-//public class SecurityConfig {
-//
-//    @Bean
-//    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.cors(Customizer.withDefaults())
-//                .csrf(AbstractHttpConfigurer::disable)
-////                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/register", "/auth/login")
-////                        .permitAll()
-////                        .anyRequest().authenticated())
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/auth/register", "/auth/login", "/loginView").permitAll()
-////                        .requestMatchers("/admin/**").hasRole("ADMIN")
-////                        .requestMatchers("/home/**", "/user/**").hasRole("USER")
-//                        .anyRequest().authenticated())
-//
-//                .httpBasic(Customizer.withDefaults())
-//                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtEntryPoint()))
-//                .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
-//    }
+
 public class SecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -52,10 +33,34 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/","/error/**", "/auth/login", "/loginView", "/css/**", "/js/**", "/images/**", "/vistaCotizacion").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/categories").hasAnyRole("ADMIN", "USER")
-                        // El resto de operaciones (crear, actualizar, eliminar) solo para ADMIN
-                        .requestMatchers("/auth/register","/registerView", "/nuevaCategoria", "/categories/guardar", "/categoria/**", "/actualizarCategoria", "/eliminarCategoria/**")
+                        .requestMatchers(HttpMethod.GET, "/categories",  "/suppliers", "/categories").hasRole("ADMIN")
+                        .requestMatchers("/auth/register","/registerView", "/nuevaCategoria", "/categories/guardar", "/categoria/**", "/actualizarCategoria", "/eliminarCategoria/**", "/api/suppliers/**", "suppliers/**")
                         .hasRole("ADMIN")
+                        .requestMatchers(
+                                "/categories",
+                                "/nuevaCategoria",
+                                "/categories/guardar",
+                                "/categoria/**",
+                                "/actualizarCategoria",
+                                "/eliminarCategoria/**"
+                        ).hasRole("ADMIN")
+                        .requestMatchers(
+                                "/products/newProducto",
+                                "/products/save",
+                                "/edit/**",
+                                "/products/update",
+                                "/delete/**"
+                        ).hasRole("ADMIN")
+                        .requestMatchers(
+                                "/suppliers",
+                                "/supplier/newSupplier",
+                                "/supplier/save",
+                                "/supplier/edit/**",
+                                "/supplier/update/**",
+                                "/supplier/delete/**"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/categories").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )
