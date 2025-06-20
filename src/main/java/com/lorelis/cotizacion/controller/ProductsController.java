@@ -31,7 +31,7 @@ public class ProductsController {
     @GetMapping("/productos")
     public String listProducts(Model model) {
 
-        List<ProductDTO> products = productsService.getAllProducts();
+        List<ProductDTO> products = productsService.getAllProductsEnabled();
 
         products.forEach(product -> {
             if (product.getCategoryProductId() != null) {

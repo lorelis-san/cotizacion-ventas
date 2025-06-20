@@ -52,7 +52,7 @@ public class ProductsServiceImpl implements ProductsService {
         product.setSalePrice(dto.getSalePrice());
         product.setImageUrl(dto.getImageUrl());
         product.setSede(dto.getSede());
-
+        product.setEnabled(dto.getEnabled());
         if (dto.getCategoryProductId() != null) {
             Optional<Category> categoryOptional = categoryRepository.findById(dto.getCategoryProductId());
             categoryOptional.ifPresent(product::setCategoryproduct);
@@ -84,7 +84,7 @@ public class ProductsServiceImpl implements ProductsService {
         dto.setSalePrice(product.getSalePrice());
         dto.setImageUrl(product.getImageUrl());
         dto.setSede(product.getSede());
-
+        dto.setEnabled(product.getEnabled());
         if (product.getCategoryproduct() != null) {
             dto.setCategoryProductId(product.getCategoryproduct().getId());
         }
@@ -96,44 +96,47 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public void saveProduct(ProductDTO dto, MultipartFile imageFile) {
-        validarProductoDTO(dto);
+        validarProductoDTO(dto); // Asegúrate de no lanzar error si ya existe pero está deshabilitado
+
+        String cod = dto.getCod().trim();
+        Products existente = productsRepository.findByCod(cod);
+
+        if (existente != null) {
+            if (!existente.getEnabled()) {
+                // Reactivar y actualizar datos
+                dto.setId(existente.getId()); // importante para que JPA lo actualice
+                updateProduct(dto, imageFile); // usa el método de actualización
+                return;
+            } else {
+                throw new IllegalArgumentException("El código ya está registrado en un producto activo.");
+            }
+        }
+
+        // Nuevo producto
         Products product = convertToEntity(dto);
-
-        System.out.println("Guardando producto con URL de imagen: " + dto.getImageUrl());
-
-        try {
-            // Prioridad 1: Archivo subido
-            if (imageFile != null && !imageFile.isEmpty()) {
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
                 String imageUrl = firebaseStorageService.uploadFile(imageFile);
                 product.setImageUrl(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al cargar la imagen desde archivo: " + e.getMessage());
             }
-            // Prioridad 2: URL proporcionada
-            else if (dto.getImageUrl() != null && !dto.getImageUrl().trim().isEmpty()) {
-                try {
-                    String imageUrl = firebaseStorageService.uploadFileFromUrl(dto.getImageUrl());
-                    product.setImageUrl(imageUrl);
-                    System.out.println("Imagen subida desde URL: " + imageUrl);
-                } catch (IOException e) {
-                    System.err.println("Error al procesar imagen desde URL: " + e.getMessage());
-                    // Continuar guardando el producto sin imagen en lugar de fallar completamente
-                    product.setImageUrl(null);
-                    System.out.println("Producto se guardará sin imagen debido al error");
-                }
-            }
-
-            // Guardar el producto (con o sin imagen)
-            productsRepository.save(product);
-            System.out.println("Producto guardado exitosamente con ID: " + product.getId());
-
-        } catch (IOException e) {
-            System.err.println("Error al procesar imagen desde archivo: " + e.getMessage());
-            throw new RuntimeException("Error al cargar la imagen desde archivo: " + e.getMessage());
         }
+
+        productsRepository.save(product);
     }
+
 
     @Override
     public List<ProductDTO> getAllProducts() {
         return productsRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> getAllProductsEnabled() {
+        return productsRepository.findByEnabledTrue().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -235,19 +238,30 @@ public class ProductsServiceImpl implements ProductsService {
 
         if (productOptional.isPresent()) {
             Products product = productOptional.get();
-            if (product.getImageUrl() != null && !product.getImageUrl().isEmpty() &&
-                    product.getImageUrl().contains("firebasestorage.googleapis.com")) {
-                firebaseStorageService.deleteFile(product.getImageUrl());
+
+            if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()
+                    && product.getImageUrl().contains("firebasestorage.googleapis.com")) {
+                try {
+                    firebaseStorageService.deleteFile(product.getImageUrl());
+                    System.out.println("Imagen eliminada de Firebase: " + product.getImageUrl());
+                } catch (Exception e) {
+                    System.err.println("Advertencia: No se pudo eliminar la imagen: " + e.getMessage());
+                }
+                product.setImageUrl(null);
             }
-            productsRepository.deleteById(id);
+
+
+            product.setEnabled(false);
+            productsRepository.save(product);
+            System.out.println("Producto deshabilitado con ID: " + product.getId());
         }
     }
 
+
+    @Override
     public List<ProductDTO> buscarPorNombreOCodigo(String termino) {
-        List<Products> productos = productsRepository.findByNameContainingIgnoreCaseOrCodContainingIgnoreCase(termino, termino);
-        return productos.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        List<Products> productos = productsRepository.buscarActivosPorNombreOCodigo(termino);
+        return productos.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     private void validarProductoDTO(ProductDTO dto) {
@@ -261,8 +275,14 @@ public class ProductsServiceImpl implements ProductsService {
         if (dto.getCod() == null || dto.getCod().trim().isEmpty()) {
             throw new IllegalArgumentException("El código del producto es obligatorio");
         }
-        if (dto.getId() == null && productsRepository.existsByCod(dto.getCod())) {
-            throw new IllegalArgumentException("El código ya esta registrado");
+
+        Products existente = productsRepository.findByCod(dto.getCod().trim());
+        if (existente != null) {
+            // Si es nuevo (sin ID) y ya existe habilitado, error
+            if (dto.getId() == null && existente.getEnabled()) {
+                throw new IllegalArgumentException("El código ya está registrado en un producto activo");
+            }
+            // Si está deshabilitado, permitir continuar y actualizar
         }
     }
 

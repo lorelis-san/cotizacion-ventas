@@ -25,6 +25,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +34,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -178,19 +178,40 @@ public class CotizacionServiceImpl implements CotizacionService {
 
     @Override
     public List<CotizacionResponseDTO> listarCotizaciones() {
-        List<Cotizacion> cotizaciones = cotizacionRepository.findAll(Sort.by(Sort.Direction.DESC, "fecha"));
+        List<Cotizacion> cotizaciones = cotizacionRepository.findByEstadoNot(EstadoCotizacion.ELIMINADA, Sort.by(Sort.Direction.DESC, "fecha"));
 
         return cotizaciones.stream().map(this::mapToResponseDTO).toList();
     }
 
     @Override
-    public void eliminarCotizacion(Long id) {
-        Optional<Cotizacion> cotizacionOpt = cotizacionRepository.findById(id);
-        if (cotizacionOpt.isPresent()) {
-            cotizacionRepository.deleteById(id);
+    public ResponseEntity<Map<String, Object>> eliminarCotizacion(Long id) {
+        Map<String, Object> res = new HashMap<>();
+        Optional<Cotizacion> optional = cotizacionRepository.findById(id);
+
+        if (optional.isPresent()) {
+            Cotizacion cotizacion = optional.get();
+
+            // Obtener usuario autenticado
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(email)
+                    .orElseThrow(() -> new RuntimeException("Usuario no autenticado"));
+
+            // Cambiar estado a ELIMINADA
+            cotizacion.setEstado(EstadoCotizacion.ELIMINADA);
+            cotizacion.setFechaModificacion(LocalDateTime.now());
+            cotizacion.setUserModificador(user);
+
+            cotizacionRepository.save(cotizacion);
+
+            res.put("mensaje", "Cotización marcada como eliminada");
+            res.put("status", HttpStatus.OK);
         } else {
-            throw new EntityNotFoundException("Cotización no encontrada con ID: " + id);
+            res.put("mensaje", "Cotización no encontrada con ID: " + id);
+            res.put("status", HttpStatus.NOT_FOUND);
         }
+
+        res.put("fecha", new Date());
+        return ResponseEntity.status((HttpStatus) res.get("status")).body(res);
     }
 
     @Transactional

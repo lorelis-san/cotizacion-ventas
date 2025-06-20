@@ -45,10 +45,22 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public void saveVehicle(VehicleDTO vehicleDTO) {
         String placa = vehicleDTO.getPlaca().trim().toUpperCase();
-        if (vehicleRepository.findByPlaca(placa) != null) {
-            throw new RuntimeException("Ya existe un vehículo con esa placa");
+        Vehicle existing = vehicleRepository.findByPlaca(placa);
+
+        if (existing != null) {
+            // Actualizar datos existentes
+            existing.setMarca(vehicleDTO.getMarca());
+            existing.setModelo(vehicleDTO.getModelo());
+            existing.setYear(vehicleDTO.getYear());
+            existing.setEnabled(true); // por si estaba deshabilitado
+            vehicleRepository.save(existing);
+        } else {
+            // Nuevo registro
+            Vehicle nuevo = convertToEntity(vehicleDTO);
+            nuevo.setPlaca(placa); // asegurar placa normalizada
+            nuevo.setEnabled(true);
+            vehicleRepository.save(nuevo);
         }
-        vehicleRepository.save(convertToEntity(vehicleDTO));
     }
 
 
@@ -111,7 +123,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleDTO getByPlaca(String placa) {
-        Vehicle vehicle = vehicleRepository.findByPlaca(placa);
+        Vehicle vehicle = vehicleRepository.findByPlacaAndEnabledTrue(placa);
         if (vehicle == null) {
             return null;
         }

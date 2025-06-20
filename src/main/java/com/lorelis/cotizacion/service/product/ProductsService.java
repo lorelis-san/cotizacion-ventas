@@ -13,6 +13,9 @@ import java.util.List;
 public interface ProductsService {
     void saveProduct(ProductDTO dto, MultipartFile imageFile);
     List<ProductDTO> getAllProducts();
+
+    List<ProductDTO> getAllProductsEnabled();
+
     ProductDTO getProductById(Long id);
     void updateProduct(ProductDTO dto,MultipartFile imageFile);
     void deleteProduct(Long id);
