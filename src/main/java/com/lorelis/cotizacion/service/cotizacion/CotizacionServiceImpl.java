@@ -166,7 +166,7 @@ public class CotizacionServiceImpl implements CotizacionService {
         Cotizacion cotizacionGuardada = cotizacionRepository.save(cotizacion);
 
         // ✅ Generar número único a partir del ID
-        String numeroCotizacion = String.format("COT-%03d", cotizacionGuardada.getId());
+        String numeroCotizacion = String.format("COT-%04d", cotizacionGuardada.getId());
         cotizacionGuardada.setNumeroCotizacion(numeroCotizacion);
 
         // ✅ Guardar con número

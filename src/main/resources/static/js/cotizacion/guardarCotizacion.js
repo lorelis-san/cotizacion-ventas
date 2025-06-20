@@ -23,7 +23,11 @@ console.log("Cotización a enviar:", cotizacionDTO);
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(cotizacionDTO)
-  });
+  }).then(response => {
+      if (response.ok) {
+        window.location.href = "/listaCotizaciones";
+      }
+    });
 
   if (response.ok) {
   const data = await response.json();

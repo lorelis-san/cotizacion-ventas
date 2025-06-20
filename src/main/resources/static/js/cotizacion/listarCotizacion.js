@@ -21,7 +21,7 @@ $(document).ready(function () {
                         method: 'DELETE'
                     }).then(response => {
                         if (response.ok) {
-                            alert('Cotización eliminada');
+
                             location.reload();
                         } else {
                             alert('Error al eliminar la cotización');

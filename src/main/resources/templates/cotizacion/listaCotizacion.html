@@ -121,21 +121,6 @@
         </div>
     </div>
 
-<script>
-    function eliminarCotizacion(id) {
-        if (confirm('¿Estás seguro de que deseas eliminar esta cotización?')) {
-            fetch(`/cotizaciones/${id}`, {
-                method: 'DELETE'
-            }).then(response => {
-                if (response.ok) {
-                    alert('Cotización eliminada');
-                    location.reload();
-                } else {
-                    alert('Error al eliminar');
-                }
-            });
-        }
-    }
-</script>
+
 </body>
 </html>

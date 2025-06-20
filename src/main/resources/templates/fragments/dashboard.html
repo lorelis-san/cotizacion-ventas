@@ -38,7 +38,7 @@
                                 <div class="nav-user-info">
                                     <h5 class="mb-0 text-white nav-user-name username">John Abraham </h5>
                                     <span class="status"></span><span class="ml-2" id="role">Available</span>
-                                    <a href="/registerView">Registrar nuevo usuario</a>
+                                    <a href="/registerView" sec:authorize="hasRole('ROLE_ADMIN')" style="color: white">Registrar nuevo usuario</a>
                                 </div>
                                 <a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-power-off mr-2"></i>Cerrar Sesión</a>
                             </div>
@@ -107,10 +107,6 @@
 
                             </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" aria-expanded="false" data-target="#submenu-10" aria-controls="submenu-10"><i class="fas fa-f fa-folder"></i>Menu Level</a>
-
-                            </li>
                         </ul>
                     </div>
                 </nav>

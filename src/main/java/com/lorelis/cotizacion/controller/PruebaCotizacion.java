@@ -32,6 +32,9 @@ public class PruebaCotizacion {
         return "cotizacion/listaCotizacion"; // Ruta a tu vista Thymeleaf
     }
 
+
+
+
     @GetMapping("/cotizaciones/editar/{id}")
     public String mostrarFormularioEdicion(@PathVariable Long id, Model model) {
 
