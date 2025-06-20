@@ -195,3 +195,16 @@ function guardarCotizacion() {
     form.submit();
 }
 
+// Animación de entrada para elementos de edición
+    document.addEventListener('DOMContentLoaded', function() {
+        const elements = document.querySelectorAll('.info-item-edit');
+        elements.forEach((el, index) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });

@@ -41,13 +41,11 @@
             <div class="card shadow-sm rounded">
                 <div class="card-body">
                     <table class="table table-hover align-middle text-center">
-                        <thead class="text-white" style="background-color: #2A2861;">
+                        <thead class="text-white text-center" style="background-color: #2A2861;">
                             <tr>
                                 <th>Tipo Doc</th>
                                 <th>Nro Doc</th>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Razón Social</th>
+                                <th>Nombre del Cliente</th>
                                 <th>Celular</th>
                                 <th>Correo</th>
                                 <th>Acciones</th>
@@ -57,9 +55,7 @@
                         <tr th:each="client : ${listaClientes}">
                             <td th:text="${client.typeDocument}"></td>
                             <td th:text="${client.documentNumber}"></td>
-                            <td th:text="${client.firstName}"></td>
-                            <td th:text="${client.lastName}"></td>
-                            <td th:text="${client.typeDocument == 'RUC' ? client.businessName : ''}"></td>
+                            <td th:text="${client.typeDocument == 'RUC' ? client.businessName : client.firstName + ' ' + client.lastName}"></td>
                             <td th:text="${client.phoneNumber}"></td>
                             <td th:text="${client.email}"></td>
                             <td>

@@ -22,10 +22,12 @@ async function buscarProducto() {
                 const div = document.createElement('div');
                 div.className = 'producto-item';
                 div.innerHTML = `
+
                     <strong>${p.name}</strong> <span>(${p.cod})</span> S/. ${p.salePrice}<br>
-                    <input type="number" id="cantidad_${p.id}" value="1" min="1" />
-                    <button onclick="agregarAlCarrito(${p.id}, '${p.name}', ${p.salePrice})">Agregar</button>
+                    <input type="number" id="cantidad_${p.id}" value="1" min="1" class="form-control form-control-sm" style="width: 80px;"/>
+                    <button onclick="agregarAlCarrito(${p.id}, '${p.name}', ${p.salePrice})" class="btn btn-flat btn-sm" >Agregar</button>
                     <hr>
+
                 `;
                 contenedor.appendChild(div);
             });

@@ -191,12 +191,10 @@ public class CotizacionServiceImpl implements CotizacionService {
         if (optional.isPresent()) {
             Cotizacion cotizacion = optional.get();
 
-            // Obtener usuario autenticado
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userRepository.findByUsername(email)
                     .orElseThrow(() -> new RuntimeException("Usuario no autenticado"));
 
-            // Cambiar estado a ELIMINADA
             cotizacion.setEstado(EstadoCotizacion.ELIMINADA);
             cotizacion.setFechaModificacion(LocalDateTime.now());
             cotizacion.setUserModificador(user);
@@ -267,15 +265,12 @@ public class CotizacionServiceImpl implements CotizacionService {
                 .orElseThrow(() -> new EntityNotFoundException("Cotización no encontrada con ID: " + id));
         return mapToResponseDTO(cot);
     }
-
-
-    private String generarNumeroCotizacion() {
-        Long count = cotizacionRepository.count();
-        return "COT-" + String.format("%03d", count + 1);
-    }
-
-
-
+//
+//
+//    private String generarNumeroCotizacion() {
+//        Long count = cotizacionRepository.count();
+//        return "COT-" + String.format("%03d", count + 1);
+//    }
 
 }
 
