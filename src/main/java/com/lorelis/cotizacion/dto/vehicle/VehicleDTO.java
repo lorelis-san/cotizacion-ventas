@@ -11,7 +11,7 @@ public class VehicleDTO {
     private String marca;
     private String modelo;
     private Integer year;
-
+    private Boolean enabled = true;
 
     public @NotNull Long getId() {
         return id;

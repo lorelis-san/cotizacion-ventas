@@ -38,6 +38,9 @@
                             <div class="col-12">
                                 <h2 class="mb-3" style="color: #0E0C28;">Editar Cotización</h2>
                             </div>
+                            <small class="alert alert-warning p-2 small" role="alert" style="margin-top:15px; margin-bottom: 15px">
+                                Asegúrese de que los datos sean correctos. Una vez guardados, no podrán deshacerse.
+                            </small>
                             <div class="col-md-4">
                                 <p class="mb-1 fw-bold">Elaborado por:</p>
                                 <p class="form-control-plaintext"
@@ -45,8 +48,6 @@
                             </div>
                         </div>
 
-                        <!-- Número, Fecha y Estado -->
-                        <!-- Número, Fecha, Estado y Modificación -->
                         <div class="row mb-3">
                             <!-- Número de cotización -->
                             <div class="col-md-4">
@@ -88,7 +89,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label>Nro Documento</label>
-                                    <input class="form-control" th:value="${cotizacion.cliente.documentNumber}" readonly />
+                                    <input class="form-control no-spaces solo-numeros" th:value="${cotizacion.cliente.documentNumber}" readonly />
                                 </div>
                                 <div class="col-md-4">
                                     <label>Nombre o Razón Social</label>
@@ -105,7 +106,7 @@
                             <div class="card-body row">
                                 <div class="col-md-3">
                                     <label>Placa</label>
-                                    <input class="form-control" th:value="${cotizacion.vehiculo.placa}" readonly />
+                                    <input class="form-control no-spaces" th:value="${cotizacion.vehiculo.placa}" readonly />
                                 </div>
                                 <div class="col-md-3">
                                     <label>Marca</label>
@@ -117,7 +118,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label>Año</label>
-                                    <input class="form-control" th:value="${cotizacion.vehiculo.year}" readonly />
+                                    <input class="form-control no-spaces solo-numeros" th:value="${cotizacion.vehiculo.year}" readonly />
                                 </div>
                             </div>
                         </div>
@@ -215,6 +216,7 @@
             </div>
     </div>
 </div>
+<script th:src="@{/js/validationForms/validationCotizacion.js}"></script>
 <script th:src="@{/js/cotizacion/editarCotizacion.js}"></script>
 </body>
 </html>

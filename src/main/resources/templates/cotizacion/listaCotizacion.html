@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
     <head>
         <title>Listado de Cotizaciones</title>
         <!-- Bootstrap CSS -->
@@ -76,7 +76,8 @@
                                             th:attr="data-id=${cotizacion.id}, data-numero=${cotizacion.numeroCotizacion}"
                                             data-bs-toggle="modal"
                                             data-bs-target="#eliminarCotizacionModal"
-                                            onclick="cargarDatosEliminar(this)">
+                                            onclick="cargarDatosEliminar(this)"
+                                            sec:authorize="hasRole('ROLE_ADMIN')">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>

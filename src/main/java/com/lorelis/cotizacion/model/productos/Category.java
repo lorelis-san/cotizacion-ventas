@@ -21,4 +21,5 @@ public class Category {
 
     @Column(name = "description", length = 255)
     private String description;
+    private Boolean enabled = true;
 }

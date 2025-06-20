@@ -33,6 +33,11 @@ public class Products {
 
     @Column(name = "year")
     private String year;
+    @Column(name = "start_year")
+    private Integer startYear;
+
+    @Column(name = "end_year")
+    private Integer endYear;
     @Column(name = "sede", nullable = false, length = 50)
     private String sede;
 
@@ -58,6 +63,6 @@ public class Products {
     @ManyToOne
     @JoinColumn(name = "id_supplier", nullable = false)
     private Supplier supplierProduct;
-
+    private Boolean enabled = true;
 
 }

@@ -17,7 +17,7 @@ public class SupplierController {
 
     @GetMapping("/suppliers")
     public String listSuppliers(Model model) {
-        List<SupplierDTO> suppliers = supplierService.getAllSuppliers();
+        List<SupplierDTO> suppliers = supplierService.getAllSuppliersEnabled();
         model.addAttribute("suppliers", suppliers);
         return "suppliers/supplierIndex";
     }
@@ -28,9 +28,18 @@ public class SupplierController {
         return "suppliers/supplierAdd";
     }
     @PostMapping("/supplier/save")
-    public String saveSupplier(SupplierDTO supplierDTO) {
-        supplierService.save(supplierDTO);
-        return "redirect:/suppliers";
+    public String saveSupplier(SupplierDTO supplierDTO, Model model) {
+        try {
+            supplierService.save(supplierDTO);
+            return "redirect:/suppliers";
+        } catch (RuntimeException e) {
+            model.addAttribute("supplier", supplierDTO);
+            model.addAttribute("error", e.getMessage());
+            return "suppliers/supplierAdd";
+        }
+
+
+
     }
 
     @GetMapping("/supplier/edit/{id}")
@@ -42,9 +51,17 @@ public class SupplierController {
     }
 
     @PostMapping("/supplier/update/{id}")
-    public String updateSupplier(@PathVariable Long id, @ModelAttribute SupplierDTO supplierDTO) {
-        supplierService.update(id, supplierDTO);
-        return "redirect:/suppliers";
+    public String updateSupplier(@PathVariable Long id, @ModelAttribute("supplier") SupplierDTO supplierDTO, Model model) {
+
+        try {
+            supplierService.update(id, supplierDTO);
+            return "redirect:/suppliers";
+
+        } catch (RuntimeException e) {
+            model.addAttribute("supplier", supplierDTO);
+            model.addAttribute("error", e.getMessage());
+            return "suppliers/supplierEdit";
+        }
     }
 
     @GetMapping("/supplier/delete/{id}")

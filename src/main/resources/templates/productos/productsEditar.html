@@ -47,6 +47,9 @@
                                 <i class="fas fa-edit me-2"></i>Editar Producto
                             </h4>
                         </div>
+                        <small class="alert alert-warning p-2 small" role="alert" style="margin-top:15px; margin-bottom: 15px">
+                            Verifique que los datos sean correctos. Una vez guardados, los cambios no podrán revertirse y afectarán a todos los registros relacionados.
+                        </small>
                         <div class="card-body p-4">
                             <form th:action="@{/products/update}" method="post" th:object="${product}" enctype="multipart/form-data">
                                 <input type="hidden" th:field="*{id}"/>
@@ -81,18 +84,38 @@
                                                 <i class="fas fa-cube me-1"></i>Modelo
                                             </label>
                                         </div>
-                                        <div class="form-floating">
-                                            <select class="form-select" th:field="*{year}" id="year">
-                                                <option value="">Seleccionar año</option>
-                                                <th:block th:each="yearOption : ${#numbers.sequence(2000, T(java.time.Year).now().getValue())}">
-                                                    <option th:value="${yearOption}" th:text="${yearOption}"
-                                                            th:selected="${product.year} == ${yearOption}">
-                                                    </option>
-                                                </th:block>
-                                            </select>
-                                            <label for="year">
-                                                <i class="fas fa-calendar-alt me-1"></i>Año
-                                            </label>
+                                        <div>
+                                            <div class="form-floating">
+                                                <select class="form-select form-select-sm" th:field="*{startYear}" id="startYear" required onchange="updateEndYearOptions()">
+                                                    <option value="">Seleccionar año inicial</option>
+                                                    <th:block th:each="yearOption : ${#numbers.sequence(1900, T(java.time.Year).now().getValue() + 10)}">
+                                                        <option th:value="${yearOption}" th:text="${yearOption}"
+                                                                th:selected="${product.startYear} == ${yearOption}">
+                                                        </option>
+                                                    </th:block>
+                                                </select>
+                                                <label for="startYear">
+                                                    <i class="fas fa-calendar-alt me-1"></i>Año Inicial *
+                                                </label>
+                                            </div>
+                                            <div class="error-text" id="startYear-error"></div>
+
+                                            <div>
+                                                <div class="form-floating">
+                                                    <select class="form-select form-select-sm" th:field="*{endYear}" id="endYear">
+                                                        <option value="">Seleccionar año final</option>
+                                                        <th:block th:each="yearOption : ${#numbers.sequence(1900, T(java.time.Year).now().getValue() + 20)}">
+                                                            <option th:value="${yearOption}" th:text="${yearOption}"
+                                                                    th:selected="${product.endYear} == ${yearOption}">
+                                                            </option>
+                                                        </th:block>
+                                                    </select>
+                                                    <label for="endYear">
+                                                        <i class="fas fa-calendar-alt me-1"></i>Año Final
+                                                    </label>
+                                                </div>
+                                                <div class="error-text" id="endYear-error"></div>
+                                            </div>
                                         </div>
                                         <div class="form-floating">
                                             <select class="form-select" th:field="*{sede}" id="sede">

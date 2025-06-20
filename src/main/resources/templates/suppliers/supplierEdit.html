@@ -36,6 +36,9 @@
                             <h4 class="mb-0">Editar Proveedor</h4>
                         </div>
                         <div class="card-body">
+                            <small class="alert alert-warning p-2 small" role="alert" style="margin-top:15px; margin-bottom: 15px">
+                                Verifique que los datos sean correctos. Una vez guardados, los cambios no podrán revertirse y afectarán a todos los registros relacionados.
+                            </small>
                             <div th:if="${error}" class="alert alert-danger">
                                 <p th:text="${error}"></p>
                             </div>
@@ -51,8 +54,10 @@
 
                                 <div class="mb-3">
                                     <label for="ruc" class="form-label">RUC:</label>
-                                    <input type="text" id="ruc" class="form-control" th:field="*{ruc}" placeholder="Ingrese el RUC" required>
-                                    <div class="error-message" th:if="${#fields.hasErrors('ruc')}" th:errors="*{ruc}"></div>
+                                    <input type="text" id="ruc" class="form-control no-spaces solo-numeros" th:field="*{ruc}" pattern="\d{11}" maxlength="11" minlength="11" title="El RUC debe tener 11 dígitos" required>
+                                    <div th:if="${#fields.hasErrors('ruc')}" class="error-message" th:errors="*{ruc}"></div>
+
+
                                 </div>
 
                                 <div class="mb-3">
@@ -63,8 +68,8 @@
 
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">Teléfono:</label>
-                                    <input type="text" id="phone" class="form-control" th:field="*{phone}" placeholder="Ingrese el teléfono">
-                                    <div class="error-message" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                                    <input type="text" id="phone" class="form-control no-spaces solo-numeros"  th:field="*{phone}">
+                                    <div th:if="${#fields.hasErrors('phone')}" class="error-message" th:errors="*{phone}"></div>
                                 </div>
 
                                 <div class="d-flex justify-content-end">
@@ -84,6 +89,6 @@
         </div>
     </div>
 </div>
-
+<script th:src="@{/js/validationForms/validationNewSupplier.js}"></script>
 </body>
 </html>

@@ -67,8 +67,8 @@ public class ProductsController {
     public String showCreateForm(Model model) {
 
         model.addAttribute("product", new ProductDTO());
-        model.addAttribute("categories", categoryService.getAllCategory());
-        model.addAttribute("suppliers", supplierService.getAllSuppliers());
+        model.addAttribute("categories", categoryService.getAllCategoryEnabled());
+        model.addAttribute("suppliers", supplierService.getAllSuppliersEnabled());
         return "productos/productsAgregar";
     }
 
@@ -94,8 +94,8 @@ public class ProductsController {
             return "redirect:/productos";
         }
         model.addAttribute("product", product);
-        model.addAttribute("categories", categoryService.getAllCategory());
-        model.addAttribute("suppliers", supplierService.getAllSuppliers());
+        model.addAttribute("categories", categoryService.getAllCategoryEnabled());
+        model.addAttribute("suppliers", supplierService.getAllSuppliersEnabled());
         return "productos/productsEditar";
     }
 

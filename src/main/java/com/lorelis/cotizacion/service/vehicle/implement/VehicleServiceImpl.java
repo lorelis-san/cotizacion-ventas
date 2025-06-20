@@ -7,10 +7,11 @@ import com.lorelis.cotizacion.repository.vehicle.VehicleRepository;
 import com.lorelis.cotizacion.service.vehicle.VehicleService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +27,7 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setYear(dto.getYear());
         vehicle.setMarca(dto.getMarca());
         vehicle.setModelo(dto.getModelo());
-
+        vehicle.setEnabled(dto.getEnabled());
         return vehicle;
     }
 
@@ -37,7 +38,7 @@ public class VehicleServiceImpl implements VehicleService {
         dto.setYear(vehicle.getYear());
         dto.setMarca(vehicle.getMarca());
         dto.setModelo(vehicle.getModelo());
-
+        dto.setEnabled(vehicle.getEnabled());
         return dto;
     }
 
@@ -88,8 +89,24 @@ public class VehicleServiceImpl implements VehicleService {
 
 
     @Override
-    public void deleteVehicle(Long id) {
-        vehicleRepository.deleteById(id);
+    public ResponseEntity<Map<String, Object>> deleteVehicle(Long id) {
+        Map<String, Object> respuesta = new HashMap<>();
+        Optional<Vehicle> opt = vehicleRepository.findById(id);
+
+        if (opt.isPresent()) {
+            Vehicle vehicle = opt.get();
+            vehicle.setEnabled(false);
+            vehicleRepository.save(vehicle);
+            respuesta.put("mensaje", "Vehículo deshabilitado correctamente");
+            respuesta.put("status", HttpStatus.NO_CONTENT);
+            respuesta.put("fecha", new Date());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(respuesta);
+        } else {
+            respuesta.put("mensaje", "Vehículo no encontrado");
+            respuesta.put("status", HttpStatus.NOT_FOUND);
+            respuesta.put("fecha", new Date());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuesta);
+        }
     }
 
     @Override
@@ -99,5 +116,12 @@ public class VehicleServiceImpl implements VehicleService {
             return null;
         }
         return convertToDTO(vehicle);
+    }
+
+    @Override
+    public List<VehicleDTO> getAllVehiclesEnabled() {
+        return vehicleRepository.findByEnabledTrue().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 }

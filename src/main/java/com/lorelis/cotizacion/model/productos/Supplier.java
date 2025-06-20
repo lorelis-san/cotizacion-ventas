@@ -36,8 +36,7 @@ public class Supplier {
     private String email;
 
     @NotBlank(message = "El teléfono es obligatorio")
-    @Size(max = 9, message = "El teléfono no puede exceder 9 caracteres")
-    @Column(length = 9)
     private String phone;
+    private Boolean enabled = true;
 
 }

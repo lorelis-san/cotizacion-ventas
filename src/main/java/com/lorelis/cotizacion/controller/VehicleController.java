@@ -21,7 +21,7 @@ public class VehicleController {
 
     @GetMapping("/vehicle")
     public String listarVehiculos(Model model) {
-        List<VehicleDTO> listVehiculo = vehicleService.getAllVehicles();
+        List<VehicleDTO> listVehiculo = vehicleService.getAllVehiclesEnabled();
 
         // Si no hay datos, pasar una lista vacía
         if (listVehiculo == null) {
@@ -83,6 +83,11 @@ public class VehicleController {
         return "redirect:/vehicle";
     }
 
+    @PostMapping("/eliminarVehicle/{id}")
+    public String eliminarVehiclePost(@PathVariable Long id) {
+        vehicleService.deleteVehicle(id);
+        return "redirect:/vehicle";
+    }
 
 
 

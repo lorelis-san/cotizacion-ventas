@@ -17,7 +17,7 @@ public class ClientController {
 
     @GetMapping("/clients")
     public String listarClientes(Model model) {
-        List<ClientDTO> listaClientes = clientService.getAllClients();
+        List<ClientDTO> listaClientes = clientService.getAllClientsEnabled();
 
         if (listaClientes == null) {
             listaClientes = new ArrayList<>();

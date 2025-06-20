@@ -2,8 +2,10 @@ package com.lorelis.cotizacion.service.product;
 
 import com.lorelis.cotizacion.dto.products.SupplierDTO;
 import com.lorelis.cotizacion.model.productos.Supplier;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface SupplierService {
@@ -13,8 +15,8 @@ public interface SupplierService {
     SupplierDTO getSupplieryById(Long id);
     SupplierDTO save(SupplierDTO supplierDTO);
     SupplierDTO update(Long id, SupplierDTO supplierDTO);
-    void deleteById(Long id);
-
+    ResponseEntity<Map<String, Object>>  deleteById(Long id);
+    List<SupplierDTO> getAllSuppliersEnabled();
     // Métodos de conversión
     SupplierDTO convertToDTO(Supplier supplier);
     Supplier convertToEntity(SupplierDTO supplierDTO);

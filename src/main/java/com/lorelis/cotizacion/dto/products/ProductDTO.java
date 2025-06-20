@@ -21,6 +21,10 @@ public class ProductDTO {
 
     private String year;
 
+    private Integer startYear;
+
+    private Integer endYear;
+
     private BigDecimal costPrice;
 
     private BigDecimal dealerPrice;
@@ -42,4 +46,12 @@ public class ProductDTO {
 
     @NotNull
     private String sede;
+    private Boolean enabled = true;
+
+    public String getYearRange() {
+        if (startYear != null) {
+            return (endYear != null ? startYear + " - " + endYear : startYear + "+");
+        }
+        return "Sin año";
+    }
 }

@@ -113,16 +113,29 @@
                                         </div>
                                         <div>
                                             <div class="form-floating">
-                                                <select class="form-select form-select-sm" th:field="*{year}" id="year" required>
-                                                    <option value="">Seleccionar año</option>
-                                                    <th:block th:each="yearOption : ${#numbers.sequence(2000, T(java.time.Year).now().getValue())}">
+                                                <select class="form-select form-select-sm" th:field="*{startYear}" id="startYear" required onchange="updateEndYearOptions()">
+                                                    <option value=""> </option>
+                                                    <th:block th:each="yearOption : ${#numbers.sequence(1900, T(java.time.Year).now().getValue() + 10)}">
                                                         <option th:value="${yearOption}" th:text="${yearOption}"></option>
                                                     </th:block>
                                                 </select>
-                                                <label for="year">
-                                                    <i class="fas fa-calendar-alt me-1"></i>Año
+                                                <label for="startYear">
+                                                    <i class="fas fa-calendar-alt me-1"></i>Año Inicial *
+                                                </label>
+                                                <div class="error-text" id="startYear-error"></div>
+                                            </div>
+                                            <div class="form-floating">
+                                            <select class="form-select form-select-sm" th:field="*{endYear}" id="endYear">Add commentMore actions
+                                                <option value=""> </option>
+                                                <th:block th:each="yearOption : ${#numbers.sequence(1900, T(java.time.Year).now().getValue() + 20)}">
+                                                    <option th:value="${yearOption}" th:text="${yearOption}"></option>
+                                                </th:block>
+                                            </select>
+                                                <label for="endYear">
+                                                    <i class="fas fa-calendar-alt me-1"></i>Año Final *
                                                 </label>
                                             </div>
+
                                             <div class="error-text" id="year-error"></div>
                                         </div>
                                         <div>
@@ -246,7 +259,9 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="image-section h-100">
-                                                <div class="image-preview-container mb-3">
+
+
+                                                <div class="image-preview-container mb-3" >
                                                     <img id="previewImage" th:src="${product.imageUrl}" alt="Imagen del producto"
                                                          class="image-preview" style="max-height: 200px; width: auto;">
                                                     <div id="noImagePlaceholder" class="no-image" style="display: none; width: 100%; height: 200px;">

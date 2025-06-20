@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -78,6 +78,17 @@
                                     <!-- Las marcas se llenarán dinámicamente -->
                                 </select>
                             </div>
+
+
+                            <div class="col-md-3">
+                                <label class="form-label filter-label text-muted">
+                                    <i class="fas fa-calendar-alt me-1"></i>Año
+                                </label>
+                                <select class="form-select form-select-compact" id="yearFilter">
+                                    <option value="">Todos los años</option>
+                                    <!-- Los años se llenarán dinámicamente -->
+                                </select>
+                            </div>
                             <div class="col-md-4">
                                 <label class="form-label filter-label text-muted">Ordenar por</label>
                                 <select class="form-select form-select-compact" id="sortFilter">
@@ -111,7 +122,8 @@
                          th:data-cod="${product.cod}"
                          th:data-brand="${product.brand}"
                          th:data-category="${#strings.isEmpty(product.categoryName) ? '' : product.categoryName}"
-                         th:data-price="${product.salePrice}">
+                         th:data-price="${product.salePrice}"
+                         th:data-years="${product.startYear != null ? product.startYear + '-' + (product.endYear != null ? product.endYear : '') : ''}">
 
                         <div class="card product-card h-100">
                             <div class="product-image-container">
@@ -156,7 +168,7 @@
                                         <i class="fas fa-eye"></i>
                                         <span>Ver</span>
                                     </a>
-                                    <div class="action-group">
+                                    <div class="action-group" sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a th:href="@{'/edit/' + ${product.id}}" class="btn btn-action btn-edit">
                                             <i class="fas fa-edit"></i>
                                         </a>

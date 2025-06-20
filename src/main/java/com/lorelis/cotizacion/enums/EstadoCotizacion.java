@@ -6,6 +6,7 @@ public enum EstadoCotizacion {
     CREADA("Creada"),
     APROBADA("Aprobada"),
     RECHAZADA("Rechazada"),
+    ELIMINADA("Eliminada"),
     VENCIDA("Vencida");
 
     private final String descripcion;

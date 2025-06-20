@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.buscarCliente = async function () {
+    if (!validarDocumentoCliente()) return;
         const tipo = tipoDoc.value;
         const numero = document.getElementById("numDoc").value.trim();
 
@@ -100,7 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const numero = document.getElementById("numDoc").value.trim();
         const correo = document.getElementById("nuevoCorreo").value.trim();
         const celular = document.getElementById("nuevoCelular").value.trim();
-
+        if (!tipo || !numero || !correo || !celular) {
+        return alert("Complete todos los campos");
+    }
         let cliente = {
             typeDocument: tipo.toUpperCase(),
             documentNumber: numero,
@@ -111,8 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tipo === "DNI") {
             cliente.firstName = document.getElementById("nuevoNombre").value.trim();
             cliente.lastName = document.getElementById("nuevoApellido").value.trim();
+            if (!cliente.firstName || !cliente.lastName) {
+                    return alert("Complete todos los campos");
+                }
         } else if (tipo === "RUC") {
             cliente.businessName = document.getElementById("nuevaRazonSocial").value.trim();
+            if (!cliente.businessName ) {
+                     return alert("Complete todos los campos");
+            }
         }
 
         console.log("Enviando cliente:", cliente);

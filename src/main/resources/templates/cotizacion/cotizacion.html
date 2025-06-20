@@ -31,7 +31,7 @@
                         <div class="col-md-4">
                             <label class="form-label">Placa</label>
                             <div class="input-group">
-                                <input type="text" id="placaInput" class="form-control" />
+                                <input type="text" id="placaInput" class="form-control no-spaces" required/>
                                 <button class="btn btn-dark" onclick="buscarVehiculo()" style="background-color: #0E0C28;">Buscar</button>
                             </div>
                         </div>
@@ -40,15 +40,15 @@
                     <div id="datosVehiculo" class="row hidden">
                         <div class="col-md-4">
                             <label>Marca</label>
-                            <input type="text" id="marca" class="form-control mb-2" placeholder="Marca" disabled />
+                            <input type="text" id="marca" class="form-control mb-2" placeholder="Marca"  disabled />
                         </div>
                         <div class="col-md-4">
                             <label>Modelo</label>
-                            <input type="text" id="modelo" class="form-control mb-2" placeholder="Modelo" disabled />
+                            <input type="text" id="modelo" class="form-control mb-2" placeholder="Modelo"  disabled />
                         </div>
                         <div class="col-md-4">
                             <label>Año</label>
-                            <input type="number" id="anio" class="form-control mb-2" placeholder="Año" disabled />
+                            <input type="number" id="anio" class="form-control mb-2 no-spaces solo-numeros" placeholder="Año"  disabled />
                         </div>
                     </div>
 
@@ -57,15 +57,16 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <label>Marca</label>
-                                <input type="text" id="nuevaMarca" class="form-control mb-2" placeholder="Marca" />
+                                <input type="text" id="nuevaMarca" class="form-control mb-2" placeholder="Marca" required />
                             </div>
                             <div class="col-md-4">
                                 <label>Modelo</label>
-                                <input type="text" id="nuevoModelo" class="form-control mb-2" placeholder="Modelo" />
+                                <input type="text" id="nuevoModelo" class="form-control mb-2" placeholder="Modelo" required />
                             </div>
                             <div class="col-md-4">
                                 <label>Año</label>
-                                <input type="text" id="anioNew" class="form-control mb-2" placeholder="Año" />
+                                <input type="text" id="anioNew" class="form-control mb-2 no-spaces solo-numeros" placeholder="Año" required/>
+                                <div id="errorAnio" class="invalid-feedback"></div>
                             </div>
                         </div>
                         <button class="btn btn-dark" onclick="agregarVehiculo()" style="background-color: #0E0C28;">Agregar Vehículo</button>
@@ -89,8 +90,9 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Número de Documento</label>
-                            <input type="text" id="numDoc" class="form-control" />
+                            <label class="form-label ">Número de Documento</label>
+                            <input type="text" id="numDoc" class="form-control no-spaces solo-numeros" required />
+                            <div id="errorNumDoc" class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-2">
                             <button class="btn btn-dark" onclick="buscarCliente()" style="background-color: #0E0C28;">Buscar</button>
@@ -112,7 +114,7 @@
                             <label>Correo</label>
                             <input type="text" id="clienteCorreo" class="form-control mb-2" placeholder="Correo" disabled />
                             <label>Celular</label>
-                            <input type="text" id="clienteCelular" class="form-control mb-2" placeholder="Celular" disabled />
+                            <input type="text" id="clienteCelular" class="form-control mb-2 no-spaces solo-numeros" placeholder="Celular" disabled />
                         </div>
 <!--                        <div class="col-md-6">-->
 <!--                            <label>Celular</label>-->
@@ -125,30 +127,30 @@
                         <div id="camposDni" class="row hidden">
                             <div class="col-md-6">
                                 <label>Nombres</label>
-                                <input type="text" id="nuevoNombre" class="form-control mb-2" placeholder="Nombres" />
+                                <input type="text" id="nuevoNombre" class="form-control mb-2" placeholder="Nombres" required />
                             </div>
                             <div class="col-md-6">
                                 <label>Apellidos</label>
-                                <input type="text" id="nuevoApellido" class="form-control mb-2" placeholder="Apellidos" />
+                                <input type="text" id="nuevoApellido" class="form-control mb-2" placeholder="Apellidos" required />
                             </div>
                         </div>
                         <div id="camposRuc" class="row hidden">
                             <div class="col-md-12">
                                 <label>Razón Social</label>
-                                <input type="text" id="nuevaRazonSocial" class="form-control mb-2" placeholder="Razón Social" />
+                                <input type="text" id="nuevaRazonSocial" class="form-control mb-2" placeholder="Razón Social" required/>
                             </div>
                         </div>
                         <div class="row">
 
                             <div class="col-md-6">
                                 <label>Correo</label>
-                                <input type="text" id="nuevoCorreo" class="form-control mb-2" placeholder="Correo" />
+                                <input type="text" id="nuevoCorreo" class="form-control mb-2" placeholder="Correo" required/>
                             </div>
                             <br>
 
                             <div class="col-md-6">
                                 <label>Celular</label>
-                                <input type="text" id="nuevoCelular" class="form-control mb-2" placeholder="Celular" />
+                                <input type="text" id="nuevoCelular" class="form-control mb-2 no-spaces solo-numeros" placeholder="Celular" required/>
                             </div>
                         </div>
                         <button class="btn btn-dark" onclick="agregarCliente()"  style="background-color: #0E0C28;">Agregar Cliente</button>
@@ -208,6 +210,7 @@
 </div>
 
 <!-- Scripts -->
+<script th:src="@{/js/validationForms/validationCotizacion.js}"></script>
 <script th:src="@{/js/cotizacion/vehicle.js}"></script>
 <script th:src="@{/js/cotizacion/client.js}"></script>
 <script th:src="@{/js/cotizacion/product.js}"></script>

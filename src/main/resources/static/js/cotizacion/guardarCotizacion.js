@@ -36,6 +36,6 @@ console.log("Cotización a enviar:", cotizacionDTO);
   } else {
     alert("Error al guardar la cotización");
   }
-
-
 }
+
+

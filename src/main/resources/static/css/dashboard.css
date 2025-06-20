@@ -1,6 +1,9 @@
         body{
             overflow-y: hidden;
         }
+        .nav-item{
+          padding-left: 0px;
+        }
         .dashboard-welcome {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #0E0C28;

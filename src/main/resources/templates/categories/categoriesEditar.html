@@ -35,6 +35,9 @@
                         <div class="card-header text-white text-center" style="background-color: #0E0C28;">
                             <h4 class="mb-0">Editar Categoría</h4>
                         </div>
+                        <small class="alert alert-warning p-2 small" role="alert" style="margin-top:15px; margin-bottom: 15px">
+                            Verifique que los datos sean correctos. Una vez guardados, los cambios no podrán revertirse y afectarán a todos los registros relacionados.
+                        </small>
                         <div class="card-body">
                             <div th:if="${error}" class="alert alert-danger">
                                 <p th:text="${error}"></p>

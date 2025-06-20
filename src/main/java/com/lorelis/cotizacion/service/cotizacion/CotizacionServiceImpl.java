@@ -132,16 +132,12 @@ public class CotizacionServiceImpl implements CotizacionService {
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
         Vehicle vehiculo = vehicleRepository.findById(dto.getVehiculoId())
                 .orElseThrow(() -> new RuntimeException("Vehículo no encontrado"));
-        // Generar número de cotización automático
-        String numeroCotizacion = generarNumeroCotizacion();
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
 
-
         Cotizacion cotizacion = Cotizacion.builder()
-                .numeroCotizacion(numeroCotizacion)
                 .fecha(LocalDate.now())
                 .fechaCreacion(LocalDateTime.now())
                 .cliente(cliente)
@@ -152,10 +148,9 @@ public class CotizacionServiceImpl implements CotizacionService {
                 .build();
 
         for (DetalleCotizacionDTO detalleDTO : dto.getDetalles()) {
-            System.out.println("Producto ID recibido: " + detalleDTO.getProductoId());
-
             Products producto = productsRepository.findById(detalleDTO.getProductoId())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
             DetalleCotizacion detalle = new DetalleCotizacion(
                     cotizacion,
                     producto,
@@ -166,9 +161,20 @@ public class CotizacionServiceImpl implements CotizacionService {
         }
 
         cotizacion.calcularTotales();
+
+        // ✅ 1ra vez: guardar sin número
         Cotizacion cotizacionGuardada = cotizacionRepository.save(cotizacion);
+
+        // ✅ Generar número único a partir del ID
+        String numeroCotizacion = String.format("COT-%03d", cotizacionGuardada.getId());
+        cotizacionGuardada.setNumeroCotizacion(numeroCotizacion);
+
+        // ✅ Guardar con número
+        cotizacionRepository.save(cotizacionGuardada);
+
         return mapToResponseDTO(cotizacionGuardada);
     }
+
 
     @Override
     public List<CotizacionResponseDTO> listarCotizaciones() {

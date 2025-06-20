@@ -2,7 +2,7 @@ async function buscarVehiculo() {
     const placa = document.getElementById('placaInput').value.trim();
     if (!placa) return alert("Ingrese una placa");
 
-    // Oculta todo al comenzar
+
     ocultarSecciones();
 
     try {
@@ -38,6 +38,8 @@ function ocultarSecciones() {
 }
 
 async function agregarVehiculo() {
+  if (!validarAnioNuevo()) return;
+
     const placa = document.getElementById('placaInput').value.trim();
     const marca = document.getElementById('nuevaMarca').value.trim();
     const modelo = document.getElementById('nuevoModelo').value.trim();

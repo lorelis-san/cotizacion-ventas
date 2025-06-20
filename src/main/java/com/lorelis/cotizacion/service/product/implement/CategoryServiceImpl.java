@@ -6,10 +6,11 @@ import com.lorelis.cotizacion.repository.productos.CategoryRepository;
 import com.lorelis.cotizacion.service.product.CategoryService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
         category.setId(dto.getId());
         category.setName(dto.getName());
         category.setDescription(dto.getDescription());
-
+        category.setEnabled(dto.getEnabled());
         return category;
 
     }
@@ -34,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
         dto.setId(category.getId());
         dto.setName(category.getName());
         dto.setDescription(category.getDescription());
-
+        dto.setEnabled(category.getEnabled());
         return dto;
     }
 
@@ -44,16 +45,32 @@ public class CategoryServiceImpl implements CategoryService {
         Category existing = categoryRepository.findByName(nombre);
 
         if (existing != null) {
-            throw new RuntimeException("Ya existe una categoría con ese nombre");
-        }
+            if(existing.getEnabled()){
+                throw new RuntimeException("Ya existe una categoría con ese nombre");
+            }
+            else{
+                existing.setName(categoryDTO.getName());
+                existing.setDescription(categoryDTO.getDescription());
+                existing.setEnabled(true);
+                categoryRepository.save(existing);
+                return;
+            }
 
-        categoryRepository.save(convertToEntity(categoryDTO));
+        }
+        Category nuevaCategoria= convertToEntity(categoryDTO);
+        nuevaCategoria.setEnabled(true);
+        categoryRepository.save(nuevaCategoria);
+
     }
 
 
     @Override
     public List<CategoryDTO> getAllCategory() {
         return categoryRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+    @Override
+    public List<CategoryDTO> getAllCategoryEnabled() {
+        return categoryRepository.findByEnabledTrue().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -82,8 +99,24 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
+    public ResponseEntity<Map<String, Object>> deleteCategory(Long id) {
+        Map<String, Object> res = new HashMap<>();
+        Optional<Category> categoryOptional = categoryRepository.findById(id);
 
+        if (categoryOptional.isEmpty()) {
+            res.put("mensaje", "Categoría no encontrada");
+            res.put("status", HttpStatus.NOT_FOUND);
+            res.put("fecha", new Date());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+        }
+
+        Category category = categoryOptional.get();
+        category.setEnabled(false);
+        categoryRepository.save(category);
+
+        res.put("mensaje", "Categoría deshabilitada correctamente");
+        res.put("status", HttpStatus.NO_CONTENT);
+        res.put("fecha", new Date());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(res);
     }
 }

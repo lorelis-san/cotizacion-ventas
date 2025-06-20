@@ -24,6 +24,7 @@ public class ClientDTO {
     private String phoneNumber;
 
     private String email;
+    private Boolean enabled = true;
 
 
 }

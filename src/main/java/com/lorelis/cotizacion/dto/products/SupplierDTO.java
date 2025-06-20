@@ -2,6 +2,7 @@ package com.lorelis.cotizacion.dto.products;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -17,7 +18,8 @@ public class SupplierDTO {
     private String name;
 
     @NotBlank(message = "El RUC es obligatorio")
-    @Size(max = 11, message = "El RUC no puede exceder 11 caracteres")
+    @Size(min = 11, max = 11, message = "El RUC debe tener 11 dígitos")
+    @Pattern(regexp = "\\d+", message = "El RUC solo debe contener números")
     private String ruc;
 
     @Email(message = "Email debe tener formato válido")
@@ -25,6 +27,9 @@ public class SupplierDTO {
     private String email;
 
     @NotBlank(message = "El teléfono es obligatorio")
-    @Size(max = 9, message = "El teléfono no puede exceder 9 caracteres")
+    @Pattern(regexp = "\\d+", message = "El teléfono solo debe contener números")
     private String phone;
+
+    private Boolean enabled = true;
+
 }

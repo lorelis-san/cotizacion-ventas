@@ -18,7 +18,7 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public String listarCategorias(Model model) {
-        List<CategoryDTO> listaCategorias = categoryService.getAllCategory();
+        List<CategoryDTO> listaCategorias = categoryService.getAllCategoryEnabled();
         model.addAttribute("listaCategorias", listaCategorias);
         return "categories/categoriesIndex";
     }

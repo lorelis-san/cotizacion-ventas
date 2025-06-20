@@ -45,6 +45,8 @@ public class ProductsServiceImpl implements ProductsService {
         product.setBrand(dto.getBrand());
         product.setModel(dto.getModel());
         product.setYear(dto.getYear());
+        product.setStartYear(dto.getStartYear());
+        product.setEndYear(dto.getEndYear());
         product.setCostPrice(dto.getCostPrice());
         product.setCostDealer(dto.getDealerPrice());
         product.setSalePrice(dto.getSalePrice());
@@ -75,6 +77,8 @@ public class ProductsServiceImpl implements ProductsService {
         dto.setBrand(product.getBrand());
         dto.setModel(product.getModel());
         dto.setYear(product.getYear());
+        dto.setStartYear(product.getStartYear());
+        dto.setEndYear(product.getEndYear());
         dto.setCostPrice(product.getCostPrice());
         dto.setDealerPrice(product.getCostDealer());
         dto.setSalePrice(product.getSalePrice());
@@ -102,7 +106,6 @@ public class ProductsServiceImpl implements ProductsService {
             if (imageFile != null && !imageFile.isEmpty()) {
                 String imageUrl = firebaseStorageService.uploadFile(imageFile);
                 product.setImageUrl(imageUrl);
-                System.out.println("Imagen subida desde archivo: " + imageUrl);
             }
             // Prioridad 2: URL proporcionada
             else if (dto.getImageUrl() != null && !dto.getImageUrl().trim().isEmpty()) {
@@ -157,6 +160,8 @@ public class ProductsServiceImpl implements ProductsService {
             product.setBrand(dto.getBrand());
             product.setModel(dto.getModel());
             product.setYear(dto.getYear());
+            product.setStartYear(dto.getStartYear());
+            product.setEndYear(dto.getEndYear());
             product.setCostPrice(dto.getCostPrice());
             product.setCostDealer(dto.getDealerPrice());
             product.setSalePrice(dto.getSalePrice());
@@ -174,11 +179,14 @@ public class ProductsServiceImpl implements ProductsService {
                 }
             }
             // Manejar imagen
+            System.out.println("va a entrar a la img URL: " );
             String oldImageUrl = product.getImageUrl();
             boolean imageUpdated = false;
             try {
+                System.out.println("entra al if" );
                 // Prioridad 1: Nuevo archivo subido
                 if (imageFile != null && !imageFile.isEmpty()) {
+                    System.out.println("a la linea 183: " );
                     String newImageUrl = firebaseStorageService.uploadFile(imageFile);
                     product.setImageUrl(newImageUrl);
                     imageUpdated = true;
@@ -259,16 +267,16 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     private void validarYear(ProductDTO dto) {
-        if (dto.getYear() != null && !dto.getYear().trim().isEmpty()) {
-            try {
-                int anio = Integer.parseInt(dto.getYear());
-                int anioActual = java.time.LocalDate.now().getYear();
-                if (anio < 1900 || anio > anioActual) {
-                    throw new IllegalArgumentException("El año debe estar entre 1900 y " + anioActual);
-                }
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("El año debe ser un número válido.");
-            }
+        Integer start = dto.getStartYear();
+        Integer end = dto.getEndYear();
+        int anioActual = java.time.LocalDate.now().getYear();
+
+        if (start == null || start < 1900 || start > anioActual + 10) {
+            throw new IllegalArgumentException("El año inicial debe estar entre 1900 y " + (anioActual + 10));
+        }
+
+        if (end != null && (end < start || end > anioActual + 20)) {
+            throw new IllegalArgumentException("El año final debe ser mayor o igual al inicial y razonable");
         }
     }
 
