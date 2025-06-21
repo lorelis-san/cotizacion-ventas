@@ -45,8 +45,8 @@ public class PdfGeneratorService {
         try {
             PdfWriter writer = PdfWriter.getInstance(document, out);
 
-            Image background = Image.getInstance("static/img/membrete_fondo.jpg");
-            writer.setPageEvent(new BackgroundPageEvent(background));
+//            Image background = Image.getInstance("static/img/membrete_fondo.jpg");
+//            writer.setPageEvent(new BackgroundPageEvent(background));
 
             document.open();
 
