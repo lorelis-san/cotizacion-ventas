@@ -26,10 +26,15 @@
     <div th:replace="~{fragments/dashboard :: menu}"></div>
     <div class="dashboard-wrapper">
         <nav class="navbar navbar-expand-lg navbar-dark custom-navbar" style="background-color:#0E0C28;">
+            <div class="container-fluid">
             <a class="navbar-brand" href="/vehicle">
                 <i class="fa-solid fa-car"></i> Vehículos
             </a>
-            <div class="collapse navbar-collapse">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCotizaciones"
+                        aria-controls="navbarCotizaciones" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            <div class="collapse navbar-collapse" id="navbarCotizaciones">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/nuevoVehiculo">
@@ -38,6 +43,8 @@
                     </li>
                 </ul>
             </div>
+            </div>
+
         </nav>
 
         <br />
