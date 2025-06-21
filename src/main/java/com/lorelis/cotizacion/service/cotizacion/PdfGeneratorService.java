@@ -4,11 +4,13 @@ import com.lorelis.cotizacion.model.cotizacion.Cotizacion;
 import com.lorelis.cotizacion.model.cotizacion.DetalleCotizacion;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 
@@ -36,7 +38,33 @@ public class PdfGeneratorService {
             }
         }
     }
+    private void configurarImagenFondo(PdfWriter writer) {
+        try {
+            System.out.println("Intentando cargar imagen de fondo...");
 
+            // Método 1: ClassPathResource
+            ClassPathResource resource = new ClassPathResource("static/img/membrete_fondo.jpg");
+            System.out.println("Recurso existe: " + resource.exists());
+
+            if (resource.exists()) {
+                try (InputStream inputStream = resource.getInputStream()) {
+                    byte[] imageBytes = inputStream.readAllBytes();
+                    System.out.println("Imagen cargada, tamaño: " + imageBytes.length + " bytes");
+
+                    Image background = Image.getInstance(imageBytes);
+                    writer.setPageEvent(new BackgroundPageEvent(background));
+                    System.out.println("Imagen de fondo configurada exitosamente");
+                }
+            } else {
+                System.out.println("Imagen no encontrada, continuando sin fondo");
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error configurando imagen de fondo: " + e.getMessage());
+            e.printStackTrace();
+            // Continúa sin imagen de fondo
+        }
+    }
     public ByteArrayInputStream generarCotizacionPDF(Cotizacion cotizacion) {
         Document document = new Document(PageSize.A4, 60, 60, 170, 130); // márgenes corregidos
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -44,6 +72,7 @@ public class PdfGeneratorService {
 
         try {
             PdfWriter writer = PdfWriter.getInstance(document, out);
+            configurarImagenFondo(writer);
 
 //            Image background = Image.getInstance("static/img/membrete_fondo.jpg");
 //            writer.setPageEvent(new BackgroundPageEvent(background));
