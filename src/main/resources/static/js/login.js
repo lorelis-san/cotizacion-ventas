@@ -23,7 +23,7 @@
             });
 
             if (!res.ok) {
-                throw new Error('Credenciales inválidas');
+                throw new Error('Usuario o contraseña inválidas');
             }
 
             const data = await res.json();
