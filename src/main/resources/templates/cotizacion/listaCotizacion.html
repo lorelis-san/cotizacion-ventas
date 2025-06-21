@@ -21,24 +21,37 @@
 
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
-                <a class="navbar-brand" href="/listaCotizaciones">
-                    <i class="fas fa-file-invoice-dollar"></i> Cotizaciones
-                </a>
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/nuevaCotizacion">
-                                <i class="fas fa-plus-circle"></i> Nueva Cotización
-                            </a>
-                        </li>
-                    </ul>
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/listaCotizaciones">
+                        <i class="fas fa-file-invoice-dollar"></i> Cotizaciones
+                    </a>
+
+                    <!-- Botón hamburguesa -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCotizaciones"
+                            aria-controls="navbarCotizaciones" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <!-- Menú colapsable -->
+                    <div class="collapse navbar-collapse" id="navbarCotizaciones">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/nuevaCotizacion">
+                                    <i class="fas fa-plus-circle"></i> Nueva Cotización
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
+
 
             <div class="container mt-4">
                 <div class="card shadow-sm rounded">
                     <div class="card-body">
-                        <table class="table table-hover align-middle text-center">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle text-center">
+
                             <thead class="text-white" style="background-color: #2A2861;">
                             <tr>
                                 <th>Número</th>
@@ -87,6 +100,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>

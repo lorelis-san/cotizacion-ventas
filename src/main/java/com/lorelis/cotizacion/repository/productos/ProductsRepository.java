@@ -18,10 +18,15 @@ public interface ProductsRepository extends JpaRepository<Products, Long> {
     Optional<Products> findByIdAndEnabledTrue(Long id);
     boolean existsByCodAndEnabledTrue(String cod);
     List<Products> findByNameContainingIgnoreCaseAndEnabledTrueOrCodContainingIgnoreCaseAndEnabledTrue(String name, String cod);
-    @Query("SELECT p FROM Products p WHERE p.enabled = true AND " +
-            "(LOWER(p.name) LIKE LOWER(CONCAT('%', :termino, '%')) " +
-            "OR LOWER(p.cod) LIKE LOWER(CONCAT('%', :termino, '%')))")
-    List<Products> buscarActivosPorNombreOCodigo(@Param("termino") String termino);
+//    @Query("SELECT p FROM Products p WHERE p.enabled = true AND " +
+//            "(LOWER(p.name) LIKE LOWER(CONCAT('%', :termino, '%')) " +
+//            "OR LOWER(p.cod) LIKE LOWER(CONCAT('%', :termino, '%')))")
+//    List<Products> buscarActivosPorNombreOCodigo(@Param("termino") String termino);
+@Query("SELECT DISTINCT p FROM Products p WHERE p.enabled = true AND " +
+        "(LOWER(p.name) LIKE LOWER(CONCAT('%', :termino, '%')) " +
+        "OR LOWER(p.cod) LIKE LOWER(CONCAT('%', :termino, '%')))")
+List<Products> buscarActivosPorNombreOCodigo(@Param("termino") String termino);
+
 
     Products findByCod(String cod);
 }

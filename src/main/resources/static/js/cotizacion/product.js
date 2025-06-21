@@ -14,6 +14,7 @@ async function buscarProducto() {
         if (!response.ok) throw new Error("Error al buscar productos");
 
         const productos = await response.json();
+        console.log("Productos encontrados:", productos);
         if (productos.length === 0) {
             contenedor.innerHTML = "<p>No se encontraron productos</p>";
         } else {
