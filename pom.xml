@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.lorelis</groupId>
 	<artifactId>cotizacion-ventas</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>cotizacion-ventas</name>
 	<description>Sistema de cotizaciones</description>
 	<url/>
