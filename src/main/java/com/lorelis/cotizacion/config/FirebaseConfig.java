@@ -31,7 +31,9 @@ public class FirebaseConfig {
     public void initialize() {
         try {
             if (FirebaseApp.getApps().isEmpty()) {
-                InputStream serviceAccount = new ClassPathResource(firebaseConfigPath).getInputStream();
+//                InputStream serviceAccount = new ClassPathResource(firebaseConfigPath).getInputStream();
+                InputStream serviceAccount = new FileInputStream(firebaseConfigPath);
+
                 GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
                 FirebaseOptions options = FirebaseOptions.builder()
@@ -54,7 +56,9 @@ public class FirebaseConfig {
 
     @Bean
     public Storage storage() throws IOException {
-        InputStream serviceAccount = new ClassPathResource(firebaseConfigPath).getInputStream();
+//        InputStream serviceAccount = new ClassPathResource(firebaseConfigPath).getInputStream();
+        InputStream serviceAccount = new FileInputStream(firebaseConfigPath);
+
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
         return StorageOptions.newBuilder()
                 .setCredentials(credentials)
