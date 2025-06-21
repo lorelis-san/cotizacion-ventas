@@ -124,7 +124,7 @@
                         <div class="col-md-4">
                             <label>Nombre o Razón Social</label>
                             <input class="form-control"
-                                   th:value="${cotizacion.cliente.businessName != null ? cotizacion.cliente.businessName : cotizacion.cliente.firstName + ' ' + cotizacion.cliente.lastName}"
+                                   th:value="${cotizacion.cliente.typeDocument == 'RUC' ? cotizacion.cliente.businessName : cotizacion.cliente.firstName + ' ' + cotizacion.cliente.lastName}"
                                    readonly/>
                         </div>
                     </div>

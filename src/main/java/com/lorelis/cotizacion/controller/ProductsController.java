@@ -7,6 +7,8 @@ import com.lorelis.cotizacion.service.product.CategoryService;
 import com.lorelis.cotizacion.service.product.ProductsService;
 import com.lorelis.cotizacion.service.product.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -112,16 +114,17 @@ public class ProductsController {
         return "redirect:/productos";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         try {
             productsService.deleteProduct(id);
-            redirectAttributes.addFlashAttribute("message", "Producto eliminado exitosamente");
+            return ResponseEntity.ok("Producto eliminado exitosamente");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al eliminar el producto: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar el producto: " + e.getMessage());
         }
-        return "redirect:/productos";
     }
+
 
     @GetMapping("/view/{id}")
     public String viewProduct(@PathVariable Long id, Model model) {

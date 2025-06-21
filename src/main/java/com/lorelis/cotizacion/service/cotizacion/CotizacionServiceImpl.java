@@ -21,6 +21,9 @@ import com.lorelis.cotizacion.repository.cotizacion.DetalleCotizacionRepository;
 import com.lorelis.cotizacion.repository.productos.ProductsRepository;
 import com.lorelis.cotizacion.repository.user.UserRepository;
 import com.lorelis.cotizacion.repository.vehicle.VehicleRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -125,6 +128,8 @@ public class CotizacionServiceImpl implements CotizacionService {
                 .orElseThrow(() -> new RuntimeException("Cotización no encontrada con ID: " + id));
     }
 
+
+
     @Transactional
     @Override
     public CotizacionResponseDTO crearCotizacionDesdeDTO(CotizacionDTO dto) {
@@ -161,18 +166,15 @@ public class CotizacionServiceImpl implements CotizacionService {
         }
 
         cotizacion.calcularTotales();
+        cotizacion.setNumeroCotizacion("TEMP"); // cualquier valor dummy temporal
 
         // ✅ 1ra vez: guardar sin número
-        Cotizacion cotizacionGuardada = cotizacionRepository.save(cotizacion);
+        cotizacionRepository.save(cotizacion);
 
-        // ✅ Generar número único a partir del ID
-        String numeroCotizacion = String.format("COT-%04d", cotizacionGuardada.getId());
-        cotizacionGuardada.setNumeroCotizacion(numeroCotizacion);
+        cotizacion.setNumeroCotizacion(String.format("COT-%04d", cotizacion.getId()));
+        cotizacionRepository.save(cotizacion);
 
-        // ✅ Guardar con número
-        cotizacionRepository.save(cotizacionGuardada);
-
-        return mapToResponseDTO(cotizacionGuardada);
+        return mapToResponseDTO(cotizacion);
     }
 
 
@@ -182,6 +184,7 @@ public class CotizacionServiceImpl implements CotizacionService {
 
         return cotizaciones.stream().map(this::mapToResponseDTO).toList();
     }
+
 
     @Override
     public ResponseEntity<Map<String, Object>> eliminarCotizacion(Long id) {
@@ -211,6 +214,7 @@ public class CotizacionServiceImpl implements CotizacionService {
         res.put("fecha", new Date());
         return ResponseEntity.status((HttpStatus) res.get("status")).body(res);
     }
+
 
     @Transactional
     @Override
@@ -265,12 +269,12 @@ public class CotizacionServiceImpl implements CotizacionService {
                 .orElseThrow(() -> new EntityNotFoundException("Cotización no encontrada con ID: " + id));
         return mapToResponseDTO(cot);
     }
-//
-//
-//    private String generarNumeroCotizacion() {
-//        Long count = cotizacionRepository.count();
-//        return "COT-" + String.format("%03d", count + 1);
-//    }
+
+
+    private String generarNumeroCotizacion() {
+        Long count = cotizacionRepository.count();
+        return "COT-" + String.format("%03d", count + 1);
+    }
 
 }
 
