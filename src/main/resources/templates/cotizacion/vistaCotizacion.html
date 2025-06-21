@@ -105,7 +105,7 @@
                                 <i class="fas fa-building"></i>
                                 Nombre o Razón Social
                             </div>
-                            <p class="info-value" th:text="${cotizacion.cliente.businessName != null ? cotizacion.cliente.businessName : cotizacion.cliente.firstName + ' ' + cotizacion.cliente.lastName}"></p>
+                            <p class="info-value" th:text="${cotizacion.cliente.typeDocument == 'RUC' ? cotizacion.cliente.businessName : cotizacion.cliente.firstName + ' ' + cotizacion.cliente.lastName}"></p>
                         </div>
                     </div>
                 </div>
