@@ -132,7 +132,7 @@
                           <div class="text-muted small">Precio de Costo</div>
                           <div class="h5 text-warning">$<span th:text="${#numbers.formatDecimal(product.costPrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
                         </div>
-                        <div class="col-md-4" th:if="${product.dealerPrice != null}">
+                        <div class="col-md-4" th:if="${product.dealerPrice != null}"  sec:authorize="hasRole('ROLE_ADMIN')">
                           <div class="text-muted small">Precio Distribuidor</div>
                           <div class="h5 text-info">$<span th:text="${#numbers.formatDecimal(product.dealerPrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
                         </div>
