@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class UserController {
     // Vista de login
-    @GetMapping("/loginView")
+    @GetMapping("/iniciarSesion")
     public String showLoginForm() {
         return "usuario/login";
     }
 
-    @GetMapping("/registerView")
+    @GetMapping("/registrarse")
     public String showRegisterForm() {
         return "usuario/register";
     }

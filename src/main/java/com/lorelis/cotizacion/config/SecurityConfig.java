@@ -32,9 +32,9 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/error/**", "/auth/login", "/loginView", "/css/**", "/js/**", "/images/**", "/vistaCotizacion", "/zohoverify/**").permitAll()
+                        .requestMatchers("/","/error/**", "/auth/login", "/iniciarSesion", "/css/**", "/js/**", "/images/**", "/vistaCotizacion").permitAll()
                         .requestMatchers(HttpMethod.GET, "/categories",  "/suppliers", "/categories").hasRole("ADMIN")
-                        .requestMatchers("/auth/register","/registerView", "/nuevaCategoria", "/categories/guardar", "/categoria/**", "/actualizarCategoria", "/eliminarCategoria/**", "/api/suppliers/**", "suppliers/**")
+                        .requestMatchers("/auth/register","/registrarse", "/nuevaCategoria", "/categories/guardar", "/categoria/**", "/actualizarCategoria", "/eliminarCategoria/**", "/api/suppliers/**", "suppliers/**")
                         .hasRole("ADMIN")
                         .requestMatchers(
                                 "/categories",

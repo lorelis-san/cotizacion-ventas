@@ -23,7 +23,7 @@
             });
 
             if (!res.ok) {
-                throw new Error('Usuario o contraseña inválidas');
+                throw new Error('Correo o contraseña inválidos');
             }
 
             const data = await res.json();
@@ -52,7 +52,7 @@
             // Hide error after 5 seconds
             setTimeout(() => {
                 errorDiv.style.display = 'none';
-            }, 5000);
+            }, 3000);
         }
 
         function resetButton() {
@@ -61,7 +61,6 @@
         }
     });
 
-    console.log("voy a ingresar a lo de cookies");
 
     window.onload = function() {
         fetch('/auth/check-auth')

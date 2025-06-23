@@ -22,21 +22,21 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(()-> new UsernameNotFoundException("User not found"));
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getName().toString());
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
                 Collections.singleton(authority)
         );
     }
     public User findByUsername(String userName) {
-        return userRepository.findByUsername(userName)
+        return userRepository.findByEmail(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
     public boolean existsByUserName(String username){
-        return userRepository.existsByUsername(username);
+        return userRepository.existsByEmail(username);
     }
 
     public void save(User user){

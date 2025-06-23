@@ -55,8 +55,8 @@ public class AuthService {
     }
 
     public void registerUser(NewUserDto newUserDto) {
-        if (userService.existsByUserName(newUserDto.getUsername())) {
-            throw new IllegalArgumentException("El nombre de usuario ya existe");
+        if (userService.existsByUserName(newUserDto.getEmail())) {
+            throw new IllegalArgumentException("El correo electrónico ya existe");
         }
 
         Role roleUser = roleRepository.findByName(RoleList.ROLE_USER).orElseThrow(() -> new RuntimeException("Rol no encontrado"));

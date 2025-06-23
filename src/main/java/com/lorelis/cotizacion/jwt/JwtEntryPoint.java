@@ -35,12 +35,12 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
             // Para peticiones AJAX/API, devolver JSON
             response.setContentType("application/json;charset=UTF-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"error\":\"Token expirado\",\"message\":\"Sesión expirada\",\"redirectUrl\":\"/loginView?expired=true\"}");
+            response.getWriter().write("{\"error\":\"Token expirado\",\"message\":\"Sesión expirada\",\"redirectUrl\":\"/iniciarSesion?expired=true\"}");
 
         } else {
             // Para peticiones de vistas normales, redirigir al login
             if (!response.isCommitted()) {
-                response.sendRedirect("/loginView?expired=true");
+                response.sendRedirect("/iniciarSesion?expired=true");
             }
         }
     }

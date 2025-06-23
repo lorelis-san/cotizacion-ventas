@@ -140,7 +140,7 @@ public class CotizacionServiceImpl implements CotizacionService {
                 .orElseThrow(() -> new RuntimeException("Vehículo no encontrado"));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
 
         Cotizacion cotizacion = Cotizacion.builder()
@@ -196,7 +196,7 @@ public class CotizacionServiceImpl implements CotizacionService {
             Cotizacion cotizacion = optional.get();
 
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userRepository.findByUsername(email)
+            User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("Usuario no autenticado"));
 
             cotizacion.setEstado(EstadoCotizacion.ELIMINADA);
@@ -229,7 +229,7 @@ public class CotizacionServiceImpl implements CotizacionService {
         List<DetalleCotizacion> nuevosDetalles = new ArrayList<>();
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
 
         for (DetalleCotizacionDTO detalleDTO : dto.getDetalles()) {
