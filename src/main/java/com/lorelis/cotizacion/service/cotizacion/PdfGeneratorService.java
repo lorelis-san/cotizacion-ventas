@@ -290,7 +290,6 @@ public class PdfGeneratorService {
                 "• Esta cotización tiene una validez de 30 días calendario desde la fecha de emisión.",
                 "• Los precios están expresados en Soles (S/) e incluyen IGV.",
                 "• El tiempo de entrega será coordinado una vez confirmado el pedido.",
-                "• Para confirmar el pedido se requiere el 50% del total como adelanto.",
                 "• Los productos están sujetos a disponibilidad de stock.",
                 "• La empresa se reserva el derecho de modificar precios sin previo aviso."
         };
