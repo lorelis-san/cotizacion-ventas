@@ -1,3 +1,4 @@
+$.fn.dataTable.ext.errMode = 'none';
 $(document).ready(function () {
                     $('.table').DataTable({
                         "language": {
