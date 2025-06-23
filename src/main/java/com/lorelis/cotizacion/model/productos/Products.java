@@ -21,8 +21,8 @@ public class Products {
     private String cod; // como 00FRR23
     @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "description")
+    @Lob
+    @Column(name = "description" )
     private String description;
 
     @Column(name = "brand") //marca
