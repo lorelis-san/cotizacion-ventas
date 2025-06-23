@@ -101,6 +101,7 @@ public class CotizacionServiceImpl implements CotizacionService {
             detalleDTO.setNombreProducto(productoDTO.getName());
             detalleDTO.setProductoId(productoDTO.getId());
             detalleDTO.setCantidad(detalle.getCantidad());
+            detalleDTO.setImagenUrl(detalle.getProducto().getImageUrl());
             detalleDTO.setPrecioUnitario(detalle.getPrecioUnitario());
             detalleDTO.setSubtotal(detalle.getSubtotal());
             return detalleDTO;

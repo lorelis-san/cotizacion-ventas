@@ -14,7 +14,6 @@ async function buscarProducto() {
         if (!response.ok) throw new Error("Error al buscar productos");
 
         const productos = await response.json();
-        console.log("Productos encontrados:", productos);
         if (productos.length === 0) {
             contenedor.innerHTML = "<p>No se encontraron productos</p>";
         } else {
@@ -23,14 +22,29 @@ async function buscarProducto() {
                 const div = document.createElement('div');
                 div.className = 'producto-item';
                 div.innerHTML = `
-
-                    <strong>${p.name}</strong> <span>(${p.cod})</span> S/. ${p.salePrice}<br>
-                    <input type="number" id="cantidad_${p.id}" value="1" min="1" class="form-control form-control-sm" style="width: 80px;"/>
-                    <button onclick="agregarAlCarrito(${p.id}, '${p.name}', ${p.salePrice})" class="btn btn-flat btn-sm" >Agregar</button>
-                    <hr>
-
+                     <div class="me-3">
+                          <img src="${p.imageUrl || '/images/no-image.png'}"
+                               alt="${p.name}"
+                               class="img-thumbnail"
+                               style="width: 60px; height: 60px; object-fit: contain;"
+                               onerror="this.src='/images/no-image.png'">
+                     </div>
+                     <div class="flex-grow-1">
+                          <strong>${p.name}</strong> <span>(${p.cod})</span><br>
+                          <span class="text-success fw-bold">S/. ${p.salePrice}</span>
+                     </div>
+                     <div class="me-2">
+                          <input type="number" id="cantidad_${p.id}" value="1" min="1"
+                                 class="form-control form-control-sm" style="width: 70px;"/>
+                     </div>
+                     <div>
+                          <button onclick="agregarAlCarrito(${p.id}, '${p.name}', ${p.salePrice}, '${p.imageUrl || ''}')"
+                                  class="btn btn-dark btn-sm">
+                              <i class="fas fa-plus"></i> Agregar
+                          </button>
+                     </div>
                 `;
-                contenedor.appendChild(div);
+                  contenedor.appendChild(div);
             });
         }
     } catch (error) {
@@ -38,20 +52,20 @@ async function buscarProducto() {
         alert("Hubo un problema al buscar productos");
     }
 }
+
 let timeoutId;
 
 function filtrarBusqueda() {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
-        buscarProducto(); // llama a tu función existente
-    }, 300); // 300ms de espera después de que el usuario deja de tipear
+        buscarProducto();
+    }, 300);
 }
-
 
 /////////////
 const carrito = [];
 
-function agregarAlCarrito(id, nombre, precio) {
+function agregarAlCarrito(id, nombre, precio, imageUrl) {
     const cantidad = parseInt(document.getElementById(`cantidad_${id}`).value);
     if (!cantidad || cantidad < 1) return alert("Cantidad inválida");
 
@@ -59,13 +73,28 @@ function agregarAlCarrito(id, nombre, precio) {
     if (existente) {
         existente.cantidad += cantidad;
     } else {
-        carrito.push({ id, nombre, precio, cantidad });
+        carrito.push({
+            id,
+            nombre,
+            precio,
+            cantidad,
+            imageUrl: imageUrl || ''
+        });
     }
 
     renderizarCarrito();
+    console.log("Producto agregado al carrito:", { id, nombre, precio, cantidad, imageUrl });
+    console.log("Carrito actual:", carrito);
 }
+
 function renderizarCarrito() {
     const contenedor = document.getElementById('carrito');
+
+    if (!contenedor) {
+        console.error("Contenedor del carrito no encontrado");
+        return;
+    }
+
     contenedor.innerHTML = '';
 
     if (carrito.length === 0) {
@@ -73,7 +102,6 @@ function renderizarCarrito() {
         return;
     }
 
-    // Cabecera
     contenedor.innerHTML = `
         <div class="carrito-header row fw-bold mb-2">
             <div class="col-4">Producto</div>
@@ -81,7 +109,6 @@ function renderizarCarrito() {
             <div class="col-2">Precio</div>
             <div class="col-3">Subtotal</div>
             <div class="col-1 text-center"></div>
-
         </div>
     `;
 
@@ -94,16 +121,30 @@ function renderizarCarrito() {
         const item = document.createElement('div');
         item.className = 'carrito-item row align-items-center mb-2';
         item.innerHTML = `
-            <div class="col-4">${p.nombre}</div>
-            <div class="col-2">${p.cantidad}</div>
+            <div class="col-4">
+                <div class="d-flex align-items-center">
+                    <img src="${p.imageUrl || '/images/no-image.png'}"
+                         alt="${p.nombre}"
+                         class="img-thumbnail me-2"
+                         style="width: 40px; height: 40px; object-fit: contain;"
+                         onerror="this.src='/images/no-image.png'">
+                    <span>${p.nombre}</span>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="input-group input-group-sm">
+                    <button class="btn btn-outline-secondary" onclick="cambiarCantidad(${p.id}, -1)">-</button>
+                    <input type="text" class="form-control text-center" value="${p.cantidad}" readonly>
+                    <button class="btn btn-outline-secondary" onclick="cambiarCantidad(${p.id}, 1)">+</button>
+                </div>
+            </div>
             <div class="col-2">S/ ${p.precio.toFixed(2)}</div>
-            <div class="col-3 fw-bold">S/ ${subtotal.toFixed(2)}</div>
+            <div class="col-3 fw-bold text-success">S/ ${subtotal.toFixed(2)}</div>
             <div class="col-1 text-center">
                 <button class="btn btn-sm btn-danger" onclick="eliminarDelCarrito(${p.id})">
-                      <i class="fas fa-trash"></i>
+                    <i class="fas fa-trash"></i>
                 </button>
             </div>
-
         `;
         contenedor.appendChild(item);
     });
@@ -115,12 +156,42 @@ function renderizarCarrito() {
         <div class="col-3">S/ ${total.toFixed(2)}</div>
     `;
     contenedor.appendChild(totalRow);
+
+    console.log("Carrito renderizado, total items:", carrito.length);
 }
 
-    function eliminarDelCarrito(id) {
-        const index = carrito.findIndex(p => p.id === id);
-        if (index !== -1) {
-            carrito.splice(index, 1);
+function cambiarCantidad(id, cambio) {
+    const producto = carrito.find(p => p.id === id);
+    if (producto) {
+        const nuevaCantidad = producto.cantidad + cambio;
+        if (nuevaCantidad > 0) {
+            producto.cantidad = nuevaCantidad;
             renderizarCarrito();
         }
     }
+}
+
+function eliminarDelCarrito(id) {
+    const index = carrito.findIndex(p => p.id === id);
+    if (index !== -1) {
+        carrito.splice(index, 1);
+        renderizarCarrito();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

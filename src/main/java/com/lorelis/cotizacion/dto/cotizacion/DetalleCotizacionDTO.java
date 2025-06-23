@@ -14,6 +14,7 @@ public class DetalleCotizacionDTO {
     private Long productoId;
     private String nombreProducto;
     private Integer cantidad;
+    private String imagenUrl;
     private BigDecimal precioUnitario;
     private BigDecimal subtotal;
 }
