@@ -1,4 +1,3 @@
-//js de mi proyecto
 async function buscarProducto() {
     const termino = document.getElementById('busquedaProducto').value.trim();
     const contenedor = document.getElementById('resultadosProducto');
@@ -53,20 +52,20 @@ async function buscarProducto() {
         alert("Hubo un problema al buscar productos");
     }
 }
+
 let timeoutId;
 
 function filtrarBusqueda() {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
-        buscarProducto(); // llama a tu función existente
-    }, 300); // 300ms de espera después de que el usuario deja de tipear
+        buscarProducto();
+    }, 300);
 }
-
 
 /////////////
 const carrito = [];
 
-function agregarAlCarrito(id, nombre, precio) {
+function agregarAlCarrito(id, nombre, precio, imageUrl) {
     const cantidad = parseInt(document.getElementById(`cantidad_${id}`).value);
     if (!cantidad || cantidad < 1) return alert("Cantidad inválida");
 
@@ -74,13 +73,28 @@ function agregarAlCarrito(id, nombre, precio) {
     if (existente) {
         existente.cantidad += cantidad;
     } else {
-        carrito.push({ id, nombre, precio, cantidad, imageUrl: imagenUrl});
+        carrito.push({
+            id,
+            nombre,
+            precio,
+            cantidad,
+            imageUrl: imageUrl || ''
+        });
     }
 
     renderizarCarrito();
+    console.log("Producto agregado al carrito:", { id, nombre, precio, cantidad, imageUrl });
+    console.log("Carrito actual:", carrito);
 }
+
 function renderizarCarrito() {
     const contenedor = document.getElementById('carrito');
+
+    if (!contenedor) {
+        console.error("Contenedor del carrito no encontrado");
+        return;
+    }
+
     contenedor.innerHTML = '';
 
     if (carrito.length === 0) {
@@ -88,7 +102,6 @@ function renderizarCarrito() {
         return;
     }
 
-    // Cabecera
     contenedor.innerHTML = `
         <div class="carrito-header row fw-bold mb-2">
             <div class="col-4">Producto</div>
@@ -96,7 +109,6 @@ function renderizarCarrito() {
             <div class="col-2">Precio</div>
             <div class="col-3">Subtotal</div>
             <div class="col-1 text-center"></div>
-
         </div>
     `;
 
@@ -111,7 +123,7 @@ function renderizarCarrito() {
         item.innerHTML = `
             <div class="col-4">
                 <div class="d-flex align-items-center">
-                    <img src="${p.imagenUrl || '/images/no-image.png'}"
+                    <img src="${p.imageUrl || '/images/no-image.png'}"
                          alt="${p.nombre}"
                          class="img-thumbnail me-2"
                          style="width: 40px; height: 40px; object-fit: contain;"
@@ -144,23 +156,25 @@ function renderizarCarrito() {
         <div class="col-3">S/ ${total.toFixed(2)}</div>
     `;
     contenedor.appendChild(totalRow);
+
+    console.log("Carrito renderizado, total items:", carrito.length);
 }
 
-    // Nueva función para cambiar cantidad con botones +/-
-    function cambiarCantidad(id, cambio) {
-        const producto = carrito.find(p => p.id === id);
-        if (producto) {
-            const nuevaCantidad = producto.cantidad + cambio;
-            if (nuevaCantidad > 0) {
-                producto.cantidad = nuevaCantidad;
-                renderizarCarrito();
-            }
-        }
-    }
-    function eliminarDelCarrito(id) {
-        const index = carrito.findIndex(p => p.id === id);
-        if (index !== -1) {
-            carrito.splice(index, 1);
+function cambiarCantidad(id, cambio) {
+    const producto = carrito.find(p => p.id === id);
+    if (producto) {
+        const nuevaCantidad = producto.cantidad + cambio;
+        if (nuevaCantidad > 0) {
+            producto.cantidad = nuevaCantidad;
             renderizarCarrito();
         }
     }
+}
+
+function eliminarDelCarrito(id) {
+    const index = carrito.findIndex(p => p.id === id);
+    if (index !== -1) {
+        carrito.splice(index, 1);
+        renderizarCarrito();
+    }
+}
