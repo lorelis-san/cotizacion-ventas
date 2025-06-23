@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro de Usuario</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+<body>
+<div class="register-container">
+    <div class="register-card">
+        <div class="brand-section">
+            <div class="brand-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h1 class="card-title">Crear Cuenta</h1>
+            <p class="card-subtitle">Complete los datos para registrarse</p>
+        </div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="nombre" class="form-label">Nombre</label>
+                <div class="input-wrapper">
+                    <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese su nombre" required>
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="apellido" class="form-label">Apellido</label>
+                <div class="input-wrapper">
+                    <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese su apellido" required>
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="username" class="form-label">Usuario</label>
+                <div class="input-wrapper">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Ingrese su nombre de usuario" required>
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-wrapper">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Ingrese un correo válido" required>
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Contraseña</label>
+                <div class="input-wrapper">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Ingrese su contraseña" required>
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+                <div id="passwordStrength" class="password-strength"></div>
+            </div>
+
+            <button type="submit" class="btn-register" id="registerBtn">
+                <span class="btn-text">Crear Cuenta</span>
+            </button>
+        </form>
+
+        <div id="message" style="display: none;"></div>
+
+        <div class="login-link">
+            <span>¿Ya tienes una cuenta? </span>
+            <a href="/loginView">Iniciar Sesión</a>
+        </div>
+
+        <div class="security-badge">
+            <i class="fas fa-shield-alt"></i>
+            Datos protegidos
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/register.js}"></script>
+
+</body>
+</html>

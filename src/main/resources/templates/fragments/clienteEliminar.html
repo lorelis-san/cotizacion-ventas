@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Eliminar Cliente Modal</title>
+</head>
+<body th:fragment="eliminarClienteModal">
+<div  class="modal fade" id="eliminarClienteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Eliminar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ¿Desea eliminar al cliente: <strong id="eliminar-nombre"></strong>?
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="btn-confirmar-eliminar" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function cargarDatosEliminar(button) {
+        const id = button.getAttribute('data-id');
+        const nombre = button.getAttribute('data-nombre');
+
+        document.getElementById('eliminar-nombre').textContent = nombre;
+        document.getElementById('btn-confirmar-eliminar').href = '/eliminar/' + id;
+    }
+</script>
+
+</body>
+</html>

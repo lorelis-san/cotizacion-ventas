@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Clientes</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+</head>
+
+<body>
+<div class="dashboard-main-wrapper">
+    <div th:replace="~{fragments/dashboard :: menu}"></div>
+    <div class="dashboard-wrapper">
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+            <a class="navbar-brand" href="/clients">
+                <i class="fas fa-users"></i> Clientes
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/nuevoCliente">
+                            <i class="fas fa-user-plus"></i> Agregar Cliente
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container mt-4">
+            <div class="card shadow-sm rounded">
+                <div class="card-body">
+                    <table class="table table-hover align-middle text-center">
+                        <thead class="text-white text-center" style="background-color: #2A2861;">
+                            <tr>
+                                <th>Tipo Doc</th>
+                                <th>Nro Doc</th>
+                                <th>Nombre del Cliente</th>
+                                <th>Celular</th>
+                                <th>Correo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="client : ${listaClientes}">
+                            <td th:text="${client.typeDocument}"></td>
+                            <td th:text="${client.documentNumber}"></td>
+                            <td th:text="${client.typeDocument == 'RUC' ? client.businessName : client.firstName + ' ' + client.lastName}"></td>
+                            <td th:text="${client.phoneNumber}"></td>
+                            <td th:text="${client.email}"></td>
+                            <td>
+                                <a th:href="@{/editarCliente/{id}(id=${client.id})}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="btn btn-outline-danger btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#eliminarClienteModal"
+                                        th:attr="data-id=${client.id}, data-nombre=${client.firstName} + ' ' + ${client.lastName}"
+                                        onclick="cargarDatosEliminar(this)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+
+
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaClientes)}">
+                            <td colspan="9">No hay clientes registrados.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div th:replace="~{fragments/clienteEliminar :: eliminarClienteModal}"></div>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    </div>
+</div>
+<!-- jQuery (requerido por DataTables) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- Activar DataTable -->
+<script>
+    $(document).ready(function () {
+        $('.table').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+            }
+        });
+    });
+
+    function eliminarCotizacion(id) {
+        if (confirm('¿Estás seguro de que deseas eliminar esta cotización?')) {
+            fetch(`/cotizaciones/${id}`, {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.ok) {
+                    alert('Cotización eliminada');
+                    location.reload();
+                } else {
+                    alert('Error al eliminar');
+                }
+            });
+        }
+    }
+</script>
+</body>
+
+</html>

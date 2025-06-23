@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Denegado - Error 403</title>
+    <link rel="stylesheet" th:href="@{/css/httpStatus/403.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body>
+<!-- Fondo animado -->
+<div class="background-animation"></div>
+
+<!-- Partículas flotantes -->
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+
+<!-- Contenedor principal -->
+<div class="error-container">
+    <div class="lock-icon"><i class="fa-solid fa-lock" style="color: #0e0c28;"></i></div>
+    <div class="error-code">403</div>
+    <h1 class="error-title">Acceso Denegado</h1>
+    <p class="error-message">
+        Lo sentimos, no tienes los permisos necesarios para acceder a esta página.
+        Si crees que esto es un error, contacta con el administrador.
+    </p>
+    <a href="/" class="home-button">Volver al Inicio</a>
+</div>
+
+<script th:src="@{/js/httpStatus/403.js}"></script>
+</body>
+</html>

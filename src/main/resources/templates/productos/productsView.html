@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Detalles del Producto</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+<div class="dashboard-main-wrapper">
+  <div th:replace="~{fragments/dashboard :: menu}"></div>
+  <div class="dashboard-wrapper">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+      <a class="navbar-brand" href="/products">
+        <i class="fas fa-box"></i> Productos
+      </a>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="container py-4">
+      <div class="card shadow">
+        <div class="card-header text-white d-flex justify-content-between align-items-center" style="background-color: #0E0C28;">
+          <h4 class="mb-0">Detalles del Producto</h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 text-center mb-4">
+              <div th:if="${product.imageUrl != null && !product.imageUrl.isEmpty()}" class="mb-3">
+                <img th:src="${product.imageUrl}" alt="Imagen del producto" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+              </div>
+              <div th:unless="${product.imageUrl != null && !product.imageUrl.isEmpty()}" class="border rounded p-5 d-flex align-items-center justify-content-center bg-light">
+                <span class="text-muted">
+                  <i class="fas fa-image fa-3x mb-2"></i><br>
+                  Sin imagen disponible
+                </span>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <h3 th:text="${product.name}" class="mb-4" style="color: #1e3a8a;"></h3>
+              <!-- Información básica del producto -->
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="row mb-3">
+                    <div class="col-md-5 fw-bold text-muted">
+                      <i class="fas fa-barcode me-1"></i>Código:
+                    </div>
+                    <div class="col-md-7" th:text="${product.cod}"></div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-5 fw-bold text-muted">
+                      <i class="fas fa-tag me-1"></i>Marca:
+                    </div>
+                    <div class="col-md-7" th:text="${product.brand ?: 'No especificado'}"></div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-5 fw-bold text-muted">
+                      <i class="fas fa-cogs me-1"></i>Modelo:
+                    </div>
+                    <div class="col-md-7" th:text="${product.model ?: 'No especificado'}"></div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="row mb-3">
+                    <div class="col-md-5 fw-bold text-muted">
+                      <i class="fas fa-folder me-1"></i>Categoría:
+                    </div>
+                    <div class="col-md-7">
+                      <span th:each="category : ${categories}"
+                            th:if="${category.id == product.categoryProductId}"
+                            th:text="${category.name}"></span>
+                      <span th:unless="${product.categoryProductId != null}"
+                            class="text-muted">No especificado</span>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-5 fw-bold text-muted">
+                      <i class="fas fa-truck me-1"></i>Proveedor:
+                    </div>
+                    <div class="col-md-7">
+                      <span th:each="supplier : ${suppliers}"
+                            th:if="${supplier.id == product.supplierProductId}"
+                            th:text="${supplier.name}"></span>
+                      <span th:unless="${product.supplierProductId != null}"
+                            class="text-muted">No especificado</span>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-5 fw-bold text-muted">
+                      <i class="fas fa-calendar me-1"></i>Año:
+                    </div>
+                    <div class="col-md-7">
+                      <span th:text="${product.yearRange}"></span>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-5 fw-bold text-muted">
+                      <i class="fas fa-map-marker-alt me-1"></i>Sede:
+                    </div>
+                    <div class="col-md-7" th:text="${product.sede ?: 'No especificado'}"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sección de Precios -->
+              <div class="row mb-2">
+                <div class="col-md-12">
+                  <div class="card border-light">
+                    <div class="card-header bg-light">
+                      <i class="fas fa-dollar-sign"></i> Precios
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-4" th:if="${product.costPrice != null}">
+                          <div class="text-muted small">Precio de Costo</div>
+                          <div class="h5" style="color: #1e3a8a;">$<span th:text="${#numbers.formatDecimal(product.costPrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
+                        </div>
+                        <div class="col-md-4" th:if="${product.dealerPrice != null}">
+                          <div class="text-muted small">Precio Distribuidor</div>
+                          <div class="h5" style="color: #3b82f6;">$<span th:text="${#numbers.formatDecimal(product.dealerPrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="text-muted small">Precio de Venta</div>
+                          <div class="h5" style="color: #60a5fa;">$<span th:text="${#numbers.formatDecimal(product.salePrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sección de Descripción -->
+              <div class="row mb-3">
+                <div class="col-12">
+                  <div class="card border-light">
+                    <div class="card-header bg-light">
+                      <i class="fas fa-align-left"></i> Descripción
+                    </div>
+                    <div class="card-body">
+                      <p th:text="${product.description ?: 'No hay descripción disponible'}" class="mb-0"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer bg-light">
+          <div class="d-flex justify-content-between">
+            <a href="/productos" class="btn btn-outline-secondary">
+              <i class="bi bi-arrow-left"></i> Volver a la lista
+            </a>
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+              <a th:href="@{/edit/{id}(id=${product.id})}" class="btn me-2" style="background-color: #3b82f6; color: white; border-color: #3b82f6;">
+                <i class="bi bi-pencil"></i> Editar
+              </a>
+              <a th:href="@{/delete/{id}(id=${product.id})}"
+                 class="btn"
+                 style="background-color: #1e40af; color: white; border-color: #1e40af;"
+                 onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?')">
+                <i class="bi bi-trash"></i> Eliminar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
