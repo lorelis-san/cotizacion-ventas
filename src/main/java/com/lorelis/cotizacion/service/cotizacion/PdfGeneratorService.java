@@ -38,22 +38,20 @@ public class PdfGeneratorService {
             }
         }
     }
-    private void configurarImagenFondo(PdfWriter writer) {
+    private void configurarImagenFondo(PdfWriter writer, String username) {
         try {
             System.out.println("Intentando cargar imagen de fondo...");
+            String fondoArchivo = obtenerFondoPorUsername(username);
 
             // Método 1: ClassPathResource
-            ClassPathResource resource = new ClassPathResource("static/img/membrete_fondo.jpg");
+            ClassPathResource resource = new ClassPathResource("static/img/" + fondoArchivo);
             System.out.println("Recurso existe: " + resource.exists());
 
             if (resource.exists()) {
                 try (InputStream inputStream = resource.getInputStream()) {
                     byte[] imageBytes = inputStream.readAllBytes();
-                    System.out.println("Imagen cargada, tamaño: " + imageBytes.length + " bytes");
-
                     Image background = Image.getInstance(imageBytes);
                     writer.setPageEvent(new BackgroundPageEvent(background));
-                    System.out.println("Imagen de fondo configurada exitosamente");
                 }
             } else {
                 System.out.println("Imagen no encontrada, continuando sin fondo");
@@ -62,17 +60,32 @@ public class PdfGeneratorService {
         } catch (Exception e) {
             System.err.println("Error configurando imagen de fondo: " + e.getMessage());
             e.printStackTrace();
-            // Continúa sin imagen de fondo
+
         }
     }
+
+    private String obtenerFondoPorUsername(String username) {
+        switch (username.toLowerCase()) {
+            case "drevillalozano":
+                return "membrete_1.jpg";
+            case "jrevillacruzado":
+                return "membrete_2.jpg";
+//            case "usuario3":
+//                return "fondo_3.jpg";
+            default:
+                return "membrete_fondo.jpg";
+        }
+    }
+
+
     public ByteArrayInputStream generarCotizacionPDF(Cotizacion cotizacion) {
         Document document = new Document(PageSize.A4, 60, 60, 170, 130); // márgenes corregidos
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         String nombreUsuario = cotizacion.getUser().getNombre() + " " + cotizacion.getUser().getApellido();
-
+        String username = cotizacion.getUser().getUsername();
         try {
             PdfWriter writer = PdfWriter.getInstance(document, out);
-            configurarImagenFondo(writer);
+            configurarImagenFondo(writer, username);
 
 //            Image background = Image.getInstance("static/img/membrete_fondo.jpg");
 //            writer.setPageEvent(new BackgroundPageEvent(background));

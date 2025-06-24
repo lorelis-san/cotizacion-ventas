@@ -128,7 +128,7 @@
                     </div>
                     <div class="card-body">
                       <div class="row">
-                        <div class="col-md-4" th:if="${product.costPrice != null}">
+                        <div class="col-md-4" th:if="${product.costPrice != null}" sec:authorize="hasRole('ROLE_ADMIN')">
                           <div class="text-muted small">Precio de Costo</div>
                           <div class="h5" style="color: #1e3a8a;">S/.<span th:text="${#numbers.formatDecimal(product.costPrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
                         </div>
