@@ -8,11 +8,13 @@
   <!-- CSS -->
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
   <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="stylesheet" th:href="@{/css/product/viewProduct.css}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
 </head>
 
 <body>
@@ -47,7 +49,7 @@
               </div>
             </div>
             <div class="col-md-8">
-              <h3 th:text="${product.name}" class="mb-4 text-primary"></h3>
+              <h3 th:text="${product.name}" class="mb-4" style="color: #1e3a8a;"></h3>
               <!-- Información básica del producto -->
               <div class="row mb-4">
                 <div class="col-md-6">
@@ -81,8 +83,7 @@
                     <div class="col-md-7">
                       <span th:each="category : ${categories}"
                             th:if="${category.id == product.categoryProductId}"
-                            th:text="${category.name}"
-                            class="badge bg-info text-dark"></span>
+                            th:text="${category.name}"></span>
                       <span th:unless="${product.categoryProductId != null}"
                             class="text-muted">No especificado</span>
                     </div>
@@ -95,8 +96,7 @@
                     <div class="col-md-7">
                       <span th:each="supplier : ${suppliers}"
                             th:if="${supplier.id == product.supplierProductId}"
-                            th:text="${supplier.name}"
-                            class="badge bg-success text-white"></span>
+                            th:text="${supplier.name}"></span>
                       <span th:unless="${product.supplierProductId != null}"
                             class="text-muted">No especificado</span>
                     </div>
@@ -107,7 +107,7 @@
                       <i class="fas fa-calendar me-1"></i>Año:
                     </div>
                     <div class="col-md-7">
-                      <span th:text="${product.yearRange}" class="badge bg-primary text-white"></span>
+                      <span th:text="${product.yearRange}"></span>
                     </div>
                   </div>
                   <div class="row mb-3">
@@ -130,15 +130,15 @@
                       <div class="row">
                         <div class="col-md-4" th:if="${product.costPrice != null}">
                           <div class="text-muted small">Precio de Costo</div>
-                          <div class="h5 text-warning">S/.<span th:text="${#numbers.formatDecimal(product.costPrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
+                          <div class="h5" style="color: #1e3a8a;">S/.<span th:text="${#numbers.formatDecimal(product.costPrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
                         </div>
-                        <div class="col-md-4" th:if="${product.dealerPrice != null}"  sec:authorize="hasRole('ROLE_ADMIN')">
+                        <div class="col-md-4" th:if="${product.dealerPrice != null}">
                           <div class="text-muted small">Precio Distribuidor</div>
-                          <div class="h5 text-info">S/.<span th:text="${#numbers.formatDecimal(product.dealerPrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
+                          <div class="h5" style="color: #3b82f6;">S/.<span th:text="${#numbers.formatDecimal(product.dealerPrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
                         </div>
                         <div class="col-md-4">
                           <div class="text-muted small">Precio de Venta</div>
-                          <div class="h5 text-success">S/.<span th:text="${#numbers.formatDecimal(product.salePrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
+                          <div class="h5" style="color: #60a5fa;">S/.<span th:text="${#numbers.formatDecimal(product.salePrice, 0, 'POINT', 2, 'COMMA')}"></span></div>
                         </div>
                       </div>
                     </div>
@@ -164,17 +164,20 @@
         </div>
         <div class="card-footer bg-light">
           <div class="d-flex justify-content-between">
-            <a href="/productos" class="btn btn-outline-secondary">
+            <a href="/productos" class="btn btn-back">
               <i class="bi bi-arrow-left"></i> Volver a la lista
             </a>
-            <div sec:authorize="hasRole('ROLE_ADMIN')">
-              <a th:href="@{/edit/{id}(id=${product.id})}" class="btn btn-warning me-2">
-                <i class="bi bi-pencil"></i> Editar
+            <div sec:authorize="hasRole('ROLE_ADMIN')" class="d-flex gap-2">
+              <a th:href="@{/edit/{id}(id=${product.id})}" class="btn btn-edit" title="Editar producto"
+                 style="background: #fffbeb !important; color: #d97706 !important; border: 1px solid #fed7aa !important;">
+                <i class="fas fa-edit"></i>
               </a>
               <a th:href="@{/delete/{id}(id=${product.id})}"
-                 class="btn btn-danger"
+                 class="btn btn-delete"
+                 title="Eliminar producto"
+                 style="background: #fef2f2 !important; color: #dc2626 !important; border: 1px solid #fecaca !important;"
                  onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?')">
-                <i class="bi bi-trash"></i> Eliminar
+                <i class="fas fa-trash-alt"></i>
               </a>
             </div>
           </div>

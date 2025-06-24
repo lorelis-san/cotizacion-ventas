@@ -114,7 +114,7 @@
                                         <div>
                                             <div class="form-floating">
                                                 <select class="form-select form-select-sm" th:field="*{startYear}" id="startYear" required onchange="updateEndYearOptions()">
-                                                    <option value=""> </option>
+                                                    <option value="">Seleccionar año inicial</option>
                                                     <th:block th:each="yearOption : ${#numbers.sequence(1900, T(java.time.Year).now().getValue() + 10)}">
                                                         <option th:value="${yearOption}" th:text="${yearOption}"></option>
                                                     </th:block>
@@ -122,23 +122,59 @@
                                                 <label for="startYear">
                                                     <i class="fas fa-calendar-alt me-1"></i>Año Inicial *
                                                 </label>
-                                                <div class="error-text" id="startYear-error"></div>
                                             </div>
-                                            <div class="form-floating">
-                                            <select class="form-select form-select-sm" th:field="*{endYear}" id="endYear">Add commentMore actions
-                                                <option value=""> </option>
-                                                <th:block th:each="yearOption : ${#numbers.sequence(1900, T(java.time.Year).now().getValue() + 20)}">
-                                                    <option th:value="${yearOption}" th:text="${yearOption}"></option>
-                                                </th:block>
-                                            </select>
-                                                <label for="endYear">
-                                                    <i class="fas fa-calendar-alt me-1"></i>Año Final *
-                                                </label>
-                                            </div>
-
-                                            <div class="error-text" id="year-error"></div>
+                                            <div class="error-text" id="startYear-error"></div>
                                         </div>
                                         <div>
+                                            <div class="form-floating">
+                                                <select class="form-select form-select-sm" th:field="*{endYear}" id="endYear">
+                                                    <option value="">Seleccionar año final</option>
+                                                    <th:block th:each="yearOption : ${#numbers.sequence(1900, T(java.time.Year).now().getValue() + 20)}">
+                                                        <option th:value="${yearOption}" th:text="${yearOption}"></option>
+                                                    </th:block>
+                                                </select>
+                                                <label for="endYear">
+                                                    <i class="fas fa-calendar-alt me-1"></i>Año Final
+                                                </label>
+                                            </div>
+                                            <div class="error-text" id="endYear-error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <h5 class="section-title">
+                                        <i class="fas fa-sitemap me-2"></i>Categorización
+                                    </h5>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <div class="form-floating">
+                                                <select class="form-select form-select-sm" th:field="*{categoryProductId}" id="categoryProductId" required>
+                                                    <option value="">Seleccionar categoría</option>
+                                                    <option th:each="category : ${categories}"
+                                                            th:value="${category.id}"
+                                                            th:text="${category.name}"></option>
+                                                </select>
+                                                <label for="categoryProductId">
+                                                    <i class="fas fa-list me-1"></i>Categoría
+                                                </label>
+                                            </div>
+                                            <div class="error-text" id="category-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-floating">
+                                                <select class="form-select form-select-sm" th:field="*{supplierProductId}" id="supplierProductId" required>
+                                                    <option value="">Seleccionar proveedor</option>
+                                                    <option th:each="supplier : ${suppliers}"
+                                                            th:value="${supplier.id}"
+                                                            th:text="${supplier.name}"></option>
+                                                </select>
+                                                <label for="supplierProductId">
+                                                    <i class="fas fa-truck me-1"></i>Proveedor
+                                                </label>
+                                            </div>
+                                            <div class="error-text" id="supplier-error"></div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <div class="form-floating">
                                                 <select class="form-select form-select-sm" th:field="*{sede}" id="sede" required>
                                                     <option value="">Seleccionar sede</option>
@@ -154,42 +190,6 @@
                                             </div>
                                             <div class="error-text" id="sede-error"></div>
                                         </div>
-
-                                    </div>
-                                </div>
-                                <div class="mb-2">
-                                    <h5 class="section-title">
-                                        <i class="fas fa-sitemap me-2"></i>Categorización
-                                    </h5>
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <select class="form-select form-select-sm" th:field="*{categoryProductId}" id="categoryProductId" required>
-                                                    <option value="">Seleccionar categoría</option>
-                                                    <option th:each="category : ${categories}"
-                                                            th:value="${category.id}"
-                                                            th:text="${category.name}"></option>
-                                                </select>
-                                                <label for="categoryProductId">
-                                                    <i class="fas fa-list me-1"></i>Categoría
-                                                </label>
-                                            </div>
-                                            <div class="error-text" id="category-error"></div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <select class="form-select form-select-sm" th:field="*{supplierProductId}" id="supplierProductId" required>
-                                                    <option value="">Seleccionar proveedor</option>
-                                                    <option th:each="supplier : ${suppliers}"
-                                                            th:value="${supplier.id}"
-                                                            th:text="${supplier.name}"></option>
-                                                </select>
-                                                <label for="supplierProductId">
-                                                    <i class="fas fa-truck me-1"></i>Proveedor
-                                                </label>
-                                            </div>
-                                            <div class="error-text" id="supplier-error"></div>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="mb-2">
@@ -202,7 +202,7 @@
                                                 <input type="number" step="0.01" class="form-control"
                                                        th:field="*{salePrice}" id="salePrice" min="0" required>
                                                 <label for="salePrice">
-                                                    <i class="fa-solid fa-tags"></i>Precio de Venta
+                                                    <i class="fas fa-shopping-cart me-1"></i>Precio de Venta
                                                 </label>
                                             </div>
                                             <div class="error-text" id="salePrice-error"></div>
