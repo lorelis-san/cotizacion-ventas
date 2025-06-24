@@ -213,8 +213,8 @@ public class PdfGeneratorService {
             table.addCell(celdaTabla(d.getProducto().getName(), contentFont, bgColor));
             table.addCell(celdaImagen(d.getProducto().getImageUrl(), bgColor));
             table.addCell(celdaTabla(String.valueOf(d.getCantidad()), contentFont, bgColor, Element.ALIGN_CENTER));
-            table.addCell(celdaTabla(String.format("S/ %.2f", d.getPrecioUnitario()), contentFont, bgColor, Element.ALIGN_RIGHT));
-            table.addCell(celdaTabla(String.format("S/ %.2f", d.getSubtotal()), contentFont, bgColor, Element.ALIGN_RIGHT));
+            table.addCell(celdaTabla(String.format("S/. %.2f", d.getPrecioUnitario()), contentFont, bgColor, Element.ALIGN_RIGHT));
+            table.addCell(celdaTabla(String.format("S/. %.2f", d.getSubtotal()), contentFont, bgColor, Element.ALIGN_RIGHT));
         }
 
         document.add(table);
@@ -266,10 +266,10 @@ public class PdfGeneratorService {
         Font regular = FontFactory.getFont(FUENTE, 10);
 
         table.addCell(celdaTotal("Subtotal:", bold));
-        table.addCell(celdaTotal(String.format("S/ %.2f", cotizacion.getSubtotal()), regular, true));
+        table.addCell(celdaTotal(String.format("S/. %.2f", cotizacion.getSubtotal()), regular, true));
 
         PdfPCell totalLabel = celdaTotal("TOTAL:", FontFactory.getFont(FUENTE, 11, Font.BOLD));
-        PdfPCell totalValue = celdaTotal(String.format("S/ %.2f", cotizacion.getTotal()), FontFactory.getFont(FUENTE, 11, Font.BOLD), true);
+        PdfPCell totalValue = celdaTotal(String.format("S/. %.2f", cotizacion.getTotal()), FontFactory.getFont(FUENTE, 11, Font.BOLD), true);
         totalLabel.setBackgroundColor(new Color(240, 240, 240));
         totalValue.setBackgroundColor(new Color(240, 240, 240));
 
@@ -331,7 +331,7 @@ public class PdfGeneratorService {
                 ? cotizacion.getCliente().getBusinessName()
                 : cotizacion.getCliente().getFirstName() + " " + cotizacion.getCliente().getLastName();
 
-        firmaTable.addCell(celdaFirma("ELABORADO POR", nombreUsuario, firmaFont, labelFont));
+        firmaTable.addCell(celdaFirma("ELABORADO POR", nombreUsuario.toUpperCase(), firmaFont, labelFont));
         firmaTable.addCell(celdaFirma("ACEPTADO POR", nombreCliente, firmaFont, labelFont));
 
         document.add(firmaTable);
