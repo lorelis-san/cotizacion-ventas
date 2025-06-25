@@ -121,7 +121,8 @@
                     <p>Intenta con otros términos de búsqueda o limpia los filtros.</p>
                 </div>
 
-                <div class="row g-4" id="productsContainer" th:if="${!#lists.isEmpty(products)}">
+<!--                <div class="row g-4" id="productsContainer" th:if="${!#lists.isEmpty(products)}">-->
+                    <div class="row g-4" id="productListContainer" th:if="${!#lists.isEmpty(products)}">
                     <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12"
                          th:each="product : ${products}"
                          th:data-name="${product.name}"
@@ -217,12 +218,12 @@
                     <p>Agrega tu primer producto para comenzar</p>
 
                 </div>
-<!--                <div class="pagination">-->
-<!--                    <a th:href="@{/productos(page=${prevPage}, size=${pageSize})}">Anterior</a> |-->
-<!--                    Página <span th:text="${currentPage + 1}"></span>-->
-<!--                    |-->
-<!--                    <a th:href="@{/productos(page=${nextPage}, size=${pageSize})}">Siguiente</a>-->
-<!--                </div>-->
+                <div class="pagination">
+                    <a th:href="@{/productos(page=${prevPage}, size=${pageSize})}">Anterior</a> |
+                    Página <span th:text="${currentPage + 1}"></span>
+                    |
+                    <a th:href="@{/productos(page=${nextPage}, size=${pageSize})}">Siguiente</a>
+                </div>
 
             </div>
         </div>

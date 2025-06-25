@@ -11,6 +11,8 @@ import com.lorelis.cotizacion.service.firebaseStorage.FirebaseStorageService;
 import com.lorelis.cotizacion.service.product.ProductsService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.math.BigDecimal;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -319,14 +322,48 @@ public class ProductsServiceImpl implements ProductsService {
             throw new IllegalArgumentException("La sede seleccionada no es válida");
         }
     }
-//    @Override
-//    public List<ProductDTO> getProductsPaginated(int page, int size) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        return productsRepository.findAll(pageable)
-//                .stream()
-//                .map(this::convertToDTO)
-//                .collect(Collectors.toList());
-//    }
+
+    @Override
+    public List<ProductDTO> getProductsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productsRepository.findByEnabledTrue(pageable) // <- cambio aquí
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+@Override
+public List<ProductDTO> filterProducts(String name, String category, String brand, String year, String sort) {
+    List<Products> filtered = productsRepository.findAll().stream()
+            .filter(p -> p.getEnabled() != null && p.getEnabled()) // solo los habilitados
+            .filter(p -> name == null || name.isEmpty() || p.getName().toLowerCase().contains(name.toLowerCase()))
+            .filter(p -> category == null || category.isEmpty() ||
+                    (p.getCategoryproduct() != null &&
+                            category.equalsIgnoreCase(p.getCategoryproduct().getName())))
+            .filter(p -> brand == null || brand.isEmpty() ||
+                    (p.getBrand() != null && p.getBrand().equalsIgnoreCase(brand)))
+            .filter(p -> year == null || year.isEmpty() ||
+                    (p.getYear() != null && p.getYear().equalsIgnoreCase(year)))
+            .sorted(getComparator(sort))
+            .collect(Collectors.toList());
+
+    return filtered.stream()
+            .map(this::convertToDTO)
+            .collect(Collectors.toList());
+}
+
+
+    private Comparator<Products> getComparator(String sort) {
+        if (sort == null) return Comparator.comparing(Products::getName, String.CASE_INSENSITIVE_ORDER);
+
+        return switch (sort) {
+            case "cod" -> Comparator.comparing(Products::getCod);
+            case "brand" -> Comparator.comparing(Products::getBrand, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+            case "price-asc" -> Comparator.comparing(Products::getSalePrice, Comparator.nullsLast(BigDecimal::compareTo));
+            case "price-desc" -> Comparator.comparing(Products::getSalePrice, Comparator.nullsLast(BigDecimal::compareTo)).reversed();
+            default -> Comparator.comparing(Products::getName, String.CASE_INSENSITIVE_ORDER);
+        };
+    }
 
 
 

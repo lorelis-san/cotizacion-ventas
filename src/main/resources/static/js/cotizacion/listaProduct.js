@@ -45,18 +45,3 @@
             });
         });
     });
-
-
-// Cargar imágenes solo cuando están visibles
-const lazyImages = document.querySelectorAll('.lazy-load');
-const imageObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const img = entry.target;
-            img.src = img.dataset.src;
-            imageObserver.unobserve(img);
-        }
-    });
-});
-
-lazyImages.forEach(img => imageObserver.observe(img));

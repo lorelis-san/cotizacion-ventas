@@ -1,6 +1,8 @@
 package com.lorelis.cotizacion.repository.productos;
 
 import com.lorelis.cotizacion.model.productos.Products;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,6 +28,7 @@ public interface ProductsRepository extends JpaRepository<Products, Long> {
         "OR LOWER(p.cod) LIKE LOWER(CONCAT('%', :termino, '%')))")
 List<Products> buscarActivosPorNombreOCodigo(@Param("termino") String termino);
 
+    Page<Products> findByEnabledTrue(Pageable pageable);
 
     Products findByCod(String cod);
 
