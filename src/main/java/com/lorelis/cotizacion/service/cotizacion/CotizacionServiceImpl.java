@@ -178,7 +178,7 @@ public class CotizacionServiceImpl implements CotizacionService {
 
 
     @Override
-    @Transactional
+//    @Transactional
     public List<CotizacionResponseDTO> listarCotizaciones() {
         List<Cotizacion> cotizaciones = cotizacionRepository.findByEstadoNot(EstadoCotizacion.ELIMINADA, Sort.by(Sort.Direction.DESC, "fecha"));
 
@@ -264,7 +264,7 @@ public class CotizacionServiceImpl implements CotizacionService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public CotizacionResponseDTO obtenerCotizacionResponsePorId(Long id) {
         Cotizacion cot = cotizacionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cotización no encontrada con ID: " + id));
