@@ -137,7 +137,7 @@
                                      th:src="${product.imageUrl}"
                                      alt="Imagen del producto"
                                      loading="lazy"
-                                     class="card-img-top product-image" />
+                                     class="card-img-top product-image lazy-load" />
 
                                 <div th:if="${product.imageUrl == null || product.imageUrl.isEmpty()}"
                                      class="product-image-placeholder">
