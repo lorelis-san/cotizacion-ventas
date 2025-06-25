@@ -22,6 +22,6 @@ public interface ProductsService {
     void deleteProduct(Long id);
     List<ProductDTO> buscarPorNombreOCodigo(String termino);
 
-
-    List<ProductDTO> getProductsPaginated(int page, int size);
+//
+//    List<ProductDTO> getProductsPaginated(int page, int size);
 }

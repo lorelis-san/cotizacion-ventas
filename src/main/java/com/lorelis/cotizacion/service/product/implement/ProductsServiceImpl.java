@@ -319,14 +319,14 @@ public class ProductsServiceImpl implements ProductsService {
             throw new IllegalArgumentException("La sede seleccionada no es válida");
         }
     }
-    @Override
-    public List<ProductDTO> getProductsPaginated(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return productsRepository.findAll(pageable)
-                .stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<ProductDTO> getProductsPaginated(int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        return productsRepository.findAll(pageable)
+//                .stream()
+//                .map(this::convertToDTO)
+//                .collect(Collectors.toList());
+//    }
 
 
 
