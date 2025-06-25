@@ -1,5 +1,6 @@
 package com.lorelis.cotizacion.service.product;
 
+import com.google.api.gax.paging.Page;
 import com.lorelis.cotizacion.dto.products.ProductDTO;
 import com.lorelis.cotizacion.dto.products.SupplierDTO;
 import com.lorelis.cotizacion.model.productos.Products;
@@ -20,4 +21,7 @@ public interface ProductsService {
     void updateProduct(ProductDTO dto,MultipartFile imageFile);
     void deleteProduct(Long id);
     List<ProductDTO> buscarPorNombreOCodigo(String termino);
+
+
+    List<ProductDTO> getProductsPaginated(int page, int size);
 }

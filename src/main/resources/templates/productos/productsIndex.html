@@ -136,7 +136,9 @@
                                 <img th:if="${product.imageUrl != null && !product.imageUrl.isEmpty()}"
                                      th:src="${product.imageUrl}"
                                      alt="Imagen del producto"
+                                     loading="lazy"
                                      class="card-img-top product-image" />
+
                                 <div th:if="${product.imageUrl == null || product.imageUrl.isEmpty()}"
                                      class="product-image-placeholder">
                                     <i class="fas fa-image"></i>
@@ -215,6 +217,13 @@
                     <p>Agrega tu primer producto para comenzar</p>
 
                 </div>
+                <div class="pagination">
+                    <a th:href="@{/productos(page=${prevPage}, size=${pageSize})}">Anterior</a> |
+                    Página <span th:text="${currentPage + 1}"></span>
+                    |
+                    <a th:href="@{/productos(page=${nextPage}, size=${pageSize})}">Siguiente</a>
+                </div>
+
             </div>
         </div>
     </div>

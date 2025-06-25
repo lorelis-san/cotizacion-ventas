@@ -28,4 +28,5 @@ List<Products> buscarActivosPorNombreOCodigo(@Param("termino") String termino);
 
 
     Products findByCod(String cod);
+
 }

@@ -11,6 +11,8 @@ import com.lorelis.cotizacion.service.firebaseStorage.FirebaseStorageService;
 import com.lorelis.cotizacion.service.product.ProductsService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -317,4 +319,15 @@ public class ProductsServiceImpl implements ProductsService {
             throw new IllegalArgumentException("La sede seleccionada no es válida");
         }
     }
+    @Override
+    public List<ProductDTO> getProductsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productsRepository.findAll(pageable)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+
+
 }
