@@ -30,38 +30,10 @@ public class ProductsController {
     @Autowired
     private SupplierService supplierService;
 
-//    @GetMapping("/productos")
-//    public String listProducts(Model model) {
-//
-//        List<ProductDTO> products = productsService.getAllProductsEnabled();
-//
-//        products.forEach(product -> {
-//            if (product.getCategoryProductId() != null) {
-//                CategoryDTO category = categoryService.getCategoryById(product.getCategoryProductId());
-//                if (category != null) {
-//                    product.setCategoryName(category.getName());
-//                }
-//            }
-//            if (product.getSupplierProductId() != null) {
-//                SupplierDTO supplier = supplierService.getSupplieryById(product.getSupplierProductId());
-//                if (supplier != null) {
-//                    product.setSupplierName(supplier.getName());
-//                }
-//            }
-//        });
-//
-//        model.addAttribute("products", products);
-//        model.addAttribute("categories", categoryService.getAllCategory());
-//        model.addAttribute("suppliers", supplierService.getAllSuppliers());
-//        return "productos/productsIndex";
-//    }
-
     @GetMapping("/productos")
-    public String listProducts(@RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "8") int size,
-                               Model model) {
+    public String listProducts(Model model) {
 
-        List<ProductDTO> products = productsService.getProductsPaginated(page, size);
+        List<ProductDTO> products = productsService.getAllProductsEnabled();
 
         products.forEach(product -> {
             if (product.getCategoryProductId() != null) {
@@ -81,26 +53,54 @@ public class ProductsController {
         model.addAttribute("products", products);
         model.addAttribute("categories", categoryService.getAllCategory());
         model.addAttribute("suppliers", supplierService.getAllSuppliers());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("pageSize", size);
-        model.addAttribute("nextPage", page + 1);
-        model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
-
         return "productos/productsIndex";
     }
 
-    @GetMapping("/products/filter")
-    @ResponseBody
-    public List<ProductDTO> filterProducts(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String brand,
-            @RequestParam(required = false) String year,
-            @RequestParam(required = false) String sort
-    ) {
-        return productsService.filterProducts(name, category, brand, year, sort);
-    }
+//    @GetMapping("/productos")
+//    public String listProducts(@RequestParam(defaultValue = "0") int page,
+//                               @RequestParam(defaultValue = "8") int size,
+//                               Model model) {
+//
+//        List<ProductDTO> products = productsService.getProductsPaginated(page, size);
+//
+//        products.forEach(product -> {
+//            if (product.getCategoryProductId() != null) {
+//                CategoryDTO category = categoryService.getCategoryById(product.getCategoryProductId());
+//                if (category != null) {
+//                    product.setCategoryName(category.getName());
+//                }
+//            }
+//            if (product.getSupplierProductId() != null) {
+//                SupplierDTO supplier = supplierService.getSupplieryById(product.getSupplierProductId());
+//                if (supplier != null) {
+//                    product.setSupplierName(supplier.getName());
+//                }
+//            }
+//        });
+//
+//        model.addAttribute("products", products);
+//        model.addAttribute("categories", categoryService.getAllCategory());
+//        model.addAttribute("suppliers", supplierService.getAllSuppliers());
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("pageSize", size);
+//        model.addAttribute("nextPage", page + 1);
+//        model.addAttribute("prevPage", page > 0 ? page - 1 : 0);
+//
+//        return "productos/productsIndex";
+//    }
 
+//    @GetMapping("/products/filter")
+//    @ResponseBody
+//    public List<ProductDTO> filterProducts(
+//            @RequestParam(required = false) String name,
+//            @RequestParam(required = false) String category,
+//            @RequestParam(required = false) String brand,
+//            @RequestParam(required = false) String year,
+//            @RequestParam(required = false) String sort
+//    ) {
+//        return productsService.filterProducts(name, category, brand, year, sort);
+//    }
+//
 
 
 
