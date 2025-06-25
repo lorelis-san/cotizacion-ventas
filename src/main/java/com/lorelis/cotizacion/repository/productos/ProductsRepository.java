@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-
 public interface ProductsRepository extends JpaRepository<Products, Long> {
     boolean existsByCod(String cod);
     List<Products> findByNameContainingIgnoreCaseOrCodContainingIgnoreCase(String name, String cod);
