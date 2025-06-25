@@ -200,7 +200,7 @@
 // });
 
 
-
+document.addEventListener('DOMContentLoaded', function() {
 
     function applyFilters() {
         const name = document.getElementById('searchInput').value;
@@ -253,3 +253,4 @@
             container.appendChild(card);
         });
     }
+});
