@@ -6,7 +6,14 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "products")
+@Table(
+        name = "products",
+        indexes = {
+                @Index(name = "idx_cod", columnList = "cod"),
+                @Index(name = "idx_name", columnList = "name"),
+                @Index(name = "idx_model", columnList = "model")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -56,13 +63,15 @@ public class Products {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_category", nullable = false)
     private Category categoryproduct;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_supplier", nullable = false)
     private Supplier supplierProduct;
+
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean enabled = true;
 
 }
