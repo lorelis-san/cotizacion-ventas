@@ -11,6 +11,7 @@ import java.math.BigDecimal;
         indexes = {
                 @Index(name = "idx_cod", columnList = "cod"),
                 @Index(name = "idx_name", columnList = "name"),
+                @Index(name = "idx_products_enabled", columnList = "enabled"),
                 @Index(name = "idx_model", columnList = "model")
         }
 )
@@ -25,7 +26,7 @@ public class Products {
     @Column(name = "id_product")
     private Long id;
     @Column(name = "cod", nullable = false, unique = true)
-    private String cod; // como 00FRR23
+    private String cod;
     @Column(name = "name", nullable = false)
     private String name;
     @Lob

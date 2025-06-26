@@ -28,4 +28,8 @@ List<Products> buscarActivosPorNombreOCodigo(@Param("termino") String termino);
     Page<Products> findByEnabledTrue(Pageable pageable);
     Products findByCod(String cod);
 
+
+
+
+
 }

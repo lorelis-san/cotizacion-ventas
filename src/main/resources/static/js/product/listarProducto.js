@@ -243,12 +243,6 @@
             }
 
 
-            // Llamar esta función según el rol del usuario
-            // toggleAdminActions(true); // Para mostrar acciones de admin
-            // toggleAdminActions(false); // Para ocultar acciones de admin
-
-
-
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         new ProductLoader();
@@ -259,3 +253,70 @@ if (document.readyState === 'loading') {
 
 }
 
+//////////////////////
+
+
+// Añadir esta clase extendida para integrar la búsqueda sin perder diseño
+class ProductSearchLoader extends ProductLoader {
+    constructor() {
+        super(); // hereda del ProductLoader
+
+        // Nuevo: referenciar el input del buscador
+        this.searchInput = document.getElementById('buscadorProducto');
+        this.originalGrid = null; // para restaurar el scroll infinito
+        this.bindSearch();
+    }
+
+    bindSearch() {
+        if (this.searchInput) {
+            this.searchInput.addEventListener('input', this.debounce(() => {
+                const term = this.searchInput.value.trim();
+                if (term.length > 0) {
+                    this.buscarProductos(term);
+                } else {
+                    this.resetScrollInfinite();
+                }
+            }, 500));
+        }
+    }
+
+    async buscarProductos(termino) {
+        try {
+            const response = await fetch(`/api/productos/buscarProducto/${encodeURIComponent(termino)}`);
+            if (!response.ok) throw new Error('No encontrado');
+
+            const productos = await response.json();
+            this.grid.innerHTML = '';
+            this.renderProductos(productos);
+
+            // detener scroll infinito
+            this.endReached = true;
+        } catch (err) {
+            console.error('Error en búsqueda:', err);
+            this.grid.innerHTML = '<p>No se encontraron productos.</p>';
+        }
+    }
+
+    resetScrollInfinite() {
+        this.page = 0;
+        this.endReached = false;
+        this.grid.innerHTML = '';
+        this.loadProductos();
+    }
+
+    debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        new ProductSearchLoader();
+    });
+} else {
+    new ProductSearchLoader();
+}

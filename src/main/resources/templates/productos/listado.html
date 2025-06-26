@@ -21,49 +21,84 @@
     <div th:replace="~{fragments/dashboard :: menu}"></div>
     <div class="dashboard-wrapper">
         <div class="container">
-            <div class="header">
-                <h1>Nuestros Productos</h1>
-                <p>Descubre nuestra selección de productos de calidad</p>
-            </div>
-            <div id="userRole" th:data-role="${isAdmin} ? 'ADMIN' : 'USER'" style="display: none;"></div>
+            <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/productos">
+                        <i class="fas fa-box"></i> Productos
+                    </a>
 
-            <div id="producto-grid"></div>
-
-            <div id="loading" style="display: none;">
-                <div class="loading-spinner"></div>
-                Cargando productos...
-            </div>
-        </div>
-
-        <!-- Modal de Eliminación -->
-        <div class="modal fade" id="eliminarProductoModal" tabindex="-1" aria-labelledby="eliminarProductoLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title" id="eliminarProductoLabel">Eliminar Producto</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <!-- Botón hamburguesa -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarCotizaciones"
+                            aria-controls="navbarCotizaciones" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" sec:authorize="hasRole('ROLE_ADMIN')" id="navbarCotizaciones">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/products/newProducto">
+                                    <i class="fas fa-plus-circle"></i> Agregar Producto
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="modal-body">
-                        ¿Estás seguro de que deseas eliminar el producto <strong id="codEliminar"></strong>?
+                </div>
+            </nav>
+            <div class="container main-container">
+                <div class="dashboard-productos">
+                    <div class="alert alert-success minimal-alert" th:if="${message}" th:text="${message}"></div>
+                    <div class="alert alert-danger minimal-alert" th:if="${error}" th:text="${error}"></div>
+
+                    <div id="userRole" th:data-role="${isAdmin} ? 'ADMIN' : 'USER'" style="display: none;"></div>
+
+                    <div class="input-group mb-4">
+                        <input type="text" id="buscadorProducto" class="form-control" placeholder="Buscar por nombre o código...">
+                        <button class="btn btn-primary" onclick="buscarProducto()">Buscar</button>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirmarEliminarBtn">Eliminar</button>
+
+                    <div id="producto-grid"></div>
+
+                    <div id="loading" style="display: none;">
+                        <div class="loading-spinner"></div>
+                        Cargando productos...
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Font Awesome para los iconos -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <!-- Bootstrap para el modal -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
-        <script th:src="@{/js/product/listarProducto.js}"></script>
     </div>
+</div>
+</div>
+
+<!-- Modal de Eliminación -->
+<div class="modal fade" id="eliminarProductoModal" tabindex="-1" aria-labelledby="eliminarProductoLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="eliminarProductoLabel">Eliminar Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar el producto <strong id="codEliminar"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmarEliminarBtn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome para los iconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<!-- Bootstrap para el modal -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script th:src="@{/js/product/listarProducto.js}"></script>
+<!--<script th:src="@{/js/product/buscarProducto.js}"></script>-->
+</div>
 </div>
 </div>
 
