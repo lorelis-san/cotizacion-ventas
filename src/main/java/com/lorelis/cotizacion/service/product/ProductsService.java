@@ -25,7 +25,6 @@ public interface ProductsService {
     void deleteProduct(Long id);
     List<ProductDTO> buscarPorNombreOCodigo(String termino);
 
-
     Page<ProductListDTO> listarProductos(Pageable pageable);
 
     List<ProductListDTO> filtrarProductos(String categoria, String marca, Integer anio);

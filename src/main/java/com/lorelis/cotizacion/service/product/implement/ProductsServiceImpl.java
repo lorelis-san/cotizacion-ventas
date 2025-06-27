@@ -266,6 +266,7 @@ public class ProductsServiceImpl implements ProductsService {
         return productos.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+
     private void validarProductoDTO(ProductDTO dto) {
         validarCod(dto);
         validarYear(dto);

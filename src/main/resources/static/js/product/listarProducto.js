@@ -3,7 +3,7 @@ constructor() {
     const userRole = document.getElementById('userRole')?.dataset?.role;
         this.isAdmin = userRole === 'ADMIN';
         this.page = 0;
-        this.size = 10;
+        this.size = 9;
         this.isLoading = false;
         this.endReached = false;
         this.grid = null;
@@ -133,7 +133,7 @@ constructor() {
                     ${dealerPrice && parseFloat(prod.costDealer) > 0 ? `
                     <div class="producto-price dealer">
                         <span><span class="currency">S/</span> ${dealerPrice}</span>
-                        <span class="label">Costo Dealer</span>
+                        <span class="label">Precio Dealer</span>
                     </div>
                     ` : ''}
                 </div>
@@ -507,7 +507,9 @@ class ProductSearchAndFilterLoader extends ProductFilterLoader {
 
     async buscarProductos(termino) {
         try {
-            const response = await fetch(`/api/productos/buscarProducto/${encodeURIComponent(termino)}`);
+
+        const response = await fetch(`/api/productos/buscarProducto?termino=${encodeURIComponent(termino)}`);
+
             if (!response.ok) throw new Error('No encontrado');
 
             const productos = await response.json();

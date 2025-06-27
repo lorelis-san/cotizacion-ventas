@@ -19,7 +19,8 @@ async function buscarProducto() {
     }
 
     try {
-        const response = await fetch(`/api/productos/buscar/${termino}`);
+        const response = await fetch(`/api/productos/buscar?termino=${encodeURIComponent(termino)}`);
+
         if (!response.ok) throw new Error("Error al buscar productos");
 
         const productos = await response.json();

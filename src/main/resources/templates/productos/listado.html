@@ -11,7 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <title>Productos Infinite Scroll</title>
+    <title>Lista de Productos</title>
 
     <link rel="stylesheet" th:href="@{/css/product/listaProducto.css}">
 
@@ -114,7 +114,7 @@
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="/productos">
+                    <a class="navbar-brand" href="/verProductos">
                         <i class="fas fa-box"></i> Productos
                     </a>
 
@@ -144,7 +144,7 @@
 
                     <div class="input-group mb-4">
                         <input type="text" id="buscadorProducto" class="form-control" placeholder="Buscar por nombre o código...">
-                        <button class="btn btn-primary" onclick="buscarProducto()">Buscar</button>
+
                     </div>
 
                     <!-- NUEVOS FILTROS -->

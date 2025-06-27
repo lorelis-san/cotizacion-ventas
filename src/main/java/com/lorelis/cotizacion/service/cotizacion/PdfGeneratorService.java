@@ -4,13 +4,17 @@ import com.lorelis.cotizacion.model.cotizacion.Cotizacion;
 import com.lorelis.cotizacion.model.cotizacion.DetalleCotizacion;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 
@@ -243,17 +247,53 @@ public class PdfGeneratorService {
 
         try {
             if (url != null && !url.isEmpty()) {
-                Image img = Image.getInstance(new URL(url));
+                Image img;
+
+                // Abrir conexión HTTP
+                URL imageUrl = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) imageUrl.openConnection();
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+                connection.connect();
+
+                String contentType = connection.getContentType();
+                System.out.println("Content-Type: " + contentType);
+
+                // Leer imagen como stream
+                InputStream inputStream = connection.getInputStream();
+
+                if (contentType != null && contentType.equalsIgnoreCase("image/webp")) {
+                    // Leer imagen WebP y convertirla a JPG en memoria
+                    BufferedImage bufferedImage = ImageIO.read(inputStream);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ImageIO.write(bufferedImage, "jpg", baos);
+                    baos.flush();
+
+                    img = Image.getInstance(baos.toByteArray());
+
+                    baos.close();
+                } else {
+
+                    img = Image.getInstance(IOUtils.toByteArray(inputStream));
+                }
+
+                inputStream.close();
+                connection.disconnect();
+
                 img.scaleToFit(80, 80);
+                img.setAlignment(Image.ALIGN_CENTER);
+
                 cell.addElement(img);
+
             } else {
                 cell.addElement(new Paragraph("Sin imagen", FontFactory.getFont(FUENTE, 8, Color.GRAY)));
             }
         } catch (Exception e) {
             cell.addElement(new Paragraph("Sin imagen", FontFactory.getFont(FUENTE, 8, Color.GRAY)));
         }
+
         return cell;
     }
+
 
     private void agregarTotales(Document document, Cotizacion cotizacion) throws DocumentException {
         PdfPTable table = new PdfPTable(2);

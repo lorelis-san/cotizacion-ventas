@@ -77,8 +77,8 @@ public class DatosCotizacionRestController {
     }
 
     // ProductController.java
-    @GetMapping("/productos/buscar/{termino}")
-    public List<ProductDTO> buscarProductos(@PathVariable String termino) {
+    @GetMapping("/productos/buscar")
+    public List<ProductDTO> buscarProductos(@RequestParam String termino) {
         return productService.buscarPorNombreOCodigo(termino);
     }
 

@@ -189,6 +189,9 @@
             color: white;
             flex: 1;
         }
+        .btn-view i{
+         color: white;
+        }
 
         .btn-view:hover {
             background: linear-gradient(135deg, #1a1545 0%, #262159 100%);

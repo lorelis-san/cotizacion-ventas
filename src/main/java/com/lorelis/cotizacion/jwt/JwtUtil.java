@@ -1,4 +1,5 @@
 package com.lorelis.cotizacion.jwt;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,7 +21,7 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private int expiration;
 
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication) {
         UserDetails mainUser = (UserDetails) authentication.getPrincipal();
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 
@@ -36,19 +37,20 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails){
+    public Boolean validateToken(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public Boolean isTokenExpired(String token){
+    public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    public Date extractExpiration(String token){
+    public Date extractExpiration(String token) {
         return extractAllClaims(token).getExpiration();
     }
-    public Claims extractAllClaims(String token){
+
+    public Claims extractAllClaims(String token) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         return Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -56,11 +58,12 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
     public String extractUserRole(String token) {
         return extractAllClaims(token).get("role", String.class);
     }
 
-    public String extractUserName(String token){
+    public String extractUserName(String token) {
         return extractAllClaims(token).getSubject();
     }
 }

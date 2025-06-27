@@ -22,14 +22,14 @@ public class ProductApiController {
 
     @GetMapping
     public Page<ProductListDTO> listarProductos(@RequestParam(defaultValue = "0") int page,
-                                                @RequestParam(defaultValue = "9") int size) {
+                                                @RequestParam(defaultValue = "8") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         return productService.listarProductos(pageable);
     }
 
-    @GetMapping("/buscarProducto/{termino}")
-    public List<ProductListDTO> buscarProductos(@PathVariable String termino) {
+    @GetMapping("/buscarProducto")
+    public List<ProductListDTO> buscarProductos(@RequestParam String termino) {
         return productService.buscarListaPorNombreOCodigo(termino);
     }
 

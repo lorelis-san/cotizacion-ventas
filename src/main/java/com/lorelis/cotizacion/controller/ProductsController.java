@@ -58,7 +58,7 @@ public class ProductsController {
         return "productos/productsIndex";
     }
 
-    @GetMapping("/scroll")
+    @GetMapping("/verProductos")
     public String mostrarVistaProductos(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = auth.getAuthorities().stream()
@@ -90,14 +90,14 @@ public class ProductsController {
             redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
         }
 
-        return "redirect:/productos";
+        return "redirect:/verProductos";
     }
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         ProductDTO product = productsService.getProductById(id);
         if (product == null) {
-            return "redirect:/productos";
+            return "redirect:/verProductos";
         }
         model.addAttribute("product", product);
         model.addAttribute("categories", categoryService.getAllCategoryEnabled());
@@ -115,7 +115,7 @@ public class ProductsController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
         }
-        return "redirect:/productos";
+        return "redirect:/verProductos";
     }
 
     @DeleteMapping("/delete/{id}")
@@ -134,7 +134,7 @@ public class ProductsController {
     public String viewProduct(@PathVariable Long id, Model model) {
         ProductDTO product = productsService.getProductById(id);
         if (product == null) {
-            return "redirect:/productos";
+            return "redirect:/verProductos";
         }
 
         model.addAttribute("categories", categoryService.getAllCategory());
