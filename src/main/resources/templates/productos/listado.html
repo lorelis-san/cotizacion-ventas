@@ -14,6 +14,97 @@
     <title>Productos Infinite Scroll</title>
 
     <link rel="stylesheet" th:href="@{/css/product/listaProducto.css}">
+
+    <style>
+        .filtros-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .filtros-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+
+        .filtro-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filtro-group label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .filtro-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            background-color: white;
+            font-size: 14px;
+        }
+
+        .filtro-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+            outline: none;
+        }
+
+        .btn-limpiar {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            height: fit-content;
+        }
+
+        .btn-limpiar:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .filtros-activos {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .filtro-activo {
+            display: inline-block;
+            background-color: #0d6efd;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+
+        .filtro-activo .btn-close {
+            margin-left: 5px;
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .filtros-row {
+                flex-direction: column;
+            }
+
+            .filtro-group {
+                min-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -54,6 +145,41 @@
                     <div class="input-group mb-4">
                         <input type="text" id="buscadorProducto" class="form-control" placeholder="Buscar por nombre o código...">
                         <button class="btn btn-primary" onclick="buscarProducto()">Buscar</button>
+                    </div>
+
+                    <!-- NUEVOS FILTROS -->
+                    <div class="filtros-container">
+                        <div class="filtros-row">
+                            <div class="filtro-group">
+                                <label for="filtroCategoria">Categoría</label>
+                                <select id="filtroCategoria" class="filtro-select">
+                                    <option value="">Todas las categorías</option>
+                                </select>
+                            </div>
+
+                            <div class="filtro-group">
+                                <label for="filtroMarca">Marca</label>
+                                <select id="filtroMarca" class="filtro-select">
+                                    <option value="">Todas las marcas</option>
+                                </select>
+                            </div>
+
+                            <div class="filtro-group">
+                                <label for="filtroAnio">Año</label>
+                                <select id="filtroAnio" class="filtro-select">
+                                    <option value="">Todos los años</option>
+                                </select>
+                            </div>
+
+                            <div class="filtro-group">
+                                <button type="button" id="btnLimpiarFiltros" class="btn btn-limpiar">
+                                    <i class="fas fa-times"></i> Limpiar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Filtros activos -->
+                        <div id="filtrosActivos" class="filtros-activos"></div>
                     </div>
 
                     <div id="producto-grid"></div>

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -27,10 +28,24 @@ public class ProductApiController {
         return productService.listarProductos(pageable);
     }
 
-
     @GetMapping("/buscarProducto/{termino}")
-    public List<ProductDTO> buscarProductos(@PathVariable String termino) {
-        return productService.buscarPorNombreOCodigo(termino);
+    public List<ProductListDTO> buscarProductos(@PathVariable String termino) {
+        return productService.buscarListaPorNombreOCodigo(termino);
+    }
+
+    // NUEVOS ENDPOINTS PARA FILTROS
+    @GetMapping("/filtrar")
+    public List<ProductListDTO> filtrarProductos(
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String marca,
+            @RequestParam(required = false) Integer anio) {
+
+        return productService.filtrarProductos(categoria, marca, anio);
+    }
+
+    @GetMapping("/filtros/opciones")
+    public Map<String, List<String>> obtenerOpcionesFiltros() {
+        return productService.obtenerOpcionesFiltros();
     }
 
 }

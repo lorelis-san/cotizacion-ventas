@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -340,4 +338,74 @@ public class ProductsServiceImpl implements ProductsService {
                 p.getEndYear()
         ));
     }
+
+    // Agregar estos métodos a tu ProductsServiceImpl existente
+
+    @Override
+    public List<ProductListDTO> filtrarProductos(String categoria, String marca, Integer anio) {
+        List<Products> productos = productsRepository.filtrarProductosActivos(categoria, marca, anio);
+
+        return productos.stream()
+                .map(p -> new ProductListDTO(
+                        p.getId(),
+                        p.getCod(),
+                        p.getName(),
+                        p.getBrand(),
+                        p.getModel(),
+                        p.getImageUrl(),
+                        p.getSalePrice(),
+                        p.getCostDealer(),
+                        p.getCategoryproduct().getName(),
+                        p.getStartYear(),
+                        p.getEndYear()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductListDTO> buscarListaPorNombreOCodigo(String termino) {
+        List<Products> productos = productsRepository.buscarActivosPorNombreOCodigo(termino);
+        return productos.stream()
+                .map(p -> new ProductListDTO(
+                        p.getId(),
+                        p.getCod(),
+                        p.getName(),
+                        p.getBrand(),
+                        p.getModel(),
+                        p.getImageUrl(),
+                        p.getSalePrice(),
+                        p.getCostDealer(),
+                        p.getCategoryproduct().getName(),
+                        p.getStartYear(),
+                        p.getEndYear()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, List<String>> obtenerOpcionesFiltros() {
+        Map<String, List<String>> opciones = new HashMap<>();
+
+        // Obtener categorías únicas
+        List<String> categorias = productsRepository.obtenerCategoriasUnicas();
+        opciones.put("categorias", categorias);
+
+        // Obtener marcas únicas
+        List<String> marcas = productsRepository.obtenerMarcasUnicas();
+        opciones.put("marcas", marcas);
+
+        // Obtener años únicos y convertir a String para consistencia
+        List<Integer> aniosInt = productsRepository.obtenerAniosUnicos();
+        List<String> anios = aniosInt.stream()
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+        opciones.put("anios", anios);
+
+        return opciones;
+    }
+
+
+
+
+
 }

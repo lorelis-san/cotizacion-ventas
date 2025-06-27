@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductsService {
     void saveProduct(ProductDTO dto, MultipartFile imageFile);
@@ -26,4 +27,10 @@ public interface ProductsService {
 
 
     Page<ProductListDTO> listarProductos(Pageable pageable);
+
+    List<ProductListDTO> filtrarProductos(String categoria, String marca, Integer anio);
+
+    List<ProductListDTO> buscarListaPorNombreOCodigo(String termino);
+
+    Map<String, List<String>> obtenerOpcionesFiltros();
 }
