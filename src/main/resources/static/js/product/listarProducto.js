@@ -95,7 +95,6 @@ constructor() {
     }
 
     createProductCard(prod) {
-    console.log('Renderizando producto:', prod.cod, '| ¿Es admin?', this.isAdmin);
 
         const div = document.createElement('div');
         div.className = 'producto';
@@ -120,8 +119,9 @@ constructor() {
             </div>
             <div class="producto-content">
                 <div class="producto-category">${category}</div>
+                 <h4 class="producto-title">${name}</h4>
                 ${code ? `<div class="producto-code">${code}</div>` : ''}
-                <h4 class="producto-title">${name}</h4>
+
                 <p class="producto-brand">${brand}${model ? ` - ${model}` : ''}</p>
                 ${(startYear || endYear) ? `<div class="producto-years">${startYear}${endYear && endYear !== startYear ? ` - ${endYear}` : ''}</div>` : ''}
 
@@ -138,17 +138,17 @@ constructor() {
                     ` : ''}
                 </div>
 
-                <div class="product-actions">
+                <div class="product-actions mt-auto">
                     <a href="/view/${prod.id}" class="btn btn-action btn-view">
                         <i class="fas fa-eye"></i>
                         <span>Ver</span>
                     </a>
                      ${this.isAdmin ? `
                       <div class="action-group admin-only">
-                          <a href="/edit/${prod.id}" class="btn btn-action btn-edit">
+                          <a href="/edit/${prod.id}" class="btn btn-outline-primary btn-sm">
                               <i class="fas fa-edit"></i>
                           </a>
-                          <button class="btn btn-action btn-delete"
+                          <button class="btn btn-outline-danger btn-sm"
                                   data-id="${prod.id}"
                                   data-numero="${code}"
                                   data-bs-toggle="modal"

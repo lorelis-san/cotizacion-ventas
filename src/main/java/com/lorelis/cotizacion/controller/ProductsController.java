@@ -32,31 +32,31 @@ public class ProductsController {
     @Autowired
     private SupplierService supplierService;
 
-    @GetMapping("/productos")
-    public String listProducts(Model model) {
-
-        List<ProductDTO> products = productsService.getAllProductsEnabled();
-
-        products.forEach(product -> {
-            if (product.getCategoryProductId() != null) {
-                CategoryDTO category = categoryService.getCategoryById(product.getCategoryProductId());
-                if (category != null) {
-                    product.setCategoryName(category.getName());
-                }
-            }
-            if (product.getSupplierProductId() != null) {
-                SupplierDTO supplier = supplierService.getSupplieryById(product.getSupplierProductId());
-                if (supplier != null) {
-                    product.setSupplierName(supplier.getName());
-                }
-            }
-        });
-
-        model.addAttribute("products", products);
-        model.addAttribute("categories", categoryService.getAllCategory());
-        model.addAttribute("suppliers", supplierService.getAllSuppliers());
-        return "productos/productsIndex";
-    }
+//    @GetMapping("/productos")
+//    public String listProducts(Model model) {
+//
+//        List<ProductDTO> products = productsService.getAllProductsEnabled();
+//
+//        products.forEach(product -> {
+//            if (product.getCategoryProductId() != null) {
+//                CategoryDTO category = categoryService.getCategoryById(product.getCategoryProductId());
+//                if (category != null) {
+//                    product.setCategoryName(category.getName());
+//                }
+//            }
+//            if (product.getSupplierProductId() != null) {
+//                SupplierDTO supplier = supplierService.getSupplieryById(product.getSupplierProductId());
+//                if (supplier != null) {
+//                    product.setSupplierName(supplier.getName());
+//                }
+//            }
+//        });
+//
+//        model.addAttribute("products", products);
+//        model.addAttribute("categories", categoryService.getAllCategory());
+//        model.addAttribute("suppliers", supplierService.getAllSuppliers());
+//        return "productos/productsIndex";
+//    }
 
     @GetMapping("/verProductos")
     public String mostrarVistaProductos(Model model) {

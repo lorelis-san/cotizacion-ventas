@@ -133,13 +133,12 @@
         }
 
         .producto-code {
-            background: linear-gradient(135deg, #0E0C28 0%, #1a1545 100%);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 8px;
+
+            color: black;
+
             font-size: 0.8em;
-            font-weight: 600;
-            font-family: 'Courier New', monospace;
+           font-weight: bolder;
+           font-size: smaller;
             letter-spacing: 0.5px;
             margin-bottom: 16px;
             display: inline-block;
@@ -189,7 +188,7 @@
             color: white;
             flex: 1;
         }
-        .btn-view i{
+        .btn-view i, .btn-view span{
          color: white;
         }
 
