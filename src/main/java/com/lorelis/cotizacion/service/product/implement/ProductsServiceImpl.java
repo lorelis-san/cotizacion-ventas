@@ -69,8 +69,8 @@ public class ProductsServiceImpl implements ProductsService {
         }
         return product;
     }
-
-    private ProductDTO convertToDTO(Products product) {
+@Override
+public ProductDTO convertToDTO(Products product) {
         ProductDTO dto = new ProductDTO();
         dto.setId(product.getId());
         dto.setCod(product.getCod());
@@ -298,9 +298,10 @@ public class ProductsServiceImpl implements ProductsService {
             throw new IllegalArgumentException("El año inicial debe estar entre 1900 y " + (anioActual + 10));
         }
 
-        if (end != null && (end < start || end > anioActual + 20)) {
+        if (end != null && end != 9999 && (end < start || end > anioActual + 20)) {
             throw new IllegalArgumentException("El año final debe ser mayor o igual al inicial y razonable");
         }
+
     }
 
     private void validarPrice(ProductDTO dto) {
@@ -315,7 +316,7 @@ public class ProductsServiceImpl implements ProductsService {
         if (dto.getSede() == null || dto.getSede().trim().isEmpty()) {
             throw new IllegalArgumentException("La sede es obligatoria");
         }
-        List<String> sedesValidas = Arrays.asList("Lima", "Chiclayo", "Trujillo", "Piura", "Arequipa");
+        List<String> sedesValidas = Arrays.asList("Lima", "Chiclayo", "Trujillo", "Piura", "Arequipa", "Concesionario");
         if (!sedesValidas.contains(dto.getSede())) {
             throw new IllegalArgumentException("La sede seleccionada no es válida");
         }
@@ -407,6 +408,11 @@ public class ProductsServiceImpl implements ProductsService {
 
 
 
+//
+@Override
+public List<Products> obtenerProductosPorMarcaModeloYear(String marca, String modelo, Integer year) {
+    return productsRepository.findByMarcaModeloYearInRange(marca, modelo, year);
+}
 
 
 }

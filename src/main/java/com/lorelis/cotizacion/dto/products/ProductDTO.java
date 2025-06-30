@@ -50,7 +50,7 @@ public class ProductDTO {
 
     public String getYearRange() {
         if (startYear != null) {
-            return (endYear != null ? startYear + " - " + endYear : startYear + "+");
+            return (endYear != 9999 ? startYear + " - " + endYear : startYear + " - Actualidad");
         }
         return "Sin año";
     }

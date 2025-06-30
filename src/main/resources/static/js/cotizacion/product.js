@@ -47,6 +47,10 @@ async function buscarProducto() {
                      </div>
                      <div class="flex-grow-1">
                           <strong>${p.name}</strong> <span>(${p.cod})</span><br>
+                          <span>
+                            ${p.brand} - ${p.model} / ${p.startYear} - ${p.endYear === 9999 ? 'Actualidad' : p.endYear}
+                          </span><br>
+
                           <span class="text-success fw-bold">S/. ${p.salePrice}</span>
                      </div>
                      <div class="me-2">
@@ -176,5 +180,74 @@ function eliminarDelCarrito(id) {
     if (index !== -1) {
         carrito.splice(index, 1);
         renderizarCarrito();
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+async function buscarProductosPorVehiculo() {
+    const marca = document.getElementById('marca').value.trim();
+    const modelo = document.getElementById('modelo').value.trim();
+    const year = document.getElementById('anio').value.trim();
+
+    if (!marca || !modelo || !year) {
+        alert("Debe completar marca, modelo y año del vehículo para buscar productos relacionados.");
+        return;
+    }
+
+    const contenedor = document.getElementById('resultadosProducto');
+    contenedor.innerHTML = '';
+    contenedor.classList.add('hidden');
+
+    try {
+        const response = await fetch(`/api/productos/porVehiculo?marca=${encodeURIComponent(marca)}&modelo=${encodeURIComponent(modelo)}&year=${encodeURIComponent(year)}`);
+
+        if (!response.ok) throw new Error("Error al buscar productos por vehículo");
+
+        const productos = await response.json();
+
+        if (productos.length === 0) {
+            contenedor.innerHTML = "<p>No hay productos relacionados para este vehículo.</p>";
+        } else {
+            contenedor.classList.remove('hidden');
+
+            productos.forEach(p => {
+                if (carrito.some(item => item.id === p.id)) return;
+
+                const div = document.createElement('div');
+                div.className = 'producto-item d-flex align-items-center border p-2 mb-2 rounded';
+
+                div.innerHTML = `
+                     <div class="me-3">
+                          <img src="${p.imageUrl || '/images/no-image.png'}"
+                               alt="${p.name}"
+                               class="img-thumbnail"
+                               style="width: 60px; height: 60px; object-fit: contain;"
+                               onerror="this.src='/images/no-image.png'">
+                     </div>
+                     <div class="flex-grow-1">
+                          <strong>${p.name}</strong> <span>(${p.cod})</span><br>
+                          <span>
+                            ${p.brand} - ${p.model} / ${p.startYear} - ${p.endYear === 9999 ? 'Actualidad' : p.endYear}
+                          </span><br>
+                          <span class="text-success fw-bold">S/. ${p.salePrice}</span>
+                     </div>
+                     <div class="me-2">
+                          <input type="number" id="cantidad_${p.id}" value="1" min="1"
+                                 class="form-control form-control-sm" style="width: 70px;"/>
+                     </div>
+                     <div>
+                          <button onclick="agregarAlCarrito(${p.id}, '${p.name}', ${p.salePrice}, '${p.imageUrl || ''}')"
+                                  class="btn btn-dark btn-sm">
+                              <i class="fas fa-plus"></i> Agregar
+                          </button>
+                     </div>
+                `;
+                contenedor.appendChild(div);
+            });
+        }
+    } catch (error) {
+        console.error("Error al buscar productos por vehículo", error);
+        alert("Hubo un problema al buscar productos relacionados con el vehículo.");
     }
 }

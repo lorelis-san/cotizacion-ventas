@@ -3,15 +3,18 @@ package com.lorelis.cotizacion.controller;
 
 import com.lorelis.cotizacion.dto.products.ProductDTO;
 import com.lorelis.cotizacion.dto.products.ProductListDTO;
+import com.lorelis.cotizacion.model.productos.Products;
 import com.lorelis.cotizacion.service.product.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -47,5 +50,21 @@ public class ProductApiController {
     public Map<String, List<String>> obtenerOpcionesFiltros() {
         return productService.obtenerOpcionesFiltros();
     }
+
+
+
+    @GetMapping("/porVehiculo")
+    public ResponseEntity<List<ProductDTO>> obtenerProductosPorVehiculo(
+            @RequestParam String marca,
+            @RequestParam String modelo,
+            @RequestParam Integer year) {
+        List<Products> productos = productService.obtenerProductosPorMarcaModeloYear(marca, modelo, year);
+        List<ProductDTO> productosDTO = productos.stream()
+                .map(productService::convertToDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(productosDTO);
+    }
+
+
 
 }

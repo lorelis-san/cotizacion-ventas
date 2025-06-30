@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface ProductsService {
+    ProductDTO convertToDTO(Products product);
+
     void saveProduct(ProductDTO dto, MultipartFile imageFile);
     List<ProductDTO> getAllProducts();
 
@@ -32,4 +34,7 @@ public interface ProductsService {
     List<ProductListDTO> buscarListaPorNombreOCodigo(String termino);
 
     Map<String, List<String>> obtenerOpcionesFiltros();
+
+    //
+    List<Products> obtenerProductosPorMarcaModeloYear(String marca, String modelo, Integer year);
 }

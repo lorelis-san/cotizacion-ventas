@@ -52,4 +52,19 @@ List<Products> buscarActivosPorNombreOCodigo(@Param("termino") String termino);
 
 
 
+//    @Query("SELECT p FROM Products p WHERE p.brand = :marca AND p.model = :modelo AND p.year = :year AND p.enabled = true")
+//    List<Products> findByMarcaModeloYear(@Param("marca") String marca, @Param("modelo") String modelo, @Param("year") Integer year);
+
+
+    @Query("SELECT p FROM Products p " +
+            "WHERE p.enabled = true " +
+            "AND p.brand = :brand " +
+            "AND p.model = :model " +
+            "AND :year BETWEEN p.startYear AND p.endYear")
+    List<Products> findByMarcaModeloYearInRange(
+            @Param("brand") String brand,
+            @Param("model") String model,
+            @Param("year") Integer year);
+
+
 }

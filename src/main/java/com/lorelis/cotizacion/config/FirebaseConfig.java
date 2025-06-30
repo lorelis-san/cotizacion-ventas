@@ -31,7 +31,7 @@ public class FirebaseConfig {
     public void initialize() {
         try {
             if (FirebaseApp.getApps().isEmpty()) {
-               // InputStream serviceAccount = new ClassPathResource(firebaseConfigPath).getInputStream();
+      //          InputStream serviceAccount = new ClassPathResource(firebaseConfigPath).getInputStream();
                 //para subir a produccipón
                InputStream serviceAccount = new FileInputStream(firebaseConfigPath);
 
@@ -57,7 +57,7 @@ public class FirebaseConfig {
 
     @Bean
     public Storage storage() throws IOException {
-      // InputStream serviceAccount = new ClassPathResource(firebaseConfigPath).getInputStream();
+//       InputStream serviceAccount = new ClassPathResource(firebaseConfigPath).getInputStream();
         //para producción:
         InputStream serviceAccount = new FileInputStream(firebaseConfigPath);
 

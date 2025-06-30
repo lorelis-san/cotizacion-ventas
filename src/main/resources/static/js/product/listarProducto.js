@@ -123,7 +123,11 @@ constructor() {
                 ${code ? `<div class="producto-code">${code}</div>` : ''}
 
                 <p class="producto-brand">${brand}${model ? ` - ${model}` : ''}</p>
-                ${(startYear || endYear) ? `<div class="producto-years">${startYear}${endYear && endYear !== startYear ? ` - ${endYear}` : ''}</div>` : ''}
+                ${(startYear || endYear) ? `
+                  <div class="producto-years">
+                    ${startYear}${endYear && endYear !== startYear ? ` - ${endYear === 9999 ? 'Actualidad' : endYear}` : ''}
+                  </div>
+                ` : ''}
 
                 <div class="producto-prices">
                     <div class="producto-price sale">

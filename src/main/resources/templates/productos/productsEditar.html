@@ -110,7 +110,7 @@
                                         <div>
                                             <div class="form-floating">
                                                 <select class="form-select form-select-sm" th:field="*{endYear}" id="endYear">
-                                                    <option value="">Seleccionar año final</option>
+                                                    <option value="9999">Seleccionar año final</option>
                                                     <th:block th:each="yearOption : ${#numbers.sequence(1900, T(java.time.Year).now().getValue() + 20)}">
                                                         <option th:value="${yearOption}" th:text="${yearOption}"
                                                                 th:selected="${product.endYear} == ${yearOption}">
@@ -170,6 +170,7 @@
                                                     <option value="Trujillo" th:selected="${product.sede == 'Trujillo'}">Trujillo</option>
                                                     <option value="Piura" th:selected="${product.sede == 'Piura'}">Piura</option>
                                                     <option value="Arequipa" th:selected="${product.sede == 'Arequipa'}">Arequipa</option>
+                                                    <option value="Concesionario" th:selected="${product.sede == 'Concesionario'}">Concesionario</option>
                                                 </select>
                                                 <label for="sede">
                                                     <i class="fas fa-map-marker-alt me-1"></i>Sede
